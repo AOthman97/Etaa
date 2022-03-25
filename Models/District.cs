@@ -12,8 +12,8 @@ namespace Etaa.Models
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
 
-        // Relationship between the movie and the cinema
-        public int CityNo { get; set; }
+        // Relationship between the district and the city
+        public int CityId { get; set; }
         [ForeignKey("CityId")]
         public City City { get; set; }
     }

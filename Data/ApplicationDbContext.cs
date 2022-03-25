@@ -22,5 +22,7 @@ namespace Etaa.Data
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
+
+
     }
 }
