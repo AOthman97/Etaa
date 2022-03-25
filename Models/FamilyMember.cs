@@ -28,5 +28,10 @@ namespace Etaa.Models
         public int EducationalStatusId { get; set; }
         [ForeignKey("EducationalStatusId")]
         public EducationalStatus? EducationalStatus { get; set; }
+
+        // Relationship between the family member and job
+        public int JobId { get; set; }
+        [ForeignKey("JobId")]
+        public Job? Job { get; set; }
     }
 }
