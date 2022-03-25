@@ -15,9 +15,9 @@ namespace Etaa.Models
         // Relationship between the city and the state
         public int StateId { get; set; }
         [ForeignKey("StateId")]
-        public State State { get; set; }
+        public State? State { get; set; }
 
         // Relationship between the city and the district
-        public ICollection<District> Districts;
+        public ICollection<District>? Districts;
     }
 }

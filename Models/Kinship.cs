@@ -13,6 +13,6 @@ namespace Etaa.Models
 
         // Each kinship contains a number of family members, This property defines the relationship
         // between them
-        public ICollection<FamilyMember> FamilyMembers;
+        public ICollection<FamilyMember>? FamilyMembers;
     }
 }

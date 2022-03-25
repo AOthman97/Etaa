@@ -11,17 +11,22 @@ namespace Etaa.Models
         [Display(Name = "Name(Ar)")]
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
-        public int Age { get; set; }
-        public string Note { get; set; }
+        public int? Age { get; set; }
+        public string? Note { get; set; }
 
         // Relationship between the family member and kinship
         public int KinshipId { get; set; }
         [ForeignKey("KinshipId")]
-        public Kinship Kinship { get; set; }
+        public Kinship? Kinship { get; set; }
 
         // Relationship between the family member and gender
         public int GenderId { get; set; }
         [ForeignKey("GenderId")]
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
+
+        // Relationship between the family member and educational status
+        public int EducationalStatusId { get; set; }
+        [ForeignKey("EducationalStatusId")]
+        public EducationalStatus? EducationalStatus { get; set; }
     }
 }
