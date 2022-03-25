@@ -18,5 +18,10 @@ namespace Etaa.Models
         public int KinshipId { get; set; }
         [ForeignKey("KinshipId")]
         public Kinship Kinship { get; set; }
+
+        // Relationship between the family member and gender
+        public int GenderId { get; set; }
+        [ForeignKey("GenderId")]
+        public Gender Gender { get; set; }
     }
 }
