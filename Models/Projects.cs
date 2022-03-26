@@ -20,6 +20,7 @@ namespace Etaa.Models
         public DateTime? Date { get; set; }
         public DateTime? WaiverPeriod { get; set; }
         public bool? IsApprovedByManagement { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the projects and families
         public int FamilyId { get; set; }

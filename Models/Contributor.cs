@@ -20,6 +20,7 @@ namespace Etaa.Models
         public decimal? MonthlyShareAmount { get; set; }
         public int? NumberOfShares { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the contributor and district
         public int DistrictId { get; set; }

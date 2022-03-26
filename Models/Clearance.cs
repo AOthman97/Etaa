@@ -11,6 +11,7 @@ namespace Etaa.Models
         public string? Comments { get; set; }
         public DateTime ClearanceDate { get; set; }
         public bool IsApprovedByManagement { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the projects and families
         public int ProjectId { get; set; }

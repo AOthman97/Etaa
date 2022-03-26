@@ -10,7 +10,8 @@ namespace Etaa.Models
         public string PaymentDocumentPath { get; set; }
         public DateTime PaymentDate { get; set; }
         public decimal PaymentAmount { get; set; }
-        public bool IsApprovedByManagement { get; set; }
+        public bool? IsApprovedByManagement { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the projects and families
         public int ProjectId { get; set; }

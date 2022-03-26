@@ -11,6 +11,7 @@ namespace Etaa.Models
         [Display(Name = "Name(Ar)")]
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the city and the state
         public int StateId { get; set; }

@@ -11,5 +11,6 @@ namespace Etaa.Models
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
         public int? InstallmentNumber { get; set; }
+        public bool? IsCanceled { get; set; }
     }
 }

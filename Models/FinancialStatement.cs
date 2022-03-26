@@ -9,6 +9,7 @@ namespace Etaa.Models
         public int FinancialStatementId { get; set; }
         public string DocumentPath { get; set; }
         public bool IsApprovedByManagement { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the projects and families
         public int ProjectId { get; set; }

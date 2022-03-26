@@ -24,6 +24,7 @@ namespace Etaa.Models
         public decimal? MonthlyIncome { get; set; }
         public bool? IsCurrentInvestmentProject { get; set; }
         public bool? IsApprovedByManagement { get; set; }
+        public bool? IsCanceled { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
         public int DistrictId { get; set; }

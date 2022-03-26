@@ -14,8 +14,9 @@ namespace Etaa.Models
         public int? Order { get; set; }
         public decimal? MinAmount { get; set; }
         public decimal? MaxAmount { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Define the relationship with the projects model
-        //public ICollection<proje> { get; set; }
+        public ICollection<Projects> Projects { get; set; }
     }
 }

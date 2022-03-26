@@ -13,6 +13,7 @@ namespace Etaa.Models
         public string Role { get; set; }
         public string? Signature { get; set; }
         public string? ProfileImagePath { get; set; }
+        public bool? IsDisabled { get; set; }
 
         public ICollection<Family>? Families;
         public ICollection<Projects>? Projects;

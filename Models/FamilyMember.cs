@@ -13,6 +13,7 @@ namespace Etaa.Models
         public string? NameEn { get; set; }
         public int? Age { get; set; }
         public string? Note { get; set; }
+        public bool? IsCanceled { get; set; }
 
         // Relationship between the family member and kinship
         public int KinshipId { get; set; }
