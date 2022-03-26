@@ -33,5 +33,9 @@ namespace Etaa.Models
         public int JobId { get; set; }
         [ForeignKey("JobId")]
         public Job? Job { get; set; }
+        // Relationship between the family member and family
+        public int? FamilyId { get; set; }
+        [ForeignKey("FamilyId")]
+        public Family? Family { get; set; }
     }
 }
