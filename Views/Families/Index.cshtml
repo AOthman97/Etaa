@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Etaa.Models.Family>
+
+@{
+    ViewData["Title"] = "Family Data";
+}
+
+<h1>Family Data</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameAr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NameEn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HouseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alleyway)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResidentialSquare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstPhoneNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameAr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameEn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HouseNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alleyway)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResidentialSquare)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstPhoneNumber)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FamilyId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
+    <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> Add Family</a>
+</div>

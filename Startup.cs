@@ -1,4 +1,5 @@
 ﻿using Etaa.Data;
+using Etaa.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MoviesStore
@@ -19,6 +20,7 @@ namespace MoviesStore
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Services Configuration
+            services.AddScoped<IFamiliesService, FamiliesService>();
 
             services.AddControllersWithViews();
         }

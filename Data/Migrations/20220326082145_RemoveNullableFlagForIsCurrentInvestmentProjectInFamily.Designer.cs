@@ -4,6 +4,7 @@ using Etaa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Etaa.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220326082145_RemoveNullableFlagForIsCurrentInvestmentProjectInFamily")]
+    partial class RemoveNullableFlagForIsCurrentInvestmentProjectInFamily
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,7 +249,7 @@ namespace Etaa.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FamilyId"), 1L, 1);
 
-                    b.Property<int?>("AccommodationTypeId")
+                    b.Property<int>("AccommodationTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
@@ -265,7 +267,7 @@ namespace Etaa.Data.Migrations
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EducationalStatusId")
+                    b.Property<int>("EducationalStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("FirstPhoneNumber")
@@ -274,13 +276,13 @@ namespace Etaa.Data.Migrations
                     b.Property<int>("GenderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("HealthStatusId")
+                    b.Property<int>("HealthStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("HouseNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("InvestmentTypeId")
+                    b.Property<int>("InvestmentTypeId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("IsApprovedByManagement")
@@ -292,13 +294,13 @@ namespace Etaa.Data.Migrations
                     b.Property<bool>("IsCurrentInvestmentProject")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("JobId")
+                    b.Property<int>("JobId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ManagementUserId")
+                    b.Property<int>("ManagementUserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MartialStatusId")
+                    b.Property<int>("MartialStatusId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("MonthlyIncome")
@@ -332,7 +334,7 @@ namespace Etaa.Data.Migrations
                     b.Property<string>("SecondPhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("FamilyId");
@@ -1400,7 +1402,9 @@ namespace Etaa.Data.Migrations
                 {
                     b.HasOne("Etaa.Models.AccommodationType", "AccommodationType")
                         .WithMany()
-                        .HasForeignKey("AccommodationTypeId");
+                        .HasForeignKey("AccommodationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.District", "District")
                         .WithMany()
@@ -1410,7 +1414,9 @@ namespace Etaa.Data.Migrations
 
                     b.HasOne("Etaa.Models.EducationalStatus", "EducationalStatus")
                         .WithMany()
-                        .HasForeignKey("EducationalStatusId");
+                        .HasForeignKey("EducationalStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.Gender", "Gender")
                         .WithMany()
@@ -1420,19 +1426,27 @@ namespace Etaa.Data.Migrations
 
                     b.HasOne("Etaa.Models.HealthStatus", "HealthStatus")
                         .WithMany()
-                        .HasForeignKey("HealthStatusId");
+                        .HasForeignKey("HealthStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.InvestmentType", "InvestmentType")
                         .WithMany()
-                        .HasForeignKey("InvestmentTypeId");
+                        .HasForeignKey("InvestmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.Job", "Job")
                         .WithMany()
-                        .HasForeignKey("JobId");
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.MartialStatus", "MartialStatus")
                         .WithMany()
-                        .HasForeignKey("MartialStatusId");
+                        .HasForeignKey("MartialStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Etaa.Models.Projects", null)
                         .WithMany("Families")
@@ -1446,7 +1460,9 @@ namespace Etaa.Data.Migrations
 
                     b.HasOne("Etaa.Models.Users", "Users")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AccommodationType");
 

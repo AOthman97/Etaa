@@ -1,4 +1,5 @@
 ﻿using Etaa.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Etaa.Data.Services
 {
@@ -11,27 +12,32 @@ namespace Etaa.Data.Services
             _dbContext = applicationDbContext;
         }
 
-        public Task AddFamilyAsync(Family family)
+        public async Task AddFamilyAsync(Family family)
         {
-            throw new NotImplementedException();
+            var Result = await _dbContext.Families.AddAsync(family);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Family>> GetAllAsync()
+        {
+            var Result = await _dbContext.Families.OrderBy(Family => Family.NameAr).ToListAsync();
+            return Result;
+        }
+
+        public async Task<Family> GetFamilyAsync(int FamilyId)
+        {
+            var Result = await _dbContext.Families.FirstOrDefaultAsync(Family => Family.FamilyId == FamilyId);
+            return Result;
+        }
+
+        public async Task<Family> UpdateFamilyAsync(int FamilyId, Family family)
+        {
+            _dbContext.Update(family);
+            await _dbContext.SaveChangesAsync();
+            return family;
         }
 
         public bool DeleteFamily(int FamilyId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Family>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Family> GetFamilyAsync(int FamilyId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Family> UpdateFamilyAsync(int FamilyId, Family family)
         {
             throw new NotImplementedException();
         }
