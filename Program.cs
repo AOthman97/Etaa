@@ -16,6 +16,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IFamiliesService, FamiliesService>();
+builder.Services.AddScoped<IFamilyMembersService, FamilyMembersService>();
+builder.Services.AddScoped<IContributorsService, ContributorsService>();
 
 var app = builder.Build();
 
