@@ -7,9 +7,10 @@ namespace Etaa.Models
     {
         [Key]
         public int FamilyId { get; set; }
-        [Required(ErrorMessage = "Name(Ar) is Required!")]
-        [Display(Name = "Name(Ar)")]
+        [Required(ErrorMessage = "Name (Ar) is Required!")]
+        [Display(Name = "Name (Ar)")]
         public string NameAr { get; set; }
+        [Display(Name = "Name (En)")]
         public string? NameEn { get; set; }
         public string? Address { get; set; }
         [Display(Name = "House Number")]
