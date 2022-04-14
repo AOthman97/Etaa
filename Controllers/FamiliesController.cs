@@ -115,6 +115,7 @@ namespace Etaa.Controllers
             ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
             ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
             ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
+            //ViewData["FamilyId"] = family.FamilyId;
             return View(family);
         }
 

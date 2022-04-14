@@ -30,27 +30,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MonthlyShareAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfShares)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.District)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -74,27 +53,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MonthlyShareAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfShares)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.District.NameAr)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ContributorId">Edit</a> |

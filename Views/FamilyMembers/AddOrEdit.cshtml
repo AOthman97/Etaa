@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.FamilyMember
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add/Edit";
 }
 
     <script type="text/javascript">
@@ -34,14 +34,15 @@
         });
     </script>
 
-<h1>Create</h1>
+<h1>Add/Edit</h1>
 
 <h4>Family Member</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="AddOrEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FamilyMemberId" />
             <div class="form-group">
                 <label asp-for="Family" class="control-label"></label>
                 <input id="txtFamily" class="form-control" />
@@ -67,21 +68,30 @@
                 <input asp-for="Note" class="form-control" />
                 <span asp-validation-for="Note" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+                <label asp-for="IsCanceled" class="control-label"></label>
+                <input asp-for="IsCanceled" class="form-control" />
+                <span asp-validation-for="IsCanceled" class="text-danger"></span>
+            </div>*@
             <div class="form-group">
                 <label asp-for="KinshipId" class="control-label"></label>
-                <select asp-for="KinshipId" class ="form-control" asp-items="ViewBag.KinshipId"></select>
+                <select asp-for="KinshipId" class="form-control" asp-items="ViewBag.KinshipId"></select>
+                <span asp-validation-for="KinshipId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GenderId" class="control-label"></label>
-                <select asp-for="GenderId" class ="form-control" asp-items="ViewBag.GenderId"></select>
+                <select asp-for="GenderId" class="form-control" asp-items="ViewBag.GenderId"></select>
+                <span asp-validation-for="GenderId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EducationalStatusId" class="control-label"></label>
-                <select asp-for="EducationalStatusId" class ="form-control" asp-items="ViewBag.EducationalStatusId"></select>
+                <select asp-for="EducationalStatusId" class="form-control" asp-items="ViewBag.EducationalStatusId"></select>
+                <span asp-validation-for="EducationalStatusId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="JobId" class="control-label"></label>
-                <select asp-for="JobId" class ="form-control" asp-items="ViewBag.JobId"></select>
+                <select asp-for="JobId" class="form-control" asp-items="ViewBag.JobId"></select>
+                <span asp-validation-for="JobId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
@@ -90,10 +100,11 @@
             </div>
             @*<div class="form-group">
                 <label asp-for="FamilyId" class="control-label"></label>
-                <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>
+                <select asp-for="FamilyId" class="form-control" asp-items="ViewBag.FamilyId"></select>
+                <span asp-validation-for="FamilyId" class="text-danger"></span>
             </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

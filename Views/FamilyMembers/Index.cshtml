@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="AddOrEdit" class="btn btn-outline-success">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -22,22 +22,10 @@
                 @Html.DisplayNameFor(model => model.Age)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Kinship)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.EducationalStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Job)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Family)
@@ -58,22 +46,10 @@
                 @Html.DisplayFor(modelItem => item.Age)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Kinship.NameAr)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Gender.NameAr)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.EducationalStatus.NameAr)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Job.NameAr)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Family.NameAr)

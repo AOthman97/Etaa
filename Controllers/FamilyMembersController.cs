@@ -16,6 +16,28 @@ namespace Etaa.Controllers
             _context = context;
         }
 
+        // This action and the below are for the autocomplete functionality to firstly select the family and get the FamilyID
+        [HttpPost]
+        public JsonResult AutoComplete(string prefix)
+        {
+            var Families = (from family in this._context.Families
+                             where family.NameEn.StartsWith(prefix)
+                             select new
+                             {
+                                 label = family.NameEn,
+                                 val = family.FamilyId
+                             }).ToList();
+
+            return Json(Families);
+        }
+
+        [HttpPost]
+        public ActionResult Index(string FamilyName, string FamilyId)
+        {
+            ViewBag.Message = "Family Name: " + FamilyName + " FamilyId: " + FamilyId;
+            return View();
+        }
+
         // GET: FamilyMembers
         public async Task<IActionResult> Index()
         {
@@ -46,7 +68,7 @@ namespace Etaa.Controllers
             return View(familyMember);
         }
 
-        // GET: FamilyMembers/Create
+        // GET: FamilyMembers/AddOrEditAsync
         // , int FamilyId
         public async Task<IActionResult> AddOrEditAsync(int FamilyMemberId = 0)
         {
@@ -54,7 +76,7 @@ namespace Etaa.Controllers
             if(FamilyMemberId == 0)
             {
                 ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
-                ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr");
+                //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr");
                 ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
@@ -68,12 +90,23 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-                ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+                //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
                 ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                ViewData["FamilyId"] = familyMember.FamilyId;
                 return View(familyMember);
             }
+        }
+
+        // GET: Families/Create
+        public IActionResult Create()
+        {
+            ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
+            ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
+            ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
+            ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
+            return View();
         }
 
         // POST: FamilyMembers/Create
@@ -83,17 +116,18 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FamilyMemberId,NameAr,NameEn,Age,Note,IsCanceled,KinshipId,GenderId,EducationalStatusId,JobId,FamilyId")] FamilyMember familyMember)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && (familyMember.FamilyId != 0 && familyMember.FamilyId != null))
             {
                 _context.Add(familyMember);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-            ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+            //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
             ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
             ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
             ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+            ViewData["FamilyId"] = familyMember.FamilyId;
             return View(familyMember);
         }
 
