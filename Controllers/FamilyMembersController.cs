@@ -42,7 +42,7 @@ namespace Etaa.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.OrderBy(family => family.Family.NameEn).ToListAsync());
         }
 
         // GET: FamilyMembers/Details/5
@@ -70,7 +70,7 @@ namespace Etaa.Controllers
 
         // GET: FamilyMembers/AddOrEditAsync
         // , int FamilyId
-        public async Task<IActionResult> AddOrEditAsync(int FamilyMemberId = 0)
+        public async Task<IActionResult> AddOrEdit(int FamilyMemberId = 0)
         {
             // Meaning it's an add operation
             if(FamilyMemberId == 0)

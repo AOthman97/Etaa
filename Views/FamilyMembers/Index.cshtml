@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>Index</h1>
 
 <p>
-    <a asp-action="AddOrEdit" class="btn btn-outline-success">Create New</a>
+    @*//AddOrEdit*@
+    @*asp-action="AddOrEdit" *@
+    <a onclick="ShowPopup('@Url.Action("AddOrEdit","FamilyMembers",null,Context.Request.Scheme)', 'New Family Member')" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#form-modal">Create New</a>
 </p>
 <table class="table">
     <thead>
