@@ -1,4 +1,5 @@
 ﻿using Etaa.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Etaa.Data.Services
 {
@@ -24,9 +25,16 @@ namespace Etaa.Data.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ProjectTypes>> GetProjectTypeAsync(int ProjectTypeId)
+        public async Task<IEnumerable<ProjectTypes>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var Result = await _dbContext.ProjectTypes.OrderBy(ProjectType => ProjectType.NameAr).ToListAsync();
+            return Result;
+        }
+
+        public async Task<ProjectTypes> GetProjectTypeAsync(int ProjectTypeId)
+        {
+            var Result = await _dbContext.ProjectTypes.FirstOrDefaultAsync(ProjectType => ProjectType.ProjectTypeId == ProjectTypeId);
+            return Result;
         }
 
         public Task<ProjectTypes> UpdateProjectTypeAsync(int ProjectTypeId, ProjectTypes ProjectTypes)
