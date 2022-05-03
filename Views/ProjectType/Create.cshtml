@@ -22,10 +22,10 @@
                 <input asp-for="NameEn" class="form-control" />
                 <span asp-validation-for="NameEn" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
-                <span asp-validation-for="IsCanceled" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsCanceled" /> @Html.DisplayNameFor(model => model.IsCanceled)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="ProjectDomainTypeId" class="control-label"></label>

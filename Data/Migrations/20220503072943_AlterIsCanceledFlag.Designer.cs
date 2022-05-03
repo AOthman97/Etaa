@@ -4,6 +4,7 @@ using Etaa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Etaa.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220503072943_AlterIsCanceledFlag")]
+    partial class AlterIsCanceledFlag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("AccommodationTypeId");
 
-                    b.ToTable("AccommodationTypes", (string)null);
+                    b.ToTable("AccommodationTypes");
                 });
 
             modelBuilder.Entity("Etaa.Models.City", b =>
@@ -70,7 +72,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("StateId");
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("Etaa.Models.Clearance", b =>
@@ -111,7 +113,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Clearances", (string)null);
+                    b.ToTable("Clearances");
                 });
 
             modelBuilder.Entity("Etaa.Models.Contributor", b =>
@@ -166,7 +168,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("Contributors", (string)null);
+                    b.ToTable("Contributors");
                 });
 
             modelBuilder.Entity("Etaa.Models.District", b =>
@@ -194,7 +196,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Districts", (string)null);
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("Etaa.Models.EducationalStatus", b =>
@@ -217,7 +219,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("EducationalStatusId");
 
-                    b.ToTable("EducationalStatuses", (string)null);
+                    b.ToTable("EducationalStatuses");
                 });
 
             modelBuilder.Entity("Etaa.Models.EventTypes", b =>
@@ -236,7 +238,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("EventTypeId");
 
-                    b.ToTable("EventTypes", (string)null);
+                    b.ToTable("EventTypes");
                 });
 
             modelBuilder.Entity("Etaa.Models.Family", b =>
@@ -359,7 +361,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Families", (string)null);
+                    b.ToTable("Families");
                 });
 
             modelBuilder.Entity("Etaa.Models.FamilyMember", b =>
@@ -413,7 +415,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("KinshipId");
 
-                    b.ToTable("FamilyMembers", (string)null);
+                    b.ToTable("FamilyMembers");
                 });
 
             modelBuilder.Entity("Etaa.Models.FinancialStatement", b =>
@@ -449,7 +451,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FinancialStatements", (string)null);
+                    b.ToTable("FinancialStatements");
                 });
 
             modelBuilder.Entity("Etaa.Models.Gender", b =>
@@ -478,7 +480,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("GenderId");
 
-                    b.ToTable("Genders", (string)null);
+                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("Etaa.Models.HealthStatus", b =>
@@ -501,7 +503,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("HealthStatusId");
 
-                    b.ToTable("HealthStatuses", (string)null);
+                    b.ToTable("HealthStatuses");
                 });
 
             modelBuilder.Entity("Etaa.Models.Installments", b =>
@@ -527,7 +529,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("InstallmentsId");
 
-                    b.ToTable("Installments", (string)null);
+                    b.ToTable("Installments");
                 });
 
             modelBuilder.Entity("Etaa.Models.InvestmentType", b =>
@@ -550,7 +552,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("InvestmentTypeId");
 
-                    b.ToTable("InvestmentTypes", (string)null);
+                    b.ToTable("InvestmentTypes");
                 });
 
             modelBuilder.Entity("Etaa.Models.Job", b =>
@@ -573,7 +575,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("JobId");
 
-                    b.ToTable("Jobs", (string)null);
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Etaa.Models.Kinship", b =>
@@ -596,7 +598,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("KinshipId");
 
-                    b.ToTable("Kinships", (string)null);
+                    b.ToTable("Kinships");
                 });
 
             modelBuilder.Entity("Etaa.Models.Log", b =>
@@ -631,7 +633,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("Etaa.Models.MartialStatus", b =>
@@ -654,7 +656,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("MartialStatusId");
 
-                    b.ToTable("MartialStatuses", (string)null);
+                    b.ToTable("MartialStatuses");
                 });
 
             modelBuilder.Entity("Etaa.Models.Modules", b =>
@@ -674,7 +676,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ModuleId");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("Etaa.Models.NumberOfFunds", b =>
@@ -709,7 +711,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("NumberOfFundsId");
 
-                    b.ToTable("NumberOfFunds", (string)null);
+                    b.ToTable("NumberOfFunds");
                 });
 
             modelBuilder.Entity("Etaa.Models.PaymentVoucher", b =>
@@ -756,7 +758,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PaymentVouchers", (string)null);
+                    b.ToTable("PaymentVouchers");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectDomainTypes", b =>
@@ -779,7 +781,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ProjectDomainTypeId");
 
-                    b.ToTable("ProjectDomainTypes", (string)null);
+                    b.ToTable("ProjectDomainTypes");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectGroup", b =>
@@ -802,7 +804,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ProjectGroupId");
 
-                    b.ToTable("ProjectGroups", (string)null);
+                    b.ToTable("ProjectGroups");
                 });
 
             modelBuilder.Entity("Etaa.Models.Projects", b =>
@@ -875,7 +877,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectsAssets", b =>
@@ -907,7 +909,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ProjectTypesAssetsId");
 
-                    b.ToTable("ProjectsAssets", (string)null);
+                    b.ToTable("ProjectsAssets");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectSelectionReasons", b =>
@@ -930,7 +932,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ProjectSelectionReasonsId");
 
-                    b.ToTable("ProjectSelectionReasons", (string)null);
+                    b.ToTable("ProjectSelectionReasons");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectSocialBenefits", b =>
@@ -953,7 +955,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ProjectSocialBenefitsId");
 
-                    b.ToTable("ProjectSocialBenefits", (string)null);
+                    b.ToTable("ProjectSocialBenefits");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectsSelectionReasons", b =>
@@ -976,7 +978,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ProjectSelectionReasonsId");
 
-                    b.ToTable("ProjectsSelectionReasons", (string)null);
+                    b.ToTable("ProjectsSelectionReasons");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectsSocialBenefits", b =>
@@ -999,7 +1001,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ProjectSocialBenefitsId");
 
-                    b.ToTable("ProjectsSocialBenefits", (string)null);
+                    b.ToTable("ProjectsSocialBenefits");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectTypes", b =>
@@ -1032,7 +1034,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ProjectGroupId");
 
-                    b.ToTable("ProjectTypes", (string)null);
+                    b.ToTable("ProjectTypes");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectTypesAssets", b =>
@@ -1060,7 +1062,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ProjectTypeId");
 
-                    b.ToTable("ProjectTypesAssets", (string)null);
+                    b.ToTable("ProjectTypesAssets");
                 });
 
             modelBuilder.Entity("Etaa.Models.Religion", b =>
@@ -1083,7 +1085,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("ReligionId");
 
-                    b.ToTable("Religions", (string)null);
+                    b.ToTable("Religions");
                 });
 
             modelBuilder.Entity("Etaa.Models.State", b =>
@@ -1106,7 +1108,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("StateId");
 
-                    b.ToTable("States", (string)null);
+                    b.ToTable("States");
                 });
 
             modelBuilder.Entity("Etaa.Models.Users", b =>
@@ -1139,7 +1141,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

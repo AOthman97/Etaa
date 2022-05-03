@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Etaa.Models.ProjectTypesAssets>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" asp-route-ProjectTypeId="@ViewBag.ProjectTypeId">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameAr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NameEn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameAr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameEn)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProjectTypesAssetsId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectTypesAssetsId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectTypesAssetsId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

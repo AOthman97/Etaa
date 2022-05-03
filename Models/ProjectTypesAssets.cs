@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Etaa.Models
 {
@@ -11,11 +10,9 @@ namespace Etaa.Models
         [Display(Name = "Name(Ar)")]
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
-        public bool? IsCanceled { get; set; }
+        public bool IsCanceled { get; set; }
 
-        // Relationship between the project type assets and project type
+        // Relationship between the project type assets and project type, the relationship is represented in the main table
         public int ProjectTypeId { get; set; }
-        [ForeignKey("ProjectTypeId")]
-        public ProjectTypes? ProjectTypes { get; set; }
     }
 }
