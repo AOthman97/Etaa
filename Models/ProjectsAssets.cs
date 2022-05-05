@@ -9,7 +9,6 @@ namespace Etaa.Models
         public int ProjectsAssetsId { get; set; }
         public int Quantity { get; set; }
         public decimal Amount { get; set; }
-        public bool? IsCanceled { get; set; }
 
         // Relationship between the project type and project domain
         public int ProjectId { get; set; }

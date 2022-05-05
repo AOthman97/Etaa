@@ -21,8 +21,8 @@ namespace Etaa.Models
         // Relationship between the projects and families
         public int FamilyId { get; set; }
         public int NumberOfFundsId { get; set; }
-        [ForeignKey("NumberOfFundsId")]
-        public NumberOfFunds? NumberOfFunds { get; set; }
+        [NotMapped]
+        public virtual ICollection<NumberOfFunds>? NumberOfFunds { get; set; }
         // Relationship between the projects and families
         public int ProjectTypeId { get; set; }
         [ForeignKey("ProjectTypeId")]

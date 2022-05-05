@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Etaa.Models
 {
@@ -16,7 +17,7 @@ namespace Etaa.Models
         public decimal? MaxAmount { get; set; }
         public bool? IsCanceled { get; set; }
 
-        // Define the relationship with the projects model
-        public ICollection<Projects> Projects { get; set; }
+        [ForeignKey("NumberOfFundsId")]
+        public ICollection<Projects>? Projects { get; set; }
     }
 }
