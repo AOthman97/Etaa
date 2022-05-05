@@ -81,7 +81,11 @@ namespace Etaa.Models
         public int? ManagementUserId { get; set; }
         [ForeignKey("UserId")]
         public Users? Users { get; set; }
-        
+
+        // New 1-Many relationship with the Projects model
+        [ForeignKey("FamilyId")]
+        public ICollection<Projects>? Projects { get; set; }
+
         // Each state contains a number of cities, This property defines the relationship between them
         public ICollection<FamilyMember>? FamilyMembers;
     }

@@ -25,7 +25,7 @@ namespace Etaa.Data.Services
 
         public async Task<IEnumerable<Projects>> GetAllAsync()
         {
-            var Result = await _dbContext.Projects.OrderBy(Project => Project.NameAr).ToListAsync();
+            var Result = await _dbContext.Projects.ToListAsync();
             return Result;
         }
 

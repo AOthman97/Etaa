@@ -7,10 +7,6 @@ namespace Etaa.Models
     {
         [Key]
         public int ProjectId { get; set; }
-        [Required(ErrorMessage = "Name(Ar) is Required!")]
-        [Display(Name = "Name(Ar)")]
-        public string NameAr { get; set; }
-        public string? NameEn { get; set; }
         public string? SignatureofApplicantPath { get; set; }
         public string? ProjectActivity { get; set; }
         public string? ProjectPurpose { get; set; }
@@ -24,9 +20,6 @@ namespace Etaa.Models
 
         // Relationship between the projects and families
         public int FamilyId { get; set; }
-        [ForeignKey("FamilyId")]
-        public Family? Family { get; set; }
-        // Relationship between the projects and families
         public int NumberOfFundsId { get; set; }
         [ForeignKey("NumberOfFundsId")]
         public NumberOfFunds? NumberOfFunds { get; set; }
@@ -40,7 +33,6 @@ namespace Etaa.Models
         [ForeignKey("UserId")]
         public Users? Users { get; set; }
 
-        public ICollection<Family> Families { get; set; }
         public ICollection<ProjectsAssets> ProjectsAssets { get; set; }
         public ICollection<ProjectsSelectionReasons> ProjectsSelectionReasons { get; set; }
         public ICollection<ProjectsSocialBenefits> ProjectsSocialBenefits { get; set; }
