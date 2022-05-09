@@ -1,0 +1,59 @@
+﻿@model Etaa.Models.FinancialStatement
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>FinancialStatement</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FinancialStatementId" />
+            <div class="form-group">
+                <label asp-for="DocumentPath" class="control-label"></label>
+                <input asp-for="DocumentPath" class="form-control" />
+                <span asp-validation-for="DocumentPath" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsApprovedByManagement" /> @Html.DisplayNameFor(model => model.IsApprovedByManagement)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsCanceled" class="control-label"></label>
+                <input asp-for="IsCanceled" class="form-control" />
+                <span asp-validation-for="IsCanceled" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManagementUserId" class="control-label"></label>
+                <input asp-for="ManagementUserId" class="form-control" />
+                <span asp-validation-for="ManagementUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

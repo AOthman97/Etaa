@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Etaa.Models.FinancialStatement>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DocumentPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsApprovedByManagement)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCanceled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagementUserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DocumentPath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsApprovedByManagement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCanceled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Projects.ProjectId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManagementUserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Users.NameAr)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FinancialStatementId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FinancialStatementId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FinancialStatementId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

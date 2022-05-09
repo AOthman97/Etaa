@@ -1,0 +1,54 @@
+﻿@model Etaa.Models.FinancialStatement
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>FinancialStatement</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DocumentPath)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DocumentPath)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsApprovedByManagement)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsApprovedByManagement)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsCanceled)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsCanceled)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Projects)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Projects.ProjectId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ManagementUserId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ManagementUserId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Users)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Users.NameAr)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.FinancialStatementId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
