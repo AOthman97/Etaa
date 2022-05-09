@@ -4,6 +4,7 @@ using Etaa.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Etaa.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220508201309_RemoveRelationshipBetweenUsersAndProjects")]
+    partial class RemoveRelationshipBetweenUsersAndProjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -829,12 +831,6 @@ namespace Etaa.Data.Migrations
                     b.Property<decimal?>("MonthlyInstallmentAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("NameAr")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEn")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("NumberOfFundsId")
                         .HasColumnType("int");
 
@@ -856,6 +852,9 @@ namespace Etaa.Data.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UsersUserId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("WaiverPeriod")
                         .HasColumnType("datetime2");
 
@@ -866,6 +865,8 @@ namespace Etaa.Data.Migrations
                     b.HasIndex("NumberOfFundsId");
 
                     b.HasIndex("ProjectTypeId");
+
+                    b.HasIndex("UsersUserId");
 
                     b.ToTable("Projects");
                 });
@@ -1587,6 +1588,12 @@ namespace Etaa.Data.Migrations
                         .HasForeignKey("ProjectTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Etaa.Models.Users", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersUserId");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Etaa.Models.ProjectsAssets", b =>

@@ -26,5 +26,7 @@ namespace Etaa.Models
         // a foreign key in each ProjectTypesAsset after we've created this field in the ProjectTypesAssets model
         [ForeignKey("ProjectTypeId")]
         public ICollection<ProjectTypesAssets>? ProjectTypesAssets { get; set; }
+        [ForeignKey("ProjectTypeId")]
+        public ICollection<Projects>? Projects { get; set; }
     }
 }

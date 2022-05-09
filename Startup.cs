@@ -23,6 +23,8 @@ namespace MoviesStore
             services.AddScoped<IFamiliesService, FamiliesService>();
 
             services.AddControllersWithViews();
+
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -41,6 +43,8 @@ namespace MoviesStore
             app.UseStaticFiles();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

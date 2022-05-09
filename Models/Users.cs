@@ -15,10 +15,10 @@ namespace Etaa.Models
         public string? ProfileImagePath { get; set; }
         public bool? IsDisabled { get; set; }
 
-        public ICollection<Family>? Families;
-        public ICollection<Projects>? Projects;
-        public ICollection<FinancialStatement>? FinancialStatements;
-        public ICollection<PaymentVoucher>? PaymentVouchers;
-        public ICollection<Clearance>? Clearances;
+        //public ICollection<Family>? Families;
+        //public ICollection<Projects>? Projects;
+        //public ICollection<FinancialStatement>? FinancialStatements;
+        //public ICollection<PaymentVoucher>? PaymentVouchers;
+        //public ICollection<Clearance>? Clearances;
     }
 }

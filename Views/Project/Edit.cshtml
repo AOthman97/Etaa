@@ -1,0 +1,104 @@
+﻿@model Etaa.Models.Projects
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Projects</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProjectId" />
+            <div class="form-group">
+                <label asp-for="SignatureofApplicantPath" class="control-label"></label>
+                <input asp-for="SignatureofApplicantPath" class="form-control" />
+                <span asp-validation-for="SignatureofApplicantPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectActivity" class="control-label"></label>
+                <input asp-for="ProjectActivity" class="form-control" />
+                <span asp-validation-for="ProjectActivity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectPurpose" class="control-label"></label>
+                <input asp-for="ProjectPurpose" class="form-control" />
+                <span asp-validation-for="ProjectPurpose" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Capital" class="control-label"></label>
+                <input asp-for="Capital" class="form-control" />
+                <span asp-validation-for="Capital" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MonthlyInstallmentAmount" class="control-label"></label>
+                <input asp-for="MonthlyInstallmentAmount" class="form-control" />
+                <span asp-validation-for="MonthlyInstallmentAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfInstallments" class="control-label"></label>
+                <input asp-for="NumberOfInstallments" class="form-control" />
+                <span asp-validation-for="NumberOfInstallments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WaiverPeriod" class="control-label"></label>
+                <input asp-for="WaiverPeriod" class="form-control" />
+                <span asp-validation-for="WaiverPeriod" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsApprovedByManagement" /> @Html.DisplayNameFor(model => model.IsApprovedByManagement)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsCanceled" /> @Html.DisplayNameFor(model => model.IsCanceled)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="FamilyId" class="control-label"></label>
+                <select asp-for="FamilyId" class="form-control" asp-items="ViewBag.FamilyId"></select>
+                <span asp-validation-for="FamilyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfFundsId" class="control-label"></label>
+                <select asp-for="NumberOfFundsId" class="form-control" asp-items="ViewBag.NumberOfFundsId"></select>
+                <span asp-validation-for="NumberOfFundsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectTypeId" class="control-label"></label>
+                <select asp-for="ProjectTypeId" class="form-control" asp-items="ViewBag.ProjectTypeId"></select>
+                <span asp-validation-for="ProjectTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManagementUserId" class="control-label"></label>
+                <input asp-for="ManagementUserId" class="form-control" />
+                <span asp-validation-for="ManagementUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

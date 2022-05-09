@@ -19,6 +19,10 @@ builder.Services.AddScoped<IFamiliesService, FamiliesService>();
 builder.Services.AddScoped<IFamilyMembersService, FamilyMembersService>();
 builder.Services.AddScoped<IContributorsService, ContributorsService>();
 
+builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
+builder.Services.AddSession();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,6 +41,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
