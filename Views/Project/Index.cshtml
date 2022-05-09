@@ -13,7 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SignatureofApplicantPath)
+                @Html.DisplayNameFor(model => model.NameAr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NameEn)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProjectActivity)
@@ -36,15 +39,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.WaiverPeriod)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsApprovedByManagement)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ManagementUserId)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -52,7 +46,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.SignatureofApplicantPath)
+                @Html.DisplayFor(modelItem => item.NameAr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameEn)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectActivity)
@@ -74,15 +71,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.WaiverPeriod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsApprovedByManagement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ManagementUserId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |

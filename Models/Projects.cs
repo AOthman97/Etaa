@@ -14,12 +14,17 @@ namespace Etaa.Models
         public string? NameAr { get; set; }
         public string? NameEn { get; set; }
         public string? SignatureofApplicantPath { get; set; }
+        [Display(Name = "Project Activity")]
         public string? ProjectActivity { get; set; }
+        [Display(Name = "Project Purpose")]
         public string? ProjectPurpose { get; set; }
         public decimal? Capital { get; set; }
+        [Display(Name = "Monthly Installment Amount")]
         public decimal? MonthlyInstallmentAmount { get; set; }
+        [Display(Name = "Number of Installments")]
         public int? NumberOfInstallments { get; set; }
         public DateTime? Date { get; set; }
+        [Display(Name = "Waifer Period")]
         public DateTime? WaiverPeriod { get; set; }
         public bool IsApprovedByManagement { get; set; }
         public bool IsCanceled { get; set; }
