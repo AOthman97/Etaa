@@ -16,19 +16,7 @@
                 @Html.DisplayNameFor(model => model.DocumentPath)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsApprovedByManagement)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Projects)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ManagementUserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Users)
             </th>
             <th></th>
         </tr>
@@ -40,19 +28,7 @@
                 @Html.DisplayFor(modelItem => item.DocumentPath)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsApprovedByManagement)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Projects.ProjectId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ManagementUserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Users.NameAr)
+                @Html.DisplayFor(modelItem => item.Projects.NameAr)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FinancialStatementId">Edit</a> |

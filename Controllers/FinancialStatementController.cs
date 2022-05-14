@@ -10,10 +10,12 @@ namespace Etaa.Controllers
     public class FinancialStatementController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IWebHostEnvironment hostingEnv;
 
-        public FinancialStatementController(ApplicationDbContext context)
+        public FinancialStatementController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            hostingEnv = webHostEnvironment;
         }
 
         // GET: FinancialStatement
@@ -54,19 +56,40 @@ namespace Etaa.Controllers
         // POST: FinancialStatement/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("FinancialStatementId,DocumentPath,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] FinancialStatement financialStatement)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(financialStatement);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
+        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+        //    return View(financialStatement);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FinancialStatementId,DocumentPath,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] FinancialStatement financialStatement)
+        public async Task<IActionResult> Create(FinancialStatement financialStatement)
         {
-            if (ModelState.IsValid)
+            try
             {
+                financialStatement.UserId = 1;
+                var filePath = HttpContext.Session.GetString("filePath");
+                HttpContext.Session.Clear();
+                financialStatement.DocumentPath = filePath;
                 _context.Add(financialStatement);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
-            return View(financialStatement);
+            catch (Exception ex)
+            {
+
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: FinancialStatement/Edit/5
@@ -158,6 +181,38 @@ namespace Etaa.Controllers
         private bool FinancialStatementExists(int id)
         {
             return _context.FinancialStatements.Any(e => e.FinancialStatementId == id);
+        }
+
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            var FileDic = "Temp";
+            string SubFileDic = Guid.NewGuid().ToString();
+            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+            {
+                SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+            }
+            else
+            {
+                HttpContext.Session.SetString("SubFolderName", SubFileDic);
+            }
+
+            string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+
+            if (!Directory.Exists(FilePath))
+                Directory.CreateDirectory(FilePath);
+            string SubFilePath = Path.Combine(FilePath, SubFileDic);
+            if (!Directory.Exists(SubFilePath))
+                Directory.CreateDirectory(SubFilePath);
+            var fileName = file.FileName;
+
+            string filePath = Path.Combine(SubFilePath, fileName);
+            HttpContext.Session.SetString("filePath", filePath);
+            using (FileStream fs = System.IO.File.Create(filePath))
+            {
+                file.CopyTo(fs);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

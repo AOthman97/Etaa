@@ -1,4 +1,6 @@
 ﻿@model Etaa.Models.FinancialStatement
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
 
 @{
     ViewData["Title"] = "Create";
@@ -10,38 +12,34 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DocumentPath" class="control-label"></label>
-                <input asp-for="DocumentPath" class="form-control" />
-                <span asp-validation-for="DocumentPath" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsApprovedByManagement" /> @Html.DisplayNameFor(model => model.IsApprovedByManagement)
-                </label>
+                <label class="control-label">Select Project</label>
+                <input id="txtProject" class="form-control" />
+                <input id="hdnProjectId" type="hidden" name="ProjectId" />
             </div>
             <div class="form-group">
-                <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
-                <span asp-validation-for="IsCanceled" class="text-danger"></span>
+                <label>Attachments:</label>
+                <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="col-md-12 border border-info" id="dropzone">
+                            <div class="dropzone" style="border:none" action="/FinancialStatement/Upload" id="uploader">
+                                <div class="dz-message needsclick">
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                    <div class="ms-4">
+                                        <h3 class="fs-5 fw-bolder text-gray-900 mb-1">Drop files here or click to upload</h3>
+                                        <span class="fs-7 fw-bold text-gray-400">Upload up to 10 files</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ManagementUserId" class="control-label"></label>
-                <input asp-for="ManagementUserId" class="form-control" />
-                <span asp-validation-for="ManagementUserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                @*<input type="submit" value="Create" class="btn btn-primary" />*@
+                <a class="btn btn-primary" onclick="saveData()">Save</a>
             </div>
         </form>
     </div>
@@ -52,5 +50,65 @@
 </div>
 
 @section Scripts {
+    <script>
+        function saveData(){
+            let projectId = $("#hdnProjectId").val();
+
+            let financialStatementItem = {
+                "ProjectId": projectId
+            }
+
+            $.ajax({
+                url: "/FinancialStatement/Create",
+                type: 'Post',
+                data: {
+                    financialStatement: financialStatementItem
+                },
+                headers:
+                {
+                    "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    alert("Success");
+                    var res = result;
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        $(function ()
+        {
+            // Autocomplete for getting the Project
+                $("#txtProject").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Project/AutoComplete/',
+                        data: { "prefix": request.term },
+                        type: "POST",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#hdnProjectId").val(i.item.val);
+                    // Get it's value: $("#hdnFamilyId").val();
+                    //$("#SelectedFamilyId").text = $("#hdnFamilyId").val;
+                },
+                minLength: 1
+            });
+        });
+    </script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

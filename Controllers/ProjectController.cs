@@ -22,6 +22,21 @@ namespace Etaa.Controllers
             hostingEnv = webHostEnvironment;
         }
 
+        // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
+        [HttpPost]
+        public JsonResult AutoComplete(string prefix)
+        {
+            var Project = (from project in this._context.Projects
+                            where project.NameEn.StartsWith(prefix)
+                            select new
+                            {
+                                label = project.NameEn,
+                                val = project.ProjectId
+                            }).ToList();
+
+            return Json(Project);
+        }
+
         // GET: Project
         public async Task<IActionResult> Index()
         {
@@ -110,6 +125,7 @@ namespace Etaa.Controllers
             try
             {
                 var filePath = HttpContext.Session.GetString("filePath");
+                HttpContext.Session.Clear();
                 project.SignatureofApplicantPath = filePath;
                 _context.Add(project);
                 await _context.SaveChangesAsync();
