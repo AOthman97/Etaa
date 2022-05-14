@@ -7,7 +7,7 @@ namespace Etaa.Models
     {
         [Key]
         public int PaymentVoucherId { get; set; }
-        public string PaymentDocumentPath { get; set; }
+        public string? PaymentDocumentPath { get; set; }
         public DateTime PaymentDate { get; set; }
         public decimal PaymentAmount { get; set; }
         public bool? IsApprovedByManagement { get; set; }
