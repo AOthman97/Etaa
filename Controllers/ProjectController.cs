@@ -27,12 +27,12 @@ namespace Etaa.Controllers
         public JsonResult AutoComplete(string prefix)
         {
             var Project = (from project in this._context.Projects
-                            where project.NameEn.StartsWith(prefix)
-                            select new
-                            {
-                                label = project.NameEn,
-                                val = project.ProjectId
-                            }).ToList();
+                           where project.NameEn.StartsWith(prefix)
+                           select new
+                           {
+                               label = project.NameEn,
+                               val = project.ProjectId
+                           }).ToList();
 
             return Json(Project);
         }

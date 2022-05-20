@@ -33,7 +33,6 @@ namespace Etaa.Controllers
         [HttpPost]  
         public JsonResult AutoComplete(string prefix)
         {
-            // maxInstallmentsNo = Payments.DefaultIfEmpty().Max(InstallmentNo => InstallmentNo.InstallmentsId)
             var Project = (from project in _context.Projects
                            where project.NameEn.StartsWith(prefix)
                            select new
@@ -41,35 +40,12 @@ namespace Etaa.Controllers
                                label = project.NameEn,
                                val = project.ProjectId
                            }).ToListAsync();
-
             return Json(Project);
         }
 
         [HttpPost]
         public JsonResult GetMaxInstallmentNo(int projectId)
         {
-            //var MaxInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
-            //                        where paymentVoucher.ProjectId.Equals(projectId)
-            //                        let maxInstallmentsNo = _context.PaymentVouchers.DefaultIfEmpty().Where(Payment => Payment.ProjectId == projectId).Max(InstallmentNo => InstallmentNo.InstallmentsId)
-            //                        select new
-            //                        {
-            //                            val = maxInstallmentsNo
-            //                        }).ToListAsync();
-
-
-            //int InstallmentsNo = 0;
-            
-            //if(MaxInstallmentNo.Result.Count == 0)
-            //{
-            //    InstallmentsNo = 1;
-            //}
-            //else
-            //{
-            //    InstallmentsNo = MaxInstallmentNo.Result[0].val;
-            //}
-
-            //var InstallmentsNo = _context.PaymentVouchers.Where(Payment => Payment.ProjectId == projectId).Max(InstallmentNo => InstallmentNo.InstallmentsId);
-
             var InstallmentsNo = (from paymentVoucher in _context.PaymentVouchers
                                                 where paymentVoucher.ProjectId == projectId
                                                 select (int?)paymentVoucher.InstallmentsId).Max();
@@ -263,7 +239,7 @@ namespace Etaa.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return RedirectToAction(nameof(Index));
         }
 
