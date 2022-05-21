@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Newtonsoft.Json;
 
 namespace Etaa.Controllers
 {
@@ -44,11 +45,106 @@ namespace Etaa.Controllers
         }
 
         [HttpPost]
+        public IActionResult GetAllInstallments(int ProjectId)
+        {
+            // Variables for the datatable config
+            //int totalRecord = 0;
+            //int filterRecord = 0;
+            //var draw = Request.Form["draw"].FirstOrDefault();
+            //var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+            //var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            //var searchValue = Request.Form["search[value]"].FirstOrDefault();
+            //int pageSize = Convert.ToInt32(Request.Form["length"].FirstOrDefault() ?? "0");
+            //int skip = Convert.ToInt32(Request.Form["start"].FirstOrDefault() ?? "0");
+
+            List<JsonResult> data = new List<JsonResult>();
+            //List<string> data = new List<string>();
+            JsonResult result;
+
+            var ProjectNumberOfInstallments = (from project in _context.Projects
+                                               where project.ProjectId == ProjectId
+                                               select (int)project.NumberOfInstallments).Single();
+            List<string> Installments = new List<string>();
+
+            for(int Increment = 1; Increment <= ProjectNumberOfInstallments; Increment++)
+            {
+                var InstallmentName = (from Installment in _context.Installments
+                                       where Installment.InstallmentNumber == Increment
+                                       select (string)Installment.NameAr).Single();
+
+                Installments.Add(InstallmentName);
+
+                DateTime DueDate = DateTime.Now;
+
+                if(Increment == 1)
+                {
+                    DueDate = (from project in _context.Projects
+                               where project.ProjectId == ProjectId
+                               select (DateTime)project.FirstInstallmentDueDate).Single();
+                }
+                else
+                {
+                    DueDate = (from project in _context.Projects
+                               where project.ProjectId == ProjectId
+                               select (DateTime)project.FirstInstallmentDueDate).Single();
+                    DueDate = DueDate.AddMonths(Increment - 1);
+                }
+                Installments.Add(DueDate.ToShortDateString());
+
+                var MonthlyInstallmentAmount = (from project in _context.Projects
+                                                where project.ProjectId == ProjectId
+                                                select (decimal)project.MonthlyInstallmentAmount).Single();
+
+                Installments.Add(MonthlyInstallmentAmount.ToString());
+
+                decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
+                                                         where paymentVoucher.ProjectId == ProjectId &&
+                                                         paymentVoucher.InstallmentsId == Increment
+                                                         select (decimal)paymentVoucher.PaymentAmount).Sum();
+
+                Installments.Add(SumPaidAmountForInstallmentNo.ToString());
+
+                var RemainAmount = MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo;
+
+                Installments.Add(RemainAmount.ToString());
+
+                result = this.Json(new
+                {
+                    InstallmentName = InstallmentName,
+                    dueDate = DueDate.ToShortDateString(),
+                    monthlyInstallmentAmount = MonthlyInstallmentAmount.ToString(),
+                    sumPaidAmountForInstallmentNo = SumPaidAmountForInstallmentNo.ToString(),
+                    remainAmount = RemainAmount.ToString()
+                });
+                data.Add(result);
+            }
+
+            //get total count of data in table
+            //totalRecord = payments.Count();
+            //// get total count of records after search
+            //filterRecord = payments.Count();
+
+            // return Json(Installments);
+            var returnObj = new
+            {
+                //recordsTotal = totalRecord,
+                //recordsFiltered = filterRecord,
+                data = data
+            };
+
+            //return JsonConvert.SerializeObject(data.ToString());
+            return Json(data.ToList());
+
+            //return Json(returnObj);
+            //return Ok(returnObj);
+        }
+
+        [HttpPost]
         public JsonResult GetMaxInstallmentNo(int projectId)
         {
             var InstallmentsNo = (from paymentVoucher in _context.PaymentVouchers
-                                                where paymentVoucher.ProjectId == projectId
-                                                select (int?)paymentVoucher.InstallmentsId).Max();
+                                  where paymentVoucher.ProjectId == projectId
+                                  select (int?)paymentVoucher.InstallmentsId).Max();
 
             // Check if it's the first installment or not, If it's the first just return 1 meaning it's the first installment.
             // If it's not null then check whether to get just the max or max + 1 depending on if the current installment has
@@ -69,9 +165,9 @@ namespace Etaa.Controllers
                                                     select (decimal)project.MonthlyInstallmentAmount).Single();
 
                 decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
-                                                    where paymentVoucher.ProjectId == projectId && 
-                                                    paymentVoucher.InstallmentsId == InstallmentsNo
-                                                    select (decimal)paymentVoucher.PaymentAmount).Sum();
+                                                         where paymentVoucher.ProjectId == projectId &&
+                                                         paymentVoucher.InstallmentsId == InstallmentsNo
+                                                         select (decimal)paymentVoucher.PaymentAmount).Sum();
 
                 //var SumPaidAmountForInstallmentNo = _context.PaymentVouchers.Where(Payment => Payment.ProjectId == projectId).SumAsync(p => p.PaymentAmount);
 
