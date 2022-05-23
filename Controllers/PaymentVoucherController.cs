@@ -26,218 +26,264 @@ namespace Etaa.Controllers
         // Get Installments select list
         public async Task<JsonResult> GetInstallments()
         {
-            var Result = new SelectList(await _context.Installments.ToListAsync(), "InstallmentsId", "NameAr");
-            return Json(Result);
+            try
+            {
+                var Result = new SelectList(await _context.Installments.ToListAsync(), "InstallmentsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
         [HttpPost]  
         public JsonResult AutoComplete(string prefix)
         {
-            var Project = (from project in _context.Projects
-                           where project.NameEn.StartsWith(prefix)
-                           select new
-                           {
-                               label = project.NameEn,
-                               val = project.ProjectId
-                           }).ToListAsync();
-            return Json(Project);
+            try
+            {
+                var Project = (from project in _context.Projects
+                               where project.NameEn.StartsWith(prefix)
+                               select new
+                               {
+                                   label = project.NameEn,
+                                   val = project.ProjectId
+                               }).ToListAsync();
+                return Json(Project);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         [HttpPost]
         public IActionResult GetAllInstallments(int ProjectId)
         {
-            // Variables for the datatable config
-            //int totalRecord = 0;
-            //int filterRecord = 0;
-            //var draw = Request.Form["draw"].FirstOrDefault();
-            //var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-            //var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-            //var searchValue = Request.Form["search[value]"].FirstOrDefault();
-            //int pageSize = Convert.ToInt32(Request.Form["length"].FirstOrDefault() ?? "0");
-            //int skip = Convert.ToInt32(Request.Form["start"].FirstOrDefault() ?? "0");
-
-            List<JsonResult> data = new List<JsonResult>();
-            //List<string> data = new List<string>();
-            JsonResult result;
-
-            var ProjectNumberOfInstallments = (from project in _context.Projects
-                                               where project.ProjectId == ProjectId
-                                               select (int)project.NumberOfInstallments).Single();
-            List<string> Installments = new List<string>();
-
-            for(int Increment = 1; Increment <= ProjectNumberOfInstallments; Increment++)
+            try
             {
-                var InstallmentName = (from Installment in _context.Installments
-                                       where Installment.InstallmentNumber == Increment
-                                       select (string)Installment.NameAr).Single();
+                // Variables for the datatable config
+                //int totalRecord = 0;
+                //int filterRecord = 0;
+                //var draw = Request.Form["draw"].FirstOrDefault();
+                //var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                //var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                //var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                //int pageSize = Convert.ToInt32(Request.Form["length"].FirstOrDefault() ?? "0");
+                //int skip = Convert.ToInt32(Request.Form["start"].FirstOrDefault() ?? "0");
 
-                Installments.Add(InstallmentName);
+                List<JsonResult> data = new List<JsonResult>();
+                //List<string> data = new List<string>();
+                JsonResult result;
 
-                DateTime DueDate = DateTime.Now;
+                var ProjectNumberOfInstallments = (from project in _context.Projects
+                                                   where project.ProjectId == ProjectId
+                                                   select (int)project.NumberOfInstallments).Single();
+                List<string> Installments = new List<string>();
 
-                if(Increment == 1)
+                for (int Increment = 1; Increment <= ProjectNumberOfInstallments; Increment++)
                 {
-                    DueDate = (from project in _context.Projects
-                               where project.ProjectId == ProjectId
-                               select (DateTime)project.FirstInstallmentDueDate).Single();
+                    var InstallmentName = (from Installment in _context.Installments
+                                           where Installment.InstallmentNumber == Increment
+                                           select (string)Installment.NameAr).Single();
+
+                    Installments.Add(InstallmentName);
+
+                    DateTime DueDate = DateTime.Now;
+
+                    if (Increment == 1)
+                    {
+                        DueDate = (from project in _context.Projects
+                                   where project.ProjectId == ProjectId
+                                   select (DateTime)project.FirstInstallmentDueDate).Single();
+                    }
+                    else
+                    {
+                        DueDate = (from project in _context.Projects
+                                   where project.ProjectId == ProjectId
+                                   select (DateTime)project.FirstInstallmentDueDate).Single();
+                        DueDate = DueDate.AddMonths(Increment - 1);
+                    }
+                    Installments.Add(DueDate.ToShortDateString());
+
+                    var MonthlyInstallmentAmount = (from project in _context.Projects
+                                                    where project.ProjectId == ProjectId
+                                                    select (decimal)project.MonthlyInstallmentAmount).Single();
+
+                    Installments.Add(MonthlyInstallmentAmount.ToString());
+
+                    decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
+                                                             where paymentVoucher.ProjectId == ProjectId &&
+                                                             paymentVoucher.InstallmentsId == Increment
+                                                             select (decimal)paymentVoucher.PaymentAmount).Sum();
+
+                    Installments.Add(SumPaidAmountForInstallmentNo.ToString());
+
+                    var RemainAmount = MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo;
+
+                    Installments.Add(RemainAmount.ToString());
+
+                    // Coloring for the table
+                    string ColorClass = "";
+                    // Firstly if the Installment due date is not due yet
+                    int CompareDates = DateTime.Compare(DateTime.Now.Date, DueDate.Date);
+                    if (CompareDates < 0)
+                    {
+                        ColorClass = "text-secondary";
+                    }
+                    else if (CompareDates == 0 || CompareDates > 1)
+                    {
+                        ColorClass = "text-danger";
+                    }
+
+                    if (RemainAmount > 0 && RemainAmount < MonthlyInstallmentAmount)
+                    {
+                        ColorClass = "text-warning";
+                    }
+                    else if (RemainAmount == 0)
+                    {
+                        ColorClass = "text-success";
+                    }
+
+                    result = this.Json(new
+                    {
+                        InstallmentName = InstallmentName,
+                        dueDate = DueDate.ToShortDateString(),
+                        monthlyInstallmentAmount = MonthlyInstallmentAmount.ToString(),
+                        sumPaidAmountForInstallmentNo = SumPaidAmountForInstallmentNo.ToString(),
+                        remainAmount = RemainAmount.ToString(),
+                        colorClass = ColorClass
+                    });
+                    data.Add(result);
                 }
-                else
+
+                //get total count of data in table
+                //totalRecord = payments.Count();
+                //// get total count of records after search
+                //filterRecord = payments.Count();
+
+                // return Json(Installments);
+                var returnObj = new
                 {
-                    DueDate = (from project in _context.Projects
-                               where project.ProjectId == ProjectId
-                               select (DateTime)project.FirstInstallmentDueDate).Single();
-                    DueDate = DueDate.AddMonths(Increment - 1);
-                }
-                Installments.Add(DueDate.ToShortDateString());
+                    //recordsTotal = totalRecord,
+                    //recordsFiltered = filterRecord,
+                    data = data
+                };
 
-                var MonthlyInstallmentAmount = (from project in _context.Projects
-                                                where project.ProjectId == ProjectId
-                                                select (decimal)project.MonthlyInstallmentAmount).Single();
-
-                Installments.Add(MonthlyInstallmentAmount.ToString());
-
-                decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
-                                                         where paymentVoucher.ProjectId == ProjectId &&
-                                                         paymentVoucher.InstallmentsId == Increment
-                                                         select (decimal)paymentVoucher.PaymentAmount).Sum();
-
-                Installments.Add(SumPaidAmountForInstallmentNo.ToString());
-
-                var RemainAmount = MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo;
-
-                Installments.Add(RemainAmount.ToString());
-
-                // Coloring for the table
-                string ColorClass = "";
-                // Firstly if the Installment due date is not due yet
-                int CompareDates = DateTime.Compare(DateTime.Now.Date, DueDate.Date);
-                if(CompareDates < 0)
-                {
-                    ColorClass = "text-secondary";
-                }
-                else if (CompareDates == 0 || CompareDates > 1)
-                {
-                    ColorClass = "text-danger";
-                }
-
-                if (RemainAmount > 0 && RemainAmount < MonthlyInstallmentAmount)
-                {
-                    ColorClass = "text-warning";
-                }
-                else if (RemainAmount == 0)
-                {
-                    ColorClass = "text-success";
-                }
-
-                result = this.Json(new
-                {
-                    InstallmentName = InstallmentName,
-                    dueDate = DueDate.ToShortDateString(),
-                    monthlyInstallmentAmount = MonthlyInstallmentAmount.ToString(),
-                    sumPaidAmountForInstallmentNo = SumPaidAmountForInstallmentNo.ToString(),
-                    remainAmount = RemainAmount.ToString(),
-                    colorClass = ColorClass
-                });
-                data.Add(result);
+                //return JsonConvert.SerializeObject(data.ToString());
+                return Json(data.ToList());
             }
-
-            //get total count of data in table
-            //totalRecord = payments.Count();
-            //// get total count of records after search
-            //filterRecord = payments.Count();
-
-            // return Json(Installments);
-            var returnObj = new
+            catch (Exception ex)
             {
-                //recordsTotal = totalRecord,
-                //recordsFiltered = filterRecord,
-                data = data
-            };
-
-            //return JsonConvert.SerializeObject(data.ToString());
-            return Json(data.ToList());
-
-            //return Json(returnObj);
-            //return Ok(returnObj);
+                return View("Error");
+            }
         }
 
         [HttpPost]
         public JsonResult GetMaxInstallmentNo(int projectId)
         {
-            var InstallmentsNo = (from paymentVoucher in _context.PaymentVouchers
-                                  where paymentVoucher.ProjectId == projectId
-                                  select (int?)paymentVoucher.InstallmentsId).Max();
-
-            // Check if it's the first installment or not, If it's the first just return 1 meaning it's the first installment.
-            // If it's not null then check whether to get just the max or max + 1 depending on if the current installment has
-            // been fully paid and that would be managed through getting the monthly installment amount from the Project or
-            // get the Capital and divide it on the no of installments and check if the sum of PaidAmount in the PaymentVoucher
-            // for this project equals the monthly amount then return max + 1, else return max meaning there's still a remain
-            // unpaid amount in this installment
-            if (InstallmentsNo.Equals(null))
+            try
             {
-                InstallmentsNo = 1;
-            }
-            else
-            {
-                //decimal MonthlyInstallmentAmount = _context.Projects.Where(p => p.ProjectId == projectId).Single(p => p.MonthlyInstallmentAmount);
+                var InstallmentsNo = (from paymentVoucher in _context.PaymentVouchers
+                                      where paymentVoucher.ProjectId == projectId
+                                      select (int?)paymentVoucher.InstallmentsId).Max();
 
-                decimal MonthlyInstallmentAmount = (from project in _context.Projects
-                                                    where project.ProjectId == projectId
-                                                    select (decimal)project.MonthlyInstallmentAmount).Single();
-
-                decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
-                                                         where paymentVoucher.ProjectId == projectId &&
-                                                         paymentVoucher.InstallmentsId == InstallmentsNo
-                                                         select (decimal)paymentVoucher.PaymentAmount).Sum();
-
-                //var SumPaidAmountForInstallmentNo = _context.PaymentVouchers.Where(Payment => Payment.ProjectId == projectId).SumAsync(p => p.PaymentAmount);
-
-                if (MonthlyInstallmentAmount == SumPaidAmountForInstallmentNo)
+                // Check if it's the first installment or not, If it's the first just return 1 meaning it's the first installment.
+                // If it's not null then check whether to get just the max or max + 1 depending on if the current installment has
+                // been fully paid and that would be managed through getting the monthly installment amount from the Project or
+                // get the Capital and divide it on the no of installments and check if the sum of PaidAmount in the PaymentVoucher
+                // for this project equals the monthly amount then return max + 1, else return max meaning there's still a remain
+                // unpaid amount in this installment
+                if (InstallmentsNo.Equals(null))
                 {
-                    InstallmentsNo++;
+                    InstallmentsNo = 1;
                 }
-            }
+                else
+                {
+                    //decimal MonthlyInstallmentAmount = _context.Projects.Where(p => p.ProjectId == projectId).Single(p => p.MonthlyInstallmentAmount);
 
-            return Json(InstallmentsNo);
+                    decimal MonthlyInstallmentAmount = (from project in _context.Projects
+                                                        where project.ProjectId == projectId
+                                                        select (decimal)project.MonthlyInstallmentAmount).Single();
+
+                    decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
+                                                             where paymentVoucher.ProjectId == projectId &&
+                                                             paymentVoucher.InstallmentsId == InstallmentsNo
+                                                             select (decimal)paymentVoucher.PaymentAmount).Sum();
+
+                    //var SumPaidAmountForInstallmentNo = _context.PaymentVouchers.Where(Payment => Payment.ProjectId == projectId).SumAsync(p => p.PaymentAmount);
+
+                    if (MonthlyInstallmentAmount == SumPaidAmountForInstallmentNo)
+                    {
+                        InstallmentsNo++;
+                    }
+                }
+
+                return Json(InstallmentsNo);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         // GET: PaymentVoucher
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.PaymentVouchers.Include(p => p.Installments).Include(p => p.Projects).Include(p => p.Users);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var applicationDbContext = _context.PaymentVouchers.Include(p => p.Installments).Include(p => p.Projects).Include(p => p.Users);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: PaymentVoucher/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var paymentVoucher = await _context.PaymentVouchers
-                .Include(p => p.Installments)
-                .Include(p => p.Projects)
-                .Include(p => p.Users)
-                .FirstOrDefaultAsync(m => m.PaymentVoucherId == id);
-            if (paymentVoucher == null)
+                var paymentVoucher = await _context.PaymentVouchers
+                    .Include(p => p.Installments)
+                    .Include(p => p.Projects)
+                    .Include(p => p.Users)
+                    .FirstOrDefaultAsync(m => m.PaymentVoucherId == id);
+                if (paymentVoucher == null)
+                {
+                    return NotFound();
+                }
+
+                return View(paymentVoucher);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(paymentVoucher);
         }
 
         // GET: PaymentVoucher/Create
         public IActionResult Create()
         {
-            ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
-            return View();
+            try
+            {
+                ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr");
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: PaymentVoucher/Create
@@ -356,7 +402,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return RedirectToAction(nameof(Index));
+                return View("Error");
             }
 
             return RedirectToAction(nameof(Index));
@@ -365,20 +411,27 @@ namespace Etaa.Controllers
         // GET: PaymentVoucher/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
-            if (paymentVoucher == null)
-            {
-                return NotFound();
+                var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
+                if (paymentVoucher == null)
+                {
+                    return NotFound();
+                }
+                ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+                return View(paymentVoucher);
             }
-            ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
-            return View(paymentVoucher);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: PaymentVoucher/Edit/5
@@ -388,56 +441,70 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentVoucherId,PaymentDocumentPath,PaymentDate,PaymentAmount,IsApprovedByManagement,IsCanceled,ProjectId,InstallmentsId,UserId,ManagementUserId")] PaymentVoucher paymentVoucher)
         {
-            if (id != paymentVoucher.PaymentVoucherId)
+            try
             {
-                return NotFound();
-            }
+                if (id != paymentVoucher.PaymentVoucherId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(paymentVoucher);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PaymentVoucherExists(paymentVoucher.PaymentVoucherId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(paymentVoucher);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!PaymentVoucherExists(paymentVoucher.PaymentVoucherId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+                return View(paymentVoucher);
             }
-            ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
-            return View(paymentVoucher);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: PaymentVoucher/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var paymentVoucher = await _context.PaymentVouchers
-                .Include(p => p.Installments)
-                .Include(p => p.Projects)
-                .Include(p => p.Users)
-                .FirstOrDefaultAsync(m => m.PaymentVoucherId == id);
-            if (paymentVoucher == null)
+                var paymentVoucher = await _context.PaymentVouchers
+                    .Include(p => p.Installments)
+                    .Include(p => p.Projects)
+                    .Include(p => p.Users)
+                    .FirstOrDefaultAsync(m => m.PaymentVoucherId == id);
+                if (paymentVoucher == null)
+                {
+                    return NotFound();
+                }
+
+                return View(paymentVoucher);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(paymentVoucher);
         }
 
         // POST: PaymentVoucher/Delete/5
@@ -445,47 +512,68 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
-            _context.PaymentVouchers.Remove(paymentVoucher);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
+                _context.PaymentVouchers.Remove(paymentVoucher);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         private bool PaymentVoucherExists(int id)
         {
-            return _context.PaymentVouchers.Any(e => e.PaymentVoucherId == id);
+            try
+            {
+                return _context.PaymentVouchers.Any(e => e.PaymentVoucherId == id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var FileDic = "Temp";
-            string SubFileDic = Guid.NewGuid().ToString();
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+            try
             {
-                SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                var FileDic = "Temp";
+                string SubFileDic = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+                {
+                    SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                }
+
+                string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+
+                if (!Directory.Exists(FilePath))
+                    Directory.CreateDirectory(FilePath);
+                string SubFilePath = Path.Combine(FilePath, SubFileDic);
+                if (!Directory.Exists(SubFilePath))
+                    Directory.CreateDirectory(SubFilePath);
+                var fileName = file.FileName;
+
+                string filePath = Path.Combine(SubFilePath, fileName);
+                HttpContext.Session.SetString("filePath", filePath);
+                using (FileStream fs = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(fs);
+                }
+
+                return RedirectToAction("Index");
             }
-            else
+            catch (Exception ex)
             {
-                HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                return View("Error");
             }
-
-            string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
-
-            if (!Directory.Exists(FilePath))
-                Directory.CreateDirectory(FilePath);
-            string SubFilePath = Path.Combine(FilePath, SubFileDic);
-            if (!Directory.Exists(SubFilePath))
-                Directory.CreateDirectory(SubFilePath);
-            var fileName = file.FileName;
-
-            string filePath = Path.Combine(SubFilePath, fileName);
-            HttpContext.Session.SetString("filePath", filePath);
-            using (FileStream fs = System.IO.File.Create(filePath))
-            {
-                file.CopyTo(fs);
-            }
-
-            return RedirectToAction("Index");
         }
     }
 }
