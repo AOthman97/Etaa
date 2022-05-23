@@ -108,13 +108,36 @@ namespace Etaa.Controllers
 
                 Installments.Add(RemainAmount.ToString());
 
+                // Coloring for the table
+                string ColorClass = "";
+                // Firstly if the Installment due date is not due yet
+                int CompareDates = DateTime.Compare(DateTime.Now.Date, DueDate.Date);
+                if(CompareDates < 0)
+                {
+                    ColorClass = "text-secondary";
+                }
+                else if (CompareDates == 0 || CompareDates > 1)
+                {
+                    ColorClass = "text-danger";
+                }
+
+                if (RemainAmount > 0 && RemainAmount < MonthlyInstallmentAmount)
+                {
+                    ColorClass = "text-warning";
+                }
+                else if (RemainAmount == 0)
+                {
+                    ColorClass = "text-success";
+                }
+
                 result = this.Json(new
                 {
                     InstallmentName = InstallmentName,
                     dueDate = DueDate.ToShortDateString(),
                     monthlyInstallmentAmount = MonthlyInstallmentAmount.ToString(),
                     sumPaidAmountForInstallmentNo = SumPaidAmountForInstallmentNo.ToString(),
-                    remainAmount = RemainAmount.ToString()
+                    remainAmount = RemainAmount.ToString(),
+                    colorClass = ColorClass
                 });
                 data.Add(result);
             }
