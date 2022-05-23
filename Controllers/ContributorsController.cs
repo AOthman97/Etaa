@@ -23,27 +23,41 @@ namespace Etaa.Controllers
         // GET: Contributors
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Contributors.Include(c => c.District);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var applicationDbContext = _context.Contributors.Include(c => c.District);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: Contributors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var contributor = await _context.Contributors
-                .Include(c => c.District)
-                .FirstOrDefaultAsync(m => m.ContributorId == id);
-            if (contributor == null)
+                var contributor = await _context.Contributors
+                    .Include(c => c.District)
+                    .FirstOrDefaultAsync(m => m.ContributorId == id);
+                if (contributor == null)
+                {
+                    return NotFound();
+                }
+
+                return View(contributor);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(contributor);
         }
 
         // GET: Contributors/Create
@@ -60,31 +74,45 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ContributorId,NameAr,NameEn,Mobile,WhatsappMobile,Email,Address,StartDate,EndDate,MonthlyShareAmount,NumberOfShares,IsActive,IsCanceled,DistrictId")] Contributor contributor)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(contributor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(contributor);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
+                return View(contributor);
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-            return View(contributor);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: Contributors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var contributor = await _context.Contributors.FindAsync(id);
-            if (contributor == null)
-            {
-                return NotFound();
+                var contributor = await _context.Contributors.FindAsync(id);
+                if (contributor == null)
+                {
+                    return NotFound();
+                }
+                ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
+                return View(contributor);
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-            return View(contributor);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: Contributors/Edit/5
@@ -94,52 +122,66 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ContributorId,NameAr,NameEn,Mobile,WhatsappMobile,Email,Address,StartDate,EndDate,MonthlyShareAmount,NumberOfShares,IsActive,IsCanceled,DistrictId")] Contributor contributor)
         {
-            if (id != contributor.ContributorId)
+            try
             {
-                return NotFound();
-            }
+                if (id != contributor.ContributorId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(contributor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ContributorExists(contributor.ContributorId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(contributor);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ContributorExists(contributor.ContributorId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
+                return View(contributor);
             }
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-            return View(contributor);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: Contributors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var contributor = await _context.Contributors
-                .Include(c => c.District)
-                .FirstOrDefaultAsync(m => m.ContributorId == id);
-            if (contributor == null)
+                var contributor = await _context.Contributors
+                    .Include(c => c.District)
+                    .FirstOrDefaultAsync(m => m.ContributorId == id);
+                if (contributor == null)
+                {
+                    return NotFound();
+                }
+
+                return View(contributor);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(contributor);
         }
 
         // POST: Contributors/Delete/5
@@ -147,15 +189,29 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contributor = await _context.Contributors.FindAsync(id);
-            _context.Contributors.Remove(contributor);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var contributor = await _context.Contributors.FindAsync(id);
+                _context.Contributors.Remove(contributor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         private bool ContributorExists(int id)
         {
-            return _context.Contributors.Any(e => e.ContributorId == id);
+            try
+            {
+                return _context.Contributors.Any(e => e.ContributorId == id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }
