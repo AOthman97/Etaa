@@ -1,0 +1,154 @@
+﻿@model Etaa.Models.Clearance
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@Html.AntiForgeryToken()
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Clearance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Select Project</label>
+                <input id="txtProject" class="form-control" />
+                <input id="hdnProjectId" type="hidden" name="ProjectId" />
+                @*<label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>*@
+            </div>
+            <div class="form-group">
+               <label class="control-label">Remain Amount:</label>
+               <label id="RemainAmount" class="control-label">--Remain Amount--</label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClearanceDate" class="control-label"></label>
+                <input asp-for="ClearanceDate" class="form-control" />
+                <span asp-validation-for="ClearanceDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Attachments:</label>
+                <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="col-md-12 border border-info" id="dropzone">
+                            <div class="dropzone" style="border:none" action="/Clearance/Upload" id="uploader">
+                                <div class="dz-message needsclick">
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                    <div class="ms-4">
+                                        <h3 class="fs-5 fw-bolder text-gray-900 mb-1">Drop files here or click to upload</h3>
+                                        <span class="fs-7 fw-bold text-gray-400">Upload up to 10 files</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                @*<label asp-for="ClearanceDocumentPath" class="control-label"></label>
+                <input asp-for="ClearanceDocumentPath" class="form-control" />
+                <span asp-validation-for="ClearanceDocumentPath" class="text-danger"></span>*@
+            </div>
+            <div class="form-group">
+                @*<input type="submit" value="Create" class="btn btn-primary" />*@
+                <a id="btnSave" class="btn btn-primary" onclick="saveData()">Save</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        function saveData(){
+            let projectId = $("#hdnProjectId").val();
+            let comments = $("#Comments").val();
+            let clearanceDate = $("#ClearanceDate").val();
+
+            let clearance = {
+                "ProjectId": projectId,
+                "Comments": comments,
+                "ClearanceDate": clearanceDate
+            }
+
+            $.ajax({
+                url: "/Clearance/Create",
+                type: 'Post',
+                data: {
+                   clearance : clearance
+                },
+                headers:
+                {
+                    "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    //alert("Success");
+                    //var res = result;
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        $(function ()
+        {
+                // Autocomplete for getting the Project
+                $("#txtProject").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Clearance/AutoComplete/',
+                        data: { "prefix": request.term },
+                        type: "POST",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#hdnProjectId").val(i.item.val);
+                    $.ajax({
+                        url: '/Clearance/GetRemainAmount/',
+                        data: { "projectId": $("#hdnProjectId").val() },
+                        type: "POST",
+                        success: function (data) {
+                            //console.log(data);
+                            if(data != null && data != 0){
+                                //console.log(data); 
+                                $("#RemainAmount").text(data);
+                            }
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                });
+                },
+                minLength: 1
+            });
+
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
