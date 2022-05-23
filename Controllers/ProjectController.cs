@@ -26,79 +26,142 @@ namespace Etaa.Controllers
         [HttpPost]
         public JsonResult AutoComplete(string prefix)
         {
-            var Project = (from project in this._context.Projects
-                           where project.NameEn.StartsWith(prefix)
-                           select new
-                           {
-                               label = project.NameEn,
-                               val = project.ProjectId
-                           }).ToList();
+            try
+            {
+                var Project = (from project in this._context.Projects
+                               where project.NameEn.StartsWith(prefix)
+                               select new
+                               {
+                                   label = project.NameEn,
+                                   val = project.ProjectId
+                               }).ToList();
 
-            return Json(Project);
+                return Json(Project);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         // GET: Project
         public async Task<IActionResult> Index()
         {
-            // .Include(p => p.Users)
-            var applicationDbContext = _context.Projects;
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                // .Include(p => p.Users)
+                var applicationDbContext = _context.Projects;
+                return View(await applicationDbContext.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: Project/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            // .Include(p => p.Users)
-            var projects = await _context.Projects
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
-            if (projects == null)
+                // .Include(p => p.Users)
+                var projects = await _context.Projects
+                    .FirstOrDefaultAsync(m => m.ProjectId == id);
+                if (projects == null)
+                {
+                    return NotFound();
+                }
+
+                return View(projects);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(projects);
         }
 
         // GET: Project/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
-            return View();
+            try
+            {
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         public async Task<JsonResult> GetProjectSelectionReasons()
         {
-            var Result = new MultiSelectList(await _context.ProjectSelectionReasons.ToListAsync(), "ProjectSelectionReasonsId", "NameAr");
-            return Json(Result);
+            try
+            {
+                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.ToListAsync(), "ProjectSelectionReasonsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         public async Task<JsonResult> GetProjectSocialBenefits()
         {
-            var Result = new MultiSelectList(await _context.ProjectSocialBenefits.ToListAsync(), "ProjectSocialBenefitsId", "NameAr");
-            return Json(Result);
+            try
+            {
+                var Result = new MultiSelectList(await _context.ProjectSocialBenefits.ToListAsync(), "ProjectSocialBenefitsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         public async Task<JsonResult> GetProjectTypes()
         {
-            var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
-            return Json(Result);
+            try
+            {
+                var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         public async Task<JsonResult> GetProjectTypeAssets(int ProjectTypeId)
         {
-            var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).ToListAsync();
-            return Json(Result);
+            try
+            {
+                var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).ToListAsync();
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         public async Task<JsonResult> GetNumberOfFunds()
         {
-            var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr");
-            return Json(Result);
+            try
+            {
+                var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         // POST: Project/Create
@@ -149,30 +212,37 @@ namespace Etaa.Controllers
                     _context.Add(item);
                     await _context.SaveChangesAsync();
                 }
+
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-
+                return View("Error");
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         // GET: Project/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var projects = await _context.Projects.FindAsync(id);
-            if (projects == null)
-            {
-                return NotFound();
+                var projects = await _context.Projects.FindAsync(id);
+                if (projects == null)
+                {
+                    return NotFound();
+                }
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
+                return View(projects);
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
-            return View(projects);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: Project/Edit/5
@@ -182,52 +252,66 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProjectId,SignatureofApplicantPath,ProjectActivity,ProjectPurpose,Capital,MonthlyInstallmentAmount,NumberOfInstallments,Date,WaiverPeriod,IsApprovedByManagement,IsCanceled,FamilyId,NumberOfFundsId,ProjectTypeId,UserId,ManagementUserId")] Projects projects)
         {
-            if (id != projects.ProjectId)
+            try
             {
-                return NotFound();
-            }
+                if (id != projects.ProjectId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(projects);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectsExists(projects.ProjectId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(projects);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ProjectsExists(projects.ProjectId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
+                return View(projects);
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
-            return View(projects);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: Project/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            // .Include(p => p.Users)
-            var projects = await _context.Projects
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
-            if (projects == null)
+                // .Include(p => p.Users)
+                var projects = await _context.Projects
+                    .FirstOrDefaultAsync(m => m.ProjectId == id);
+                if (projects == null)
+                {
+                    return NotFound();
+                }
+
+                return View(projects);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(projects);
         }
 
         // POST: Project/Delete/5
@@ -235,95 +319,116 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var projects = await _context.Projects.FindAsync(id);
-            _context.Projects.Remove(projects);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var projects = await _context.Projects.FindAsync(id);
+                _context.Projects.Remove(projects);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         private bool ProjectsExists(int id)
         {
-            return _context.Projects.Any(e => e.ProjectId == id);
+            try
+            {
+                return _context.Projects.Any(e => e.ProjectId == id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var FileDic = "Temp";
-            string SubFileDic = Guid.NewGuid().ToString();
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+            try
             {
-                SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                var FileDic = "Temp";
+                string SubFileDic = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+                {
+                    SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                }
+
+                string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+
+                if (!Directory.Exists(FilePath))
+                    Directory.CreateDirectory(FilePath);
+                string SubFilePath = Path.Combine(FilePath, SubFileDic);
+                if (!Directory.Exists(SubFilePath))
+                    Directory.CreateDirectory(SubFilePath);
+                var fileName = file.FileName;
+
+                string filePath = Path.Combine(SubFilePath, fileName);
+                HttpContext.Session.SetString("filePath", filePath);
+                using (FileStream fs = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(fs);
+                }
+
+                return RedirectToAction("Index");
+
+                //delete Folder
+                //string path = @"D:\Workarea\Test\Code";
+                //Directory.Delete(path);
+
+
+                //Move Folder from source to destination
+                //string source = @"D:\Workarea\Test\Code";
+                //string destination = @"D:\Workarea\Test\NewDirectory";
+
+                //try
+                //{
+                //    // First, you should ensure that the
+                //    // source directory exists
+                //    if (Directory.Exists(source))
+                //    {
+                //        // You should eEnsure the destination
+                //        // directory doesn't already exist
+                //        if (!Directory.Exists(destination))
+                //        {
+                //            // Move the source directory
+                //            // to the new location
+                //            Directory.Move(source, destination);
+                //        }
+                //        else
+                //        {
+                //            Console.WriteLine("Destination directory" +
+                //                        " already exists...");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("Source directory " +
+                //                "does not exist...");
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
             }
-            else
+            catch (Exception ex)
             {
-                HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                return View("Error");
             }
-
-            string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
-
-            if (!Directory.Exists(FilePath))
-                Directory.CreateDirectory(FilePath);
-            string SubFilePath = Path.Combine(FilePath, SubFileDic);
-            if (!Directory.Exists(SubFilePath))
-                Directory.CreateDirectory(SubFilePath);
-            var fileName = file.FileName;
-
-            string filePath = Path.Combine(SubFilePath, fileName);
-            HttpContext.Session.SetString("filePath", filePath);
-            using (FileStream fs = System.IO.File.Create(filePath))
-            {
-                file.CopyTo(fs);
-            }
-
-            return RedirectToAction("Index");
-
-            //delete Folder
-            //string path = @"D:\Workarea\Test\Code";
-            //Directory.Delete(path);
-
-
-            //Move Folder from source to destination
-            //string source = @"D:\Workarea\Test\Code";
-            //string destination = @"D:\Workarea\Test\NewDirectory";
-
-            //try
-            //{
-            //    // First, you should ensure that the
-            //    // source directory exists
-            //    if (Directory.Exists(source))
-            //    {
-            //        // You should eEnsure the destination
-            //        // directory doesn't already exist
-            //        if (!Directory.Exists(destination))
-            //        {
-            //            // Move the source directory
-            //            // to the new location
-            //            Directory.Move(source, destination);
-            //        }
-            //        else
-            //        {
-            //            Console.WriteLine("Destination directory" +
-            //                        " already exists...");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Source directory " +
-            //                "does not exist...");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
         }
 
         // For the select reasons: List<int> SelectReasons
-        public async Task<JsonResult> testresult(List<ProjectsAssets> projectsAssets, List<ProjectsSelectionReasons> projectsSelectionReasons, List<ProjectsSocialBenefits> projectsSocialBenefits, Projects project)
-        {
-            //var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
-            //return Json(Result);
-            return Json(default);
-        }
+        //public async Task<JsonResult> testresult(List<ProjectsAssets> projectsAssets, List<ProjectsSelectionReasons> projectsSelectionReasons, List<ProjectsSocialBenefits> projectsSocialBenefits, Projects project)
+        //{
+        //    //var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
+        //    //return Json(Result);
+        //    return Json(default);
+        //}
     }
 }
