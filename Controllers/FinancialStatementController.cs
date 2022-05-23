@@ -21,36 +21,57 @@ namespace Etaa.Controllers
         // GET: FinancialStatement
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects).Include(f => f.Users);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects).Include(f => f.Users);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FinancialStatement/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var financialStatement = await _context.FinancialStatements
-                .Include(f => f.Projects)
-                .Include(f => f.Users)
-                .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
-            if (financialStatement == null)
+                var financialStatement = await _context.FinancialStatements
+                    .Include(f => f.Projects)
+                    .Include(f => f.Users)
+                    .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
+                if (financialStatement == null)
+                {
+                    return NotFound();
+                }
+
+                return View(financialStatement);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(financialStatement);
         }
 
         // GET: FinancialStatement/Create
         public IActionResult Create()
         {
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
-            return View();
+            try
+            {
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: FinancialStatement/Create
@@ -83,31 +104,38 @@ namespace Etaa.Controllers
                 financialStatement.DocumentPath = filePath;
                 _context.Add(financialStatement);
                 await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-
+                return View("Error");
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         // GET: FinancialStatement/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var financialStatement = await _context.FinancialStatements.FindAsync(id);
-            if (financialStatement == null)
-            {
-                return NotFound();
+                var financialStatement = await _context.FinancialStatements.FindAsync(id);
+                if (financialStatement == null)
+                {
+                    return NotFound();
+                }
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+                return View(financialStatement);
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
-            return View(financialStatement);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: FinancialStatement/Edit/5
@@ -117,54 +145,68 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FinancialStatementId,DocumentPath,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] FinancialStatement financialStatement)
         {
-            if (id != financialStatement.FinancialStatementId)
+            try
             {
-                return NotFound();
-            }
+                if (id != financialStatement.FinancialStatementId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(financialStatement);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FinancialStatementExists(financialStatement.FinancialStatementId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(financialStatement);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!FinancialStatementExists(financialStatement.FinancialStatementId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+                return View(financialStatement);
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
-            return View(financialStatement);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FinancialStatement/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var financialStatement = await _context.FinancialStatements
-                .Include(f => f.Projects)
-                .Include(f => f.Users)
-                .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
-            if (financialStatement == null)
+                var financialStatement = await _context.FinancialStatements
+                    .Include(f => f.Projects)
+                    .Include(f => f.Users)
+                    .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
+                if (financialStatement == null)
+                {
+                    return NotFound();
+                }
+
+                return View(financialStatement);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(financialStatement);
         }
 
         // POST: FinancialStatement/Delete/5
@@ -172,47 +214,68 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var financialStatement = await _context.FinancialStatements.FindAsync(id);
-            _context.FinancialStatements.Remove(financialStatement);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var financialStatement = await _context.FinancialStatements.FindAsync(id);
+                _context.FinancialStatements.Remove(financialStatement);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         private bool FinancialStatementExists(int id)
         {
-            return _context.FinancialStatements.Any(e => e.FinancialStatementId == id);
+            try
+            {
+                return _context.FinancialStatements.Any(e => e.FinancialStatementId == id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var FileDic = "Temp";
-            string SubFileDic = Guid.NewGuid().ToString();
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+            try
             {
-                SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                var FileDic = "Temp";
+                string SubFileDic = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("SubFolderName")))
+                {
+                    SubFileDic = HttpContext.Session.GetString("SubFolderName").ToString();
+                }
+                else
+                {
+                    HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                }
+
+                string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+
+                if (!Directory.Exists(FilePath))
+                    Directory.CreateDirectory(FilePath);
+                string SubFilePath = Path.Combine(FilePath, SubFileDic);
+                if (!Directory.Exists(SubFilePath))
+                    Directory.CreateDirectory(SubFilePath);
+                var fileName = file.FileName;
+
+                string filePath = Path.Combine(SubFilePath, fileName);
+                HttpContext.Session.SetString("filePath", filePath);
+                using (FileStream fs = System.IO.File.Create(filePath))
+                {
+                    file.CopyTo(fs);
+                }
+
+                return RedirectToAction("Index");
             }
-            else
+            catch (Exception ex)
             {
-                HttpContext.Session.SetString("SubFolderName", SubFileDic);
+                return View("Error");
             }
-
-            string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
-
-            if (!Directory.Exists(FilePath))
-                Directory.CreateDirectory(FilePath);
-            string SubFilePath = Path.Combine(FilePath, SubFileDic);
-            if (!Directory.Exists(SubFilePath))
-                Directory.CreateDirectory(SubFilePath);
-            var fileName = file.FileName;
-
-            string filePath = Path.Combine(SubFilePath, fileName);
-            HttpContext.Session.SetString("filePath", filePath);
-            using (FileStream fs = System.IO.File.Create(filePath))
-            {
-                file.CopyTo(fs);
-            }
-
-            return RedirectToAction("Index");
         }
     }
 }
