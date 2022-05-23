@@ -20,93 +20,135 @@ namespace Etaa.Controllers
         [HttpPost]
         public JsonResult AutoComplete(string prefix)
         {
-            var Families = (from family in this._context.Families
-                             where family.NameEn.StartsWith(prefix)
-                             select new
-                             {
-                                 label = family.NameEn,
-                                 val = family.FamilyId
-                             }).ToList();
+            try
+            {
+                var Families = (from family in this._context.Families
+                                where family.NameEn.StartsWith(prefix)
+                                select new
+                                {
+                                    label = family.NameEn,
+                                    val = family.FamilyId
+                                }).ToList();
 
-            return Json(Families);
+                return Json(Families);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
         }
 
         [HttpPost]
         public ActionResult Index(string FamilyName, string FamilyId)
         {
-            ViewBag.Message = "Family Name: " + FamilyName + " FamilyId: " + FamilyId;
-            return View();
+            try
+            {
+                ViewBag.Message = "Family Name: " + FamilyName + " FamilyId: " + FamilyId;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FamilyMembers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship);
-            return View(await applicationDbContext.OrderBy(family => family.Family.NameEn).ToListAsync());
+            try
+            {
+                var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship);
+                return View(await applicationDbContext.OrderBy(family => family.Family.NameEn).ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FamilyMembers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var familyMember = await _context.FamilyMembers
-                .Include(f => f.EducationalStatus)
-                .Include(f => f.Family)
-                .Include(f => f.Gender)
-                .Include(f => f.Job)
-                .Include(f => f.Kinship)
-                .FirstOrDefaultAsync(m => m.FamilyMemberId == id);
-            if (familyMember == null)
+                var familyMember = await _context.FamilyMembers
+                    .Include(f => f.EducationalStatus)
+                    .Include(f => f.Family)
+                    .Include(f => f.Gender)
+                    .Include(f => f.Job)
+                    .Include(f => f.Kinship)
+                    .FirstOrDefaultAsync(m => m.FamilyMemberId == id);
+                if (familyMember == null)
+                {
+                    return NotFound();
+                }
+
+                return View(familyMember);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(familyMember);
         }
 
         // GET: FamilyMembers/AddOrEditAsync
         // , int FamilyId
         public async Task<IActionResult> AddOrEdit(int FamilyMemberId = 0)
         {
-            // Meaning it's an add operation
-            if(FamilyMemberId == 0)
+            try
             {
-                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
-                //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr");
-                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
-                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
-                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
-                return View();
-            }
-            else
-            {
-                var familyMember = await _context.FamilyMembers.FindAsync(FamilyMemberId);
-                if (familyMember == null)
+                // Meaning it's an add operation
+                if (FamilyMemberId == 0)
                 {
-                    return NotFound();
+                    ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
+                    //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr");
+                    ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
+                    ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
+                    ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
+                    return View();
                 }
-                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-                //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
-                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
-                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
-                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-                ViewData["FamilyId"] = familyMember.FamilyId;
-                return View(familyMember);
+                else
+                {
+                    var familyMember = await _context.FamilyMembers.FindAsync(FamilyMemberId);
+                    if (familyMember == null)
+                    {
+                        return NotFound();
+                    }
+                    ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
+                    //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+                    ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
+                    ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
+                    ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                    ViewData["FamilyId"] = familyMember.FamilyId;
+                    return View(familyMember);
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
             }
         }
 
         // GET: Families/Create
         public IActionResult Create()
         {
-            ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
-            ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
-            ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
-            ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
-            return View();
+            try
+            {
+                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
+                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
+                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
+                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: FamilyMembers/Create
@@ -116,40 +158,54 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FamilyMemberId,NameAr,NameEn,Age,Note,IsCanceled,KinshipId,GenderId,EducationalStatusId,JobId,FamilyId")] FamilyMember familyMember)
         {
-            if (ModelState.IsValid && (familyMember.FamilyId != 0 && familyMember.FamilyId != null))
+            try
             {
-                _context.Add(familyMember);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid && (familyMember.FamilyId != 0 && familyMember.FamilyId != null))
+                {
+                    _context.Add(familyMember);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
+                //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
+                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
+                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                ViewData["FamilyId"] = familyMember.FamilyId;
+                return View(familyMember);
             }
-            ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-            //ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
-            ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
-            ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
-            ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-            ViewData["FamilyId"] = familyMember.FamilyId;
-            return View(familyMember);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FamilyMembers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var familyMember = await _context.FamilyMembers.FindAsync(id);
-            if (familyMember == null)
-            {
-                return NotFound();
+                var familyMember = await _context.FamilyMembers.FindAsync(id);
+                if (familyMember == null)
+                {
+                    return NotFound();
+                }
+                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
+                ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
+                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
+                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                return View(familyMember);
             }
-            ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-            ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
-            ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
-            ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
-            ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-            return View(familyMember);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // POST: FamilyMembers/Edit/5
@@ -159,60 +215,74 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FamilyMemberId,NameAr,NameEn,Age,Note,IsCanceled,KinshipId,GenderId,EducationalStatusId,JobId,FamilyId")] FamilyMember familyMember)
         {
-            if (id != familyMember.FamilyMemberId)
+            try
             {
-                return NotFound();
-            }
+                if (id != familyMember.FamilyMemberId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(familyMember);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FamilyMemberExists(familyMember.FamilyMemberId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(familyMember);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!FamilyMemberExists(familyMember.FamilyMemberId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
+                ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
+                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
+                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
+                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                return View(familyMember);
             }
-            ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
-            ViewData["FamilyId"] = new SelectList(_context.Families, "FamilyId", "NameAr", familyMember.FamilyId);
-            ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
-            ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
-            ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-            return View(familyMember);
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         // GET: FamilyMembers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var familyMember = await _context.FamilyMembers
-                .Include(f => f.EducationalStatus)
-                .Include(f => f.Family)
-                .Include(f => f.Gender)
-                .Include(f => f.Job)
-                .Include(f => f.Kinship)
-                .FirstOrDefaultAsync(m => m.FamilyMemberId == id);
-            if (familyMember == null)
+                var familyMember = await _context.FamilyMembers
+                    .Include(f => f.EducationalStatus)
+                    .Include(f => f.Family)
+                    .Include(f => f.Gender)
+                    .Include(f => f.Job)
+                    .Include(f => f.Kinship)
+                    .FirstOrDefaultAsync(m => m.FamilyMemberId == id);
+                if (familyMember == null)
+                {
+                    return NotFound();
+                }
+
+                return View(familyMember);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(familyMember);
         }
 
         // POST: FamilyMembers/Delete/5
@@ -220,15 +290,29 @@ namespace Etaa.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var familyMember = await _context.FamilyMembers.FindAsync(id);
-            _context.FamilyMembers.Remove(familyMember);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var familyMember = await _context.FamilyMembers.FindAsync(id);
+                _context.FamilyMembers.Remove(familyMember);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
         }
 
         private bool FamilyMemberExists(int id)
         {
-            return _context.FamilyMembers.Any(e => e.FamilyMemberId == id);
+            try
+            {
+                return _context.FamilyMembers.Any(e => e.FamilyMemberId == id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }
