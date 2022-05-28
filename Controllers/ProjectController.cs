@@ -187,12 +187,13 @@ namespace Etaa.Controllers
             try
             {
                 var userId = User.GetLoggedInUserId<string>();
-                var userName = User.GetLoggedInUserName();
-                var userEmail = User.GetLoggedInUserEmail();
+                //var userName = User.GetLoggedInUserName();
+                //var userEmail = User.GetLoggedInUserEmail();
 
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
                 project.SignatureofApplicantPath = filePath;
+                project.UserId = userId;
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 foreach (var item in projectsAssets)

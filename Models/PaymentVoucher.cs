@@ -21,10 +21,7 @@ namespace Etaa.Models
         public int InstallmentsId { get; set; }
         [ForeignKey("InstallmentsId")]
         public Installments? Installments { get; set; }
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public int ManagementUserId { get; set; }
-        [ForeignKey("UserId")]
-        public Users? Users { get; set; }
+        public string? UserId { get; set; }
+        public string? ManagementUserId { get; set; }
     }
 }
