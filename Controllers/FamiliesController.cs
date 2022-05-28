@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
 using System.Data;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -94,7 +95,6 @@ namespace Etaa.Controllers
                     .Include(f => f.Job)
                     .Include(f => f.MartialStatus)
                     .Include(f => f.Religion)
-                    .Include(f => f.Users)
                     .FirstOrDefaultAsync(m => m.FamilyId == id);
                 if (family == null)
                 {
@@ -144,8 +144,10 @@ namespace Etaa.Controllers
         {
             try
             {
+                var userId = User.GetLoggedInUserId<string>();
                 if (ModelState.IsValid)
                 {
+                    family.UserId = userId;
                     _context.Add(family);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -274,7 +276,6 @@ namespace Etaa.Controllers
                     .Include(f => f.Job)
                     .Include(f => f.MartialStatus)
                     .Include(f => f.Religion)
-                    .Include(f => f.Users)
                     .FirstOrDefaultAsync(m => m.FamilyId == id);
                 if (family == null)
                 {
