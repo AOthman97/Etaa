@@ -10,11 +10,12 @@
     <h4>Clearance</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-3">
             @Html.DisplayNameFor(model => model.ClearanceDocumentPath)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClearanceDocumentPath)
+        <dd class = "col-sm-9">
+            <a asp-action="Download" asp-route-ClearanceId="@Model.ClearanceId" class="btn btn-outline-primary">Download</a>
+            @*@Html.DisplayFor(model => model.ClearanceDocumentPath)*@
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Comments)

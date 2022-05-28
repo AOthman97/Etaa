@@ -15,8 +15,9 @@
             <input type="hidden" asp-for="ClearanceId" />
             <div class="form-group">
                 <label asp-for="ClearanceDocumentPath" class="control-label"></label>
-                <input asp-for="ClearanceDocumentPath" class="form-control" />
-                <span asp-validation-for="ClearanceDocumentPath" class="text-danger"></span>
+                @*<input asp-for="ClearanceDocumentPath" class="form-control" />
+                <span asp-validation-for="ClearanceDocumentPath" class="text-danger"></span>*@
+                <a asp-action="Download" asp-route-ProjectId="@Model.ProjectId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
                 <label asp-for="Comments" class="control-label"></label>
