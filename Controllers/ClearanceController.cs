@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -90,7 +91,6 @@ namespace Etaa.Controllers
 
                 var clearance = await _context.Clearances
                     .Include(c => c.Projects)
-                    .Include(c => c.Users)
                     .FirstOrDefaultAsync(m => m.ClearanceId == id);
                 if (clearance == null)
                 {
@@ -151,9 +151,11 @@ namespace Etaa.Controllers
         {
             try
             {
+                var userId = User.GetLoggedInUserId<string>();
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
                 clearance.ClearanceDocumentPath = filePath;
+                clearance.UserId = userId;
 
                 // Firstly before saving the clearance we need to check if this project is fully paid
                 int ProjectId = clearance.ProjectId;
@@ -263,7 +265,6 @@ namespace Etaa.Controllers
 
                 var clearance = await _context.Clearances
                     .Include(c => c.Projects)
-                    .Include(c => c.Users)
                     .FirstOrDefaultAsync(m => m.ClearanceId == id);
                 if (clearance == null)
                 {
