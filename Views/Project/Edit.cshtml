@@ -15,9 +15,9 @@
             <input type="hidden" asp-for="ProjectId" />
             <div class="form-group">
                 <label asp-for="SignatureofApplicantPath" class="control-label"></label>
-                <input asp-for="SignatureofApplicantPath" class="form-control" />
-                <span asp-validation-for="SignatureofApplicantPath" class="text-danger"></span>
-                <a asp-action="Download" asp-controller="Project" class="btn btn-outline-primary">Download</a>
+                @*<input asp-for="SignatureofApplicantPath" class="form-control" />
+                <span asp-validation-for="SignatureofApplicantPath" class="text-danger"></span>*@
+                <a asp-action="Download" asp-route-ProjectId="@Model.ProjectId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
                 <label asp-for="ProjectActivity" class="control-label"></label>

@@ -73,7 +73,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
 
-                HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
+                //HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
                 return View(projects);
             }
             catch (Exception ex)
@@ -234,7 +234,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
-                HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
+                //HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
                 return View(projects);
             }
             catch (Exception ex)
@@ -447,16 +447,18 @@ namespace Etaa.Controllers
             return types[ext];
         }
 
-        [HttpGet]
-        public async Task<ActionResult> DownloadAsync(int ProjectId)
+        //[HttpGet]
+        public async Task<IActionResult> Download(int ProjectId)
         {
             try
             {
                 //var fileSession = HttpContext.Session.GetString("filePath");
                 //HttpContext.Session.Remove("filePath");
+
                 var fileSession = await (from project in this._context.Projects
-                               where project.ProjectId.Equals(ProjectId)
-                               select (string)project.SignatureofApplicantPath).SingleOrDefaultAsync();
+                                         where project.ProjectId.Equals(ProjectId)
+                                         select (string)project.SignatureofApplicantPath).SingleOrDefaultAsync();
+
                 var fileName = fileSession;
                 var fileExists = System.IO.File.Exists(fileName);
                 if (fileExists)
@@ -469,6 +471,12 @@ namespace Etaa.Controllers
                 {
                     return View("Error");
                 }
+
+                //var fileStream = System.IO.File.OpenRead(fileSession);
+                //string FileExtension = GetContentType(fileSession);
+                //return File(fileStream, FileExtension, fileSession);
+                //return View("Error");
+
             }
             catch (Exception ex)
             {

@@ -15,8 +15,9 @@
             <input type="hidden" asp-for="FinancialStatementId" />
             <div class="form-group">
                 <label asp-for="DocumentPath" class="control-label"></label>
-                <input asp-for="DocumentPath" class="form-control" />
-                <span asp-validation-for="DocumentPath" class="text-danger"></span>
+                @*<input asp-for="DocumentPath" class="form-control" />
+                <span asp-validation-for="DocumentPath" class="text-danger"></span>*@
+                <a asp-action="Download" asp-controller="FinancialStatement" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
