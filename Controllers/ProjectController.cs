@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
 using System.Collections;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -185,6 +186,10 @@ namespace Etaa.Controllers
         {
             try
             {
+                var userId = User.GetLoggedInUserId<string>();
+                var userName = User.GetLoggedInUserName();
+                var userEmail = User.GetLoggedInUserEmail();
+
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
                 project.SignatureofApplicantPath = filePath;
@@ -455,7 +460,7 @@ namespace Etaa.Controllers
             {
                 //var fileSession = HttpContext.Session.GetString("filePath");
                 //HttpContext.Session.Remove("filePath");
-
+                
                 var fileSession = await (from project in this._context.Projects
                                          where project.ProjectId.Equals(ProjectId)
                                          select (string)project.SignatureofApplicantPath).SingleOrDefaultAsync();

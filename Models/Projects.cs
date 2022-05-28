@@ -39,8 +39,8 @@ namespace Etaa.Models
         public int ProjectTypeId { get; set; }
         [NotMapped]
         public virtual ICollection<ProjectTypes>? ProjectTypes { get; set; }
-        public int UserId { get; set; }
-        public int ManagementUserId { get; set; }
+        public string? UserId { get; set; }
+        public string? ManagementUserId { get; set; }
 
         [ForeignKey("ProjectId")]
         [NotMapped]

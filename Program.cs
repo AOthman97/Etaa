@@ -27,6 +27,9 @@ builder.Services.AddScoped<IContributorsService, ContributorsService>();
 
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
+// For the users
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSession();
 
 var app = builder.Build();
@@ -53,6 +56,7 @@ app.UseDirectoryBrowser(new DirectoryBrowserOptions
                 ),
     RequestPath = "/ProjectFiles"
 });
+
 
 app.UseRouting();
 app.UseSession();

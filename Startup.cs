@@ -31,6 +31,9 @@ namespace MoviesStore
                 new PhysicalFileProvider(
                     Path.Combine(Directory.GetCurrentDirectory(),
                     "./wwwroot/ProjectFiles")));
+
+            // For the users
+            services.AddHttpContextAccessor();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
