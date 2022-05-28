@@ -7,7 +7,7 @@ namespace Etaa.Models
     {
         [Key]
         public int FinancialStatementId { get; set; }
-        public string DocumentPath { get; set; }
+        public string? DocumentPath { get; set; }
         public bool IsApprovedByManagement { get; set; }
         public bool? IsCanceled { get; set; }
 
@@ -15,10 +15,7 @@ namespace Etaa.Models
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public Projects? Projects { get; set; }
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public int ManagementUserId { get; set; }
-        [ForeignKey("UserId")]
-        public Users? Users { get; set; }
+        public string? UserId { get; set; }
+        public string? ManagementUserId { get; set; }
     }
 }

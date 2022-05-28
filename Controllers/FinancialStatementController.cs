@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -23,7 +24,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects).Include(f => f.Users);
+                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects);
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -44,7 +45,6 @@ namespace Etaa.Controllers
 
                 var financialStatement = await _context.FinancialStatements
                     .Include(f => f.Projects)
-                    .Include(f => f.Users)
                     .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
                 if (financialStatement == null)
                 {
@@ -98,7 +98,8 @@ namespace Etaa.Controllers
         {
             try
             {
-                financialStatement.UserId = 1;
+                var userId = User.GetLoggedInUserId<string>();
+                financialStatement.UserId = userId;
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
                 financialStatement.DocumentPath = filePath;
@@ -194,7 +195,6 @@ namespace Etaa.Controllers
 
                 var financialStatement = await _context.FinancialStatements
                     .Include(f => f.Projects)
-                    .Include(f => f.Users)
                     .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
                 if (financialStatement == null)
                 {
