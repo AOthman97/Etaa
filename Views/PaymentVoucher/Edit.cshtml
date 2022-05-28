@@ -15,8 +15,9 @@
             <input type="hidden" asp-for="PaymentVoucherId" />
             <div class="form-group">
                 <label asp-for="PaymentDocumentPath" class="control-label"></label>
-                <input asp-for="PaymentDocumentPath" class="form-control" />
-                <span asp-validation-for="PaymentDocumentPath" class="text-danger"></span>
+                @*<input asp-for="PaymentDocumentPath" class="form-control" />
+                <span asp-validation-for="PaymentDocumentPath" class="text-danger"></span>*@
+                <a asp-action="Download" asp-route-PaymentVoucherId="@Model.PaymentVoucherId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
                 <label asp-for="PaymentDate" class="control-label"></label>

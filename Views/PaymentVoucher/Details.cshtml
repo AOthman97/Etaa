@@ -14,7 +14,8 @@
             @Html.DisplayNameFor(model => model.PaymentDocumentPath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentDocumentPath)
+            <a asp-action="Download" asp-route-PaymentVoucherId="@Model.PaymentVoucherId" class="btn btn-outline-primary">Download</a>
+            @*@Html.DisplayFor(model => model.PaymentDocumentPath)*@
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PaymentDate)
