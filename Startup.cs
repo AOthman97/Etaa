@@ -1,6 +1,7 @@
 ﻿using Etaa.Data;
 using Etaa.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace MoviesStore
 {
@@ -25,6 +26,11 @@ namespace MoviesStore
             services.AddControllersWithViews();
 
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
+            services.AddSingleton<IFileProvider>(
+                new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(),
+                    "./wwwroot/ProjectFiles")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -41,6 +47,14 @@ namespace MoviesStore
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+                {
+                    FileProvider = new PhysicalFileProvider
+                (
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProjectFiles")
+                ),
+                RequestPath = "/ProjectFiles"
+            });
 
             app.UseAuthorization();
 

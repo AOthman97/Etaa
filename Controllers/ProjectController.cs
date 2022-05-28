@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +10,12 @@ namespace Etaa.Controllers
     public class ProjectController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IWebHostEnvironment hostingEnv;
+        private IWebHostEnvironment _hostingEnv;
 
         public ProjectController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-            hostingEnv = webHostEnvironment;
+            _hostingEnv = webHostEnvironment;
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
@@ -77,6 +73,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
 
+                HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
                 return View(projects);
             }
             catch (Exception ex)
@@ -237,6 +234,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
+                HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
                 return View(projects);
             }
             catch (Exception ex)
@@ -359,7 +357,7 @@ namespace Etaa.Controllers
                     HttpContext.Session.SetString("SubFolderName", SubFileDic);
                 }
 
-                string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+                string FilePath = Path.Combine(_hostingEnv.WebRootPath, FileDic);
 
                 if (!Directory.Exists(FilePath))
                     Directory.CreateDirectory(FilePath);
@@ -423,12 +421,59 @@ namespace Etaa.Controllers
             }
         }
 
-        // For the select reasons: List<int> SelectReasons
-        //public async Task<JsonResult> testresult(List<ProjectsAssets> projectsAssets, List<ProjectsSelectionReasons> projectsSelectionReasons, List<ProjectsSocialBenefits> projectsSocialBenefits, Projects project)
-        //{
-        //    //var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
-        //    //return Json(Result);
-        //    return Json(default);
-        //}
+        public static Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},  
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
+
+        // Get content type
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadAsync(int ProjectId)
+        {
+            try
+            {
+                //var fileSession = HttpContext.Session.GetString("filePath");
+                //HttpContext.Session.Remove("filePath");
+                var fileSession = await (from project in this._context.Projects
+                               where project.ProjectId.Equals(ProjectId)
+                               select (string)project.SignatureofApplicantPath).SingleOrDefaultAsync();
+                var fileName = fileSession;
+                var fileExists = System.IO.File.Exists(fileName);
+                if (fileExists)
+                {
+                    string FileExtension = GetContentType(fileName);
+                    return PhysicalFile(fileName, FileExtension, fileName);
+                    //return PhysicalFile(fileName, "application/pdf", fileName);
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+        }
     }
 }
