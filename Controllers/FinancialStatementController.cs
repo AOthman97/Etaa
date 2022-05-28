@@ -277,5 +277,59 @@ namespace Etaa.Controllers
                 return View("Error");
             }
         }
+
+        public static Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
+
+        // Get content type
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        public async Task<IActionResult> Download(int FinancialStatementId)
+        {
+            try
+            {
+                var fileSession = await (from financialStatement in this._context.FinancialStatements
+                                         where financialStatement.FinancialStatementId.Equals(FinancialStatementId)
+                                         select (string)financialStatement.DocumentPath).SingleOrDefaultAsync();
+
+                var fileName = fileSession;
+                var fileExists = System.IO.File.Exists(fileName);
+                if (fileExists)
+                {
+                    string FileExtension = GetContentType(fileName);
+                    return PhysicalFile(fileName, FileExtension, fileName);
+                    //return PhysicalFile(fileName, "application/pdf", fileName);
+                }
+                else
+                {
+                    return View("Error");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+        }
     }
 }
