@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.FamilyMember
 
 @{
-    ViewData["Title"] = "Add/Edit";
+    ViewData["Title"] = "Add";
 }
 
    <script type="text/javascript">
@@ -31,10 +31,73 @@
                 },
                 minLength: 1
             });
+
+            // Just english or arabic letters without numbers
+            $('#txtFamily').keydown(function (e) {
+              if (e.shiftKey || e.ctrlKey || e.altKey) {
+                  e.preventDefault();
+              } else {
+                  var key = e.keyCode;
+                  if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                      e.preventDefault();
+                  }
+              }
+            });
+
+            // Just arabic letters
+            $("#NameAr").keypress(function(event){
+                var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+                var ew = event.which;
+                if(ew == 32)
+                    return true;
+                if(ew == 169)
+                    return true;
+
+                var str = String.fromCharCode(ew);
+                if (arabicCharUnicodeRange.test(str) )
+                {
+                  return true;
+                }
+                return false;
+            });
+
+            // Just arabic letters
+            $("#Note").keypress(function(event){
+                var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+                var ew = event.which;
+                if(ew == 32)
+                    return true;
+                if(ew == 169)
+                    return true;
+
+                var str = String.fromCharCode(ew);
+                if (arabicCharUnicodeRange.test(str) )
+                {
+                  return true;
+                }
+                return false;
+            });
+
+            // Just english letters
+            $("#NameEn").keypress(function(event){
+                var ew = event.which;
+                if(ew == 32)
+                    return true;
+                // This is to accept numbers
+                //if(48 <= ew && ew <= 57)
+                //    return true;
+                // This for capital english letters
+                if(65 <= ew && ew <= 90)
+                    return true;
+                // This for small english letters
+                if(97 <= ew && ew <= 122)
+                    return true;
+                return false;
+            });
         });
     </script>
 
-<h1>Add/Edit</h1>
+<h1>Add</h1>
 
 <h4>Family Member</h4>
 <hr />
@@ -45,7 +108,7 @@
             <input type="hidden" asp-for="FamilyMemberId" />
             <div class="form-group">
                 <label asp-for="Family" class="control-label"></label>
-                <input id="txtFamily" class="form-control" />
+                <input id="txtFamily" class="form-control" autofocus />
                 <input id="hdnFamilyId" type="hidden" name="FamilyId" />
             </div>
             <div class="form-group">
@@ -60,7 +123,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -93,11 +156,11 @@
                 <select asp-for="JobId" class="form-control" asp-items="ViewBag.JobId"></select>
                 <span asp-validation-for="JobId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
                 <input type="checkbox" asp-for="IsCanceled" class="form-check-input">
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>
+            </div>*@
             @*<div class="form-group">
                 <label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class="form-control" asp-items="ViewBag.FamilyId"></select>
