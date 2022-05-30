@@ -27,11 +27,93 @@
                 $("#DistrictId").html(row);
             })
         })
+
+        // Just english letters
+        $("#NameEn").keypress(function(event){
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            // This is to accept numbers
+            //if(48 <= ew && ew <= 57)
+            //    return true;
+            // This for capital english letters
+            if(65 <= ew && ew <= 90)
+                return true;
+            // This for small english letters
+            if(97 <= ew && ew <= 122)
+                return true;
+            return false;
+        });
+
+        // Just arabic letters
+        $("#NameAr").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#Address").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#Alleyway").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#ResidentialSquare").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
     })
 
-        $(document).ready(function() {
-            $('#FamilyMembersTable').DataTable();
-    } );
+    //    $(document).ready(function() {
+    //        $('#FamilyMembersTable').DataTable();
+    //} );
 </script>
 
 <h1>Edit</h1>
@@ -39,12 +121,12 @@
 <h4>Family</h4>
 <hr />
 
-@{
+@*@{
     if (ViewData["FamilyMembers"] != null)
     {
         IEnumerable<FamilyMember> FamilyMembers = ViewData["FamilyMembers"] as IEnumerable<FamilyMember>;
     }
-}
+}*@
 
 <div class="row">
     <div class="col-md-4">
@@ -68,7 +150,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="HouseNumber" class="control-label"></label>
-                <input asp-for="HouseNumber" class="form-control" />
+                <input asp-for="HouseNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="HouseNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -83,58 +165,70 @@
             </div>
             <div class="form-group">
                 <label asp-for="FirstPhoneNumber" class="control-label"></label>
-                <input asp-for="FirstPhoneNumber" class="form-control" />
+                <input asp-for="FirstPhoneNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="FirstPhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SecondPhoneNumber" class="control-label"></label>
-                <input asp-for="SecondPhoneNumber" class="form-control" />
+                <input asp-for="SecondPhoneNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="SecondPhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NationalNumber" class="control-label"></label>
-                <input asp-for="NationalNumber" class="form-control" />
+                <input asp-for="NationalNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NationalNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PassportNumber" class="control-label"></label>
-                <input asp-for="PassportNumber" class="form-control" />
+                <input asp-for="PassportNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="PassportNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfIndividuals" class="control-label"></label>
-                <input asp-for="NumberOfIndividuals" class="form-control" />
+                <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="0" />
                 <span asp-validation-for="NumberOfIndividuals" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MonthlyIncome" class="control-label"></label>
-                <input asp-for="MonthlyIncome" class="form-control" />
+                <input asp-for="MonthlyIncome" class="form-control" type="number" min="0" />
                 <span asp-validation-for="MonthlyIncome" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IsCurrentInvestmentProject" class="control-label"></label>
-                <input asp-for="IsCurrentInvestmentProject" class="form-control" />
+                <input type="checkbox" asp-for="IsCurrentInvestmentProject" class="form-check-input">
                 <span asp-validation-for="IsCurrentInvestmentProject" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="IsApprovedByManagement" class="control-label"></label>
                 <input asp-for="IsApprovedByManagement" class="form-control" />
                 <span asp-validation-for="IsApprovedByManagement" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
+                <input type="checkbox" asp-for="IsCanceled" class="form-check-input" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
                 <input asp-for="DateOfBirth" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>State</label>
+                <select id="StatesList" asp-items="@ViewBag.States" class="form-control">
+                    <option>-Select State-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <select id="CitiesList" class="form-control">
+                    <option>-Select City-</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
@@ -180,16 +274,6 @@
                 <label asp-for="InvestmentTypeId" class="control-label"></label>
                 <select asp-for="InvestmentTypeId" class="form-control" asp-items="ViewBag.InvestmentTypeId"></select>
                 <span asp-validation-for="InvestmentTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ManagementUserId" class="control-label"></label>
-                <input asp-for="ManagementUserId" class="form-control" />
-                <span asp-validation-for="ManagementUserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

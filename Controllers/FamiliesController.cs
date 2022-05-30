@@ -66,7 +66,8 @@ namespace Etaa.Controllers
             try
             {
                 // .Include(f => f.Users)
-                var applicationDbContext = _context.Families.Include(f => f.AccommodationType).Include(f => f.District).Include(f => f.EducationalStatus).Include(f => f.Gender).Include(f => f.HealthStatus).Include(f => f.InvestmentType).Include(f => f.Job).Include(f => f.MartialStatus).Include(f => f.Religion);
+                // .Include(f => f.AccommodationType).Include(f => f.District).Include(f => f.EducationalStatus).Include(f => f.Gender).Include(f => f.HealthStatus).Include(f => f.InvestmentType).Include(f => f.Job).Include(f => f.MartialStatus).Include(f => f.Religion)
+                var applicationDbContext = _context.Families;
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -147,6 +148,8 @@ namespace Etaa.Controllers
                 var userId = User.GetLoggedInUserId<string>();
                 if (ModelState.IsValid)
                 {
+                    family.IsCanceled = false;
+                    family.IsApprovedByManagement = false;
                     family.UserId = userId;
                     _context.Add(family);
                     await _context.SaveChangesAsync();
@@ -196,6 +199,9 @@ namespace Etaa.Controllers
                 ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
                 //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", family.UserId);
+
+                var StatesList = new SelectList(_context.States.ToList(), "StateId", "NameAr");
+                ViewData["States"] = StatesList;
                 return View(family);
             }
             catch (Exception ex)

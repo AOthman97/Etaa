@@ -8,17 +8,21 @@ namespace Etaa.Models
         [Key]
         public int FamilyId { get; set; }
         [Required(ErrorMessage = "حقل الإسم عربي مطلوب!")]
+        [DataType(DataType.Text)]
         [Display(Name = "Name (Ar)")]
         public string NameAr { get; set; }
         [Display(Name = "Name (En)")]
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "حقل الإسم إنجليزي مطلوب!")]
-        [RegularExpression(@"^[a-zA-Z'-]", ErrorMessage = "The field {0} is not a valid name")]
         public string NameEn { get; set; }
+        [DataType(DataType.Text)]
         public string? Address { get; set; }
         [Display(Name = "House Number")]
         public string? HouseNumber { get; set; }
+        [DataType(DataType.Text)]
         public string? Alleyway { get; set; }
         [Display(Name = "Residential Square")]
+        [DataType(DataType.Text)]
         public string? ResidentialSquare { get; set; }
         [Display(Name = "First Phone Number")]
         public string? FirstPhoneNumber { get; set; }
@@ -34,12 +38,13 @@ namespace Etaa.Models
         [Display(Name = "Monthly Income")]
         public decimal? MonthlyIncome { get; set; }
         [Display(Name = "Have Current Investment Project")]
-        public bool? IsCurrentInvestmentProject { get; set; }
+        public bool IsCurrentInvestmentProject { get; set; }
         [Display(Name = "Approved By Management")]
         public bool? IsApprovedByManagement { get; set; }
         [Display(Name = "Canceled")]
-        public bool? IsCanceled { get; set; }
+        public bool IsCanceled { get; set; }
         [Display(Name = "Date of Birth")]
+        [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
         [Display(Name = "District")]

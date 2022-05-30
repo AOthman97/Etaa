@@ -27,7 +27,101 @@
                 $("#DistrictId").html(row);
             })
         })
-    })
+
+        // Just english letters
+        $("#NameEn").keypress(function(event){
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            // This is to accept numbers
+            //if(48 <= ew && ew <= 57)
+            //    return true;
+            // This for capital english letters
+            if(65 <= ew && ew <= 90)
+                return true;
+            // This for small english letters
+            if(97 <= ew && ew <= 122)
+                return true;
+            return false;
+        });
+
+        // Just arabic letters
+        $("#NameAr").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#Address").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#Alleyway").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        $("#ResidentialSquare").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just english or arabic letters without numbers
+        //$('#Address').keydown(function (e) {
+        //  if (e.shiftKey || e.ctrlKey || e.altKey) {
+        //      e.preventDefault();
+        //  } else {
+        //      var key = e.keyCode;
+        //      if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+        //          e.preventDefault();
+        //      }
+        //  }
+        //});
+    }); 
 </script>
 
 <h1>Create</h1>
@@ -50,6 +144,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
+                @*rejex for only english onkeyup="this.value=this.value.replace(/[^a-z]/g,'');"*@
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
@@ -90,7 +185,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfIndividuals" class="control-label"></label>
-                <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="1" />
+                <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="0" />
                 <span asp-validation-for="NumberOfIndividuals" class="text-danger"></span>
             </div>
             <div class="form-group">

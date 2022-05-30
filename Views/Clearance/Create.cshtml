@@ -6,6 +6,39 @@
     ViewData["Title"] = "Create";
 }
 
+<script>
+    $(function () {
+        // Just english or arabic letters without numbers
+        $('#txtProject').keydown(function (e) {
+          if (e.shiftKey || e.ctrlKey || e.altKey) {
+              e.preventDefault();
+          } else {
+              var key = e.keyCode;
+              if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                  e.preventDefault();
+              }
+          }
+        });
+
+        // Just arabic letters
+        $("#Comments").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+    });
+</script>
+
 <h1>Create</h1>
 
 <h4>Clearance</h4>
@@ -16,14 +49,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label class="control-label">Select Project</label>
-                <input id="txtProject" class="form-control" />
+                <input id="txtProject" class="form-control" autofocus />
                 <input id="hdnProjectId" type="hidden" name="ProjectId" />
                 @*<label asp-for="ProjectId" class="control-label"></label>
                 <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>*@
             </div>
             <div class="form-group">
                <label class="control-label">Remain Amount:</label>
-               <label id="RemainAmount" class="control-label">--Remain Amount--</label>
+               <label id="RemainAmount" class="control-label text-info">--Remain Amount--</label>
             </div>
             <div class="form-group">
                 <label asp-for="Comments" class="control-label"></label>

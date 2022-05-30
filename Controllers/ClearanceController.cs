@@ -60,7 +60,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return 1;
+                return -1;
             }
         }
 

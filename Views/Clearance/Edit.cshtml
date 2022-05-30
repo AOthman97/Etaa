@@ -4,6 +4,39 @@
     ViewData["Title"] = "Edit";
 }
 
+<script>
+    $(function () {
+        // Just english or arabic letters without numbers
+        $('#txtProject').keydown(function (e) {
+          if (e.shiftKey || e.ctrlKey || e.altKey) {
+              e.preventDefault();
+          } else {
+              var key = e.keyCode;
+              if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                  e.preventDefault();
+              }
+          }
+        });
+
+        // Just arabic letters
+        $("#Comments").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+    });
+</script>
+
 <h1>Edit</h1>
 
 <h4>Clearance</h4>
@@ -13,6 +46,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ClearanceId" />
+            <div class="form-group">
+                <label class="control-label">Select Project</label>
+                <input id="txtProject" class="form-control" autofocus />
+                <input id="hdnProjectId" type="hidden" name="ProjectId" />
+                @*<label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>*@
+            </div>
             <div class="form-group">
                 <label asp-for="ClearanceDocumentPath" class="control-label"></label>
                 @*<input asp-for="ClearanceDocumentPath" class="form-control" />
@@ -29,30 +69,15 @@
                 <input asp-for="ClearanceDate" class="form-control" />
                 <span asp-validation-for="ClearanceDate" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            @*<div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsApprovedByManagement" /> @Html.DisplayNameFor(model => model.IsApprovedByManagement)
                 </label>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
                 <input asp-for="IsCanceled" class="form-control" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
-                <span asp-validation-for="ProjectId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ManagementUserId" class="control-label"></label>
-                <input asp-for="ManagementUserId" class="form-control" />
-                <span asp-validation-for="ManagementUserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -9,6 +9,8 @@ namespace Etaa.Models
         public int ClearanceId { get; set; }
         public string? ClearanceDocumentPath { get; set; }
         public string? Comments { get; set; }
+        [Display(Name = "تاريخ خلو الطرف")]
+        [DataType(DataType.Date)]
         public DateTime ClearanceDate { get; set; }
         public bool? IsApprovedByManagement { get; set; }
         public bool? IsCanceled { get; set; }
