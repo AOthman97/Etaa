@@ -3,11 +3,14 @@ using Etaa.Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -31,6 +34,33 @@ builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession();
+
+//IHostBuilder CreateHostBuilder(string[] args) =>
+//            Host.CreateDefaultBuilder(args)
+//            .UseSerilog()
+//            .ConfigureWebHostDefaults(webBuilder =>
+//            {
+//                webBuilder.UseStartup<Etaa.Startup>();
+//            });
+
+//var config = new ConfigurationBuilder()
+//                                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+
+//Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
+
+//try
+//{
+//    Log.Information("Application Started");
+//    CreateHostBuilder(args).Build().Run();
+//}
+//catch (Exception ex)
+//{
+//    Log.Error(ex, "Application Failed to Start!");
+//}
+//finally
+//{
+//    Log.CloseAndFlush();
+//}
 
 var app = builder.Build();
 
@@ -69,4 +99,42 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+//app.UseSerilogRequestLogging();
+
 app.Run();
+
+//namespace Etaa
+//{
+//    public class Program
+//    {
+//        public static void Main(string[] args)
+//        {
+//            var config = new ConfigurationBuilder()
+//                                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+
+//            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
+
+//            try
+//            {
+//                Log.Information("Application Started");
+//                CreateHostBuilder(args).Build().Run();
+//            }
+//            catch (Exception ex)
+//            {
+//                Log.Error(ex, "Application Failed to Start!");
+//            }
+//            finally
+//            {
+//                Log.CloseAndFlush();
+//            }
+//        }
+
+//        public static IHostBuilder CreateHostBuilder(string[] args) =>
+//            Host.CreateDefaultBuilder(args)
+//            .UseSerilog()
+//            .ConfigureWebHostDefaults(webBuilder =>
+//            {
+//                webBuilder.UseStartup<Startup>();
+//            });
+//    }
+//}

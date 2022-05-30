@@ -2,8 +2,10 @@
 using Etaa.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
-namespace MoviesStore
+namespace Etaa
 {
     public class Startup
     {
@@ -36,7 +38,7 @@ namespace MoviesStore
             services.AddHttpContextAccessor();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -70,6 +72,60 @@ namespace MoviesStore
                         pattern: "{controller=Home}/{action/Index}/{id?}"
                     );
             });
+
+            //var logDB = @"Server=DESKTOP-SNISS5A\\SQLEXPRESS;Database=Etaa;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //var sinkOpts = new MSSqlServerSinkOptions();
+            //sinkOpts.TableName = "Logs";
+            //Log.Logger = new LoggerConfiguration()
+            //    .ReadFrom.Configuration(Configuration)
+            //    .Enrich.FromLogContext()
+            //    .WriteTo.MSSqlServer(
+            //        connectionString: logDB,
+            //        sinkOptions: sinkOpts
+            // )
+            // .CreateLogger();
+
+            //Log.Logger = new LoggerConfiguration()
+            //            .WriteTo
+            //            .MSSqlServer(
+            //                connectionString: "Server=DESKTOP-SNISS5A\\SQLEXPRESS;Database=Etaa;Trusted_Connection=True;MultipleActiveResultSets=true",
+            //                sinkOptions: new MSSqlServerSinkOptions { TableName = "Logs" })
+            //            .CreateLogger();
+
+            //loggerFactory.AddSerilog();
+
+            //new AppProperties(app.Properties).OnAppDisposing.Register(Log.CloseAndFlush);
+
+            //app.UseSerilogRequestLogging();
+
+            //IHostBuilder CreateHostBuilder(string[] args) =>
+            //Host.CreateDefaultBuilder(args)
+            //.UseSerilog()
+            //.ConfigureWebHostDefaults(webBuilder =>
+            //{
+            //    webBuilder.UseStartup<Etaa.Startup>();
+            //});
+
+            //var config = new ConfigurationBuilder()
+            //                                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+
+            //Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(config).CreateLogger();
+
+            //try
+            //{
+            //    Log.Information("Application Started");
+            //    CreateHostBuilder(args).Build().Run();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex, "Application Failed to Start!");
+            //}
+            //finally
+            //{
+            //    Log.CloseAndFlush();
+            //}
+
+            //app.UseSerilogRequestLogging();
         }
     }
 }

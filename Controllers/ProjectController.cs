@@ -6,6 +6,7 @@ using Etaa.Data;
 using Etaa.Models;
 using System.Collections;
 using Etaa.Extensions;
+using Serilog.Context;
 
 namespace Etaa.Controllers
 {
@@ -13,11 +14,13 @@ namespace Etaa.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IWebHostEnvironment _hostingEnv;
+        private readonly ILogger<ProjectController> _logger;
 
-        public ProjectController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public ProjectController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<ProjectController> logger)
         {
             _context = context;
             _hostingEnv = webHostEnvironment;
+            _logger = logger;
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
@@ -194,6 +197,21 @@ namespace Etaa.Controllers
                 HttpContext.Session.Clear();
                 project.SignatureofApplicantPath = filePath;
                 project.UserId = userId;
+                var ProjectTypeNameEn = (from projectType in _context.ProjectTypes
+                                         where projectType.ProjectTypeId == project.ProjectTypeId
+                                         select projectType.NameEn).SingleOrDefaultAsync();
+                var ProjectTypeNameAr = (from projectType in _context.ProjectTypes
+                                         where projectType.ProjectTypeId == project.ProjectTypeId
+                                         select projectType.NameAr).SingleOrDefaultAsync();
+                var FamilyNameEn = (from family in _context.Families
+                                    where family.FamilyId == project.FamilyId
+                                    select family.NameEn).SingleOrDefaultAsync();
+                var FamilyNameAr = (from family in _context.Families
+                                    where family.FamilyId == project.FamilyId
+                                    select family.NameAr).SingleOrDefaultAsync();
+                project.NameEn = String.Concat(ProjectTypeNameEn.Result, " ", FamilyNameEn.Result);
+                project.NameAr = String.Concat(ProjectTypeNameAr.Result, " ", FamilyNameAr.Result);
+
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 foreach (var item in projectsAssets)
@@ -215,6 +233,17 @@ namespace Etaa.Controllers
                     item.ProjectId = project.ProjectId;
                     _context.Add(item);
                     await _context.SaveChangesAsync();
+                }
+
+                _logger.LogInformation("Project Created with user {@userId}", userId);
+
+                try
+                {
+                    throw new NotImplementedException();
+                }
+                catch (NotImplementedException ex)
+                {
+                    _logger.LogError(ex, ex.Message);
                 }
 
                 return RedirectToAction(nameof(Index));

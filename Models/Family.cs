@@ -7,11 +7,13 @@ namespace Etaa.Models
     {
         [Key]
         public int FamilyId { get; set; }
-        [Required(ErrorMessage = "Name (Ar) is Required!")]
+        [Required(ErrorMessage = "حقل الإسم عربي مطلوب!")]
         [Display(Name = "Name (Ar)")]
         public string NameAr { get; set; }
         [Display(Name = "Name (En)")]
-        public string? NameEn { get; set; }
+        [Required(ErrorMessage = "حقل الإسم إنجليزي مطلوب!")]
+        [RegularExpression(@"^[a-zA-Z'-]", ErrorMessage = "The field {0} is not a valid name")]
+        public string NameEn { get; set; }
         public string? Address { get; set; }
         [Display(Name = "House Number")]
         public string? HouseNumber { get; set; }
@@ -32,7 +34,7 @@ namespace Etaa.Models
         [Display(Name = "Monthly Income")]
         public decimal? MonthlyIncome { get; set; }
         [Display(Name = "Have Current Investment Project")]
-        public bool IsCurrentInvestmentProject { get; set; }
+        public bool? IsCurrentInvestmentProject { get; set; }
         [Display(Name = "Approved By Management")]
         public bool? IsApprovedByManagement { get; set; }
         [Display(Name = "Canceled")]
@@ -41,7 +43,7 @@ namespace Etaa.Models
         public DateTime? DateOfBirth { get; set; }
 
         [Display(Name = "District")]
-        public int DistrictId { get; set; }
+        public int? DistrictId { get; set; }
         [ForeignKey("DistrictId")]
         public District? District { get; set; }
         [Display(Name = "Gender")]
