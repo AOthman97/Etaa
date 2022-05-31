@@ -99,6 +99,7 @@ namespace Etaa.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    projectTypesAssets.IsCanceled = false;
                     _context.Add(projectTypesAssets);
                     await _context.SaveChangesAsync();
                     // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
