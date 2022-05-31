@@ -20,6 +20,48 @@ namespace Etaa.Controllers
             _context = context;
         }
 
+        // For the create action to load the states first, then load the cities and districts
+        public IActionResult CascadeList()
+        {
+            try
+            {
+                ViewBag.States = new SelectList(_context.States, "StateId", "NameAr");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public JsonResult LoadCities(int StateId)
+        {
+            try
+            {
+                var City = _context.Cities.Where(City => City.StateId == StateId);
+                return Json(new SelectList(City, "CityId", "NameAr"));
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult LoadDistricts(int CityId)
+        {
+            try
+            {
+                var District = _context.Districts.Where(District => District.CityId == CityId);
+                return Json(new SelectList(District, "DistrictId", "NameAr"));
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
         // GET: Contributors
         public async Task<IActionResult> Index()
         {
@@ -64,6 +106,8 @@ namespace Etaa.Controllers
         public IActionResult Create()
         {
             ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr");
+            var StatesList = new SelectList(_context.States.ToList(), "StateId", "NameAr");
+            ViewData["States"] = StatesList;
             return View();
         }
 
@@ -78,6 +122,7 @@ namespace Etaa.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    contributor.IsCanceled = false;
                     _context.Add(contributor);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -107,6 +152,8 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
+                var StatesList = new SelectList(_context.States.ToList(), "StateId", "NameAr");
+                ViewData["States"] = StatesList;
                 return View(contributor);
             }
             catch (Exception ex)

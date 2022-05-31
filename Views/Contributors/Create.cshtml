@@ -4,6 +4,80 @@
     ViewData["Title"] = "Create";
 }
 
+<script>
+    $(function () {
+        $("#StatesList").change(function () {
+            $.getJSON("@Url.Action("LoadCities")", { StateId: $("#StatesList").val() }, function (d) {
+                var row = "";
+                $("#CitiesList").empty();
+                $.each(d, function (i, v) {
+                    row += "<option value=" + v.value + ">" + v.text + "</option>";
+                });
+                $("#CitiesList").html(row);
+            })
+        })
+
+        $("#CitiesList").change(function () {
+            $.getJSON("@Url.Action("LoadDistricts")", { CityId: $("#CitiesList").val() }, function (d) {
+                var row = "";
+                $("#DistrictId").empty();
+                $.each(d, function (i, v) {
+                    row += "<option value=" + v.value + ">" + v.text + "</option>";
+                });
+                $("#DistrictId").html(row);
+            })
+        })
+
+        // Just arabic letters
+        $("#NameAr").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just english letters
+        $("#NameEn").keypress(function(event){
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            // This for capital english letters
+            if(65 <= ew && ew <= 90)
+                return true;
+            // This for small english letters
+            if(97 <= ew && ew <= 122)
+                return true;
+            return false;
+        });
+
+        // Just arabic letters
+        $("#Address").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+    });
+</script>
+
 <h1>Create</h1>
 
 <h4>Contributor</h4>
@@ -24,17 +98,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Mobile" class="control-label"></label>
-                <input asp-for="Mobile" class="form-control" />
+                <input asp-for="Mobile" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Mobile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="WhatsappMobile" class="control-label"></label>
-                <input asp-for="WhatsappMobile" class="form-control" />
+                <input asp-for="WhatsappMobile" class="form-control" type="number" min="1" />
                 <span asp-validation-for="WhatsappMobile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" type="email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -54,23 +128,30 @@
             </div>
             <div class="form-group">
                 <label asp-for="MonthlyShareAmount" class="control-label"></label>
-                <input asp-for="MonthlyShareAmount" class="form-control" type="number" />
+                <input asp-for="MonthlyShareAmount" class="form-control" type="number" min="0" />
                 <span asp-validation-for="MonthlyShareAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfShares" class="control-label"></label>
-                <input asp-for="NumberOfShares" class="form-control" type="number" />
+                <input asp-for="NumberOfShares" class="form-control" type="number" min="0" />
                 <span asp-validation-for="NumberOfShares" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IsActive" class="control-label"></label>
-                <input asp-for="IsActive" class="form-control" />
+                <input type="checkbox" asp-for="IsActive" class="form-check-input" />
                 <span asp-validation-for="IsActive" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
-                <span asp-validation-for="IsCanceled" class="text-danger"></span>
+                <label>State</label>
+                <select id="StatesList" asp-items="@ViewBag.States" class="form-control">
+                    <option>-Select State-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <select id="CitiesList" class="form-control">
+                    <option>-Select City-</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
