@@ -103,6 +103,7 @@ namespace Etaa.Controllers
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
                 financialStatement.DocumentPath = filePath;
+                financialStatement.IsApprovedByManagement = false;
                 _context.Add(financialStatement);
                 await _context.SaveChangesAsync();
 
