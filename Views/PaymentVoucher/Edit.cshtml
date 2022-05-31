@@ -4,6 +4,22 @@
     ViewData["Title"] = "Edit";
 }
 
+<script>
+    $(function () {
+        // Just english or arabic letters without numbers
+        $('#txtProject').keydown(function (e) {
+          if (e.shiftKey || e.ctrlKey || e.altKey) {
+              e.preventDefault();
+          } else {
+              var key = e.keyCode;
+              if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                  e.preventDefault();
+              }
+          }
+        });
+    });
+</script>
+
 <h1>Edit</h1>
 
 <h4>PaymentVoucher</h4>
@@ -13,6 +29,11 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PaymentVoucherId" />
+            <div class="form-group">
+                <label class="control-label">Select Project</label>
+                <input id="txtProject" class="form-control" autofocus />
+                <input id="hdnProjectId" type="hidden" name="ProjectId" />
+            </div>
             <div class="form-group">
                 <label asp-for="PaymentDocumentPath" class="control-label"></label>
                 @*<input asp-for="PaymentDocumentPath" class="form-control" />
@@ -26,30 +47,38 @@
             </div>
             <div class="form-group">
                 <label asp-for="PaymentAmount" class="control-label"></label>
-                <input asp-for="PaymentAmount" class="form-control" />
+                <input asp-for="PaymentAmount" class="form-control" type="number" min="1" />
                 <span asp-validation-for="PaymentAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="IsApprovedByManagement" class="control-label"></label>
                 <input asp-for="IsApprovedByManagement" class="form-control" />
                 <span asp-validation-for="IsApprovedByManagement" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
-                <input asp-for="IsCanceled" class="form-control" />
+                <input type="checkbox" asp-for="IsCanceled" class="form-check-input" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="ProjectId" class="control-label"></label>
                 <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
                 <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>*@
+            <div class="form-group dropdown">
+                <label class="control-label">Installment Number</label>
+                <select id="InstallmentsNo" class="form-select">
+                    <option value="0">--Select--</option>
+                </select>
+                @*<label asp-for="InstallmentsId" class="control-label"></label>
+                <select asp-for="InstallmentsId" class ="form-control" asp-items="ViewBag.InstallmentsId"></select>*@
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="InstallmentsId" class="control-label"></label>
                 <select asp-for="InstallmentsId" class="form-control" asp-items="ViewBag.InstallmentsId"></select>
                 <span asp-validation-for="InstallmentsId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </div>*@
+            @*<div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
@@ -58,7 +87,7 @@
                 <label asp-for="ManagementUserId" class="control-label"></label>
                 <input asp-for="ManagementUserId" class="form-control" />
                 <span asp-validation-for="ManagementUserId" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

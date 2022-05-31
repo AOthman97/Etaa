@@ -353,13 +353,13 @@ namespace Etaa.Controllers
                                 if (PaymentAmount <= MonthlyInstallmentAmount)
                                 {
                                     paymentVoucher.PaymentAmount = PaymentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
                                     PaymentAmount = 0;
                                 }
                                 else if (PaymentAmount > MonthlyInstallmentAmount)
                                 {
                                     paymentVoucher.PaymentAmount = MonthlyInstallmentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = MonthlyInstallmentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = MonthlyInstallmentAmount, PaymentDate = paymentVoucher.PaymentDate });
                                     //_context.Add(paymentVoucher);
                                     //await _context.SaveChangesAsync();
                                     PaymentAmount -= MonthlyInstallmentAmount;
@@ -374,7 +374,7 @@ namespace Etaa.Controllers
                                 if ((PaymentAmount + SumPaidAmountForInstallmentNo) <= MonthlyInstallmentAmount)
                                 {
                                     paymentVoucher.PaymentAmount = PaymentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
                                     //_context.Add(paymentVoucher);
                                     //await _context.SaveChangesAsync();
                                     PaymentAmount = 0;
@@ -382,7 +382,7 @@ namespace Etaa.Controllers
                                 else if ((PaymentAmount + SumPaidAmountForInstallmentNo) > MonthlyInstallmentAmount)
                                 {
                                     paymentVoucher.PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo), PaymentDate = paymentVoucher.PaymentDate });
+                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo), PaymentDate = paymentVoucher.PaymentDate });
                                     //_context.Add(paymentVoucher);
                                     //await _context.SaveChangesAsync();
                                     PaymentAmount -= (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
