@@ -4,6 +4,44 @@
     ViewData["Title"] = "Edit";
 }
 
+<script>
+    $(function () {
+        // Just english letters
+        $("#NameEn").keypress(function(event){
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            // This is to accept numbers
+            //if(48 <= ew && ew <= 57)
+            //    return true;
+            // This for capital english letters
+            if(65 <= ew && ew <= 90)
+                return true;
+            // This for small english letters
+            if(97 <= ew && ew <= 122)
+                return true;
+            return false;
+        });
+
+        // Just arabic letters
+        $("#NameAr").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+    });
+</script>
+
 <h1>Edit</h1>
 
 <h4>ProjectTypes</h4>

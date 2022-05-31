@@ -7,10 +7,12 @@ namespace Etaa.Models
     {
         [Key]
         public int ProjectTypeId { get; set; }
-        [Required(ErrorMessage = "Name(Ar) is Required!")]
-        [Display(Name = "Name(Ar)")]
+        [Required(ErrorMessage = "!حقل الإسم عربي مطلوب")]
+        [Display(Name = "الإسم عربي")]
         public string NameAr { get; set; }
-        public string? NameEn { get; set; }
+        [Required(ErrorMessage = "!حقل الإسم إنجليزي مطلوب")]
+        [Display(Name = "الإسم إنجليزي")]
+        public string NameEn { get; set; }
         public bool IsCanceled { get; set; }
 
         // Relationship between the project type and project domain
