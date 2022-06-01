@@ -212,7 +212,7 @@ namespace Etaa.Controllers
             try
             {
                 var projectTypesAssets = await _context.ProjectTypesAssets.FindAsync(id);
-                _context.ProjectTypesAssets.Remove(projectTypesAssets);
+                projectTypesAssets.IsCanceled = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
