@@ -239,7 +239,7 @@ namespace Etaa.Controllers
             try
             {
                 var contributor = await _context.Contributors.FindAsync(id);
-                _context.Contributors.Remove(contributor);
+                contributor.IsCanceled = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
