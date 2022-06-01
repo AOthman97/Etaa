@@ -51,6 +51,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProjectTypesAssetsId" />
+            <input type="hidden" asp-for="ProjectTypeId" />
             <div class="form-group">
                 <label asp-for="NameAr" class="control-label"></label>
                 <input asp-for="NameAr" class="form-control" />
@@ -61,11 +62,11 @@
                 <input asp-for="NameEn" class="form-control" />
                 <span asp-validation-for="NameEn" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
                 <input type="checkbox" asp-for="IsCanceled" class="form-check-input" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>
+            </div>*@
             @*<div class="form-group">
                 <label asp-for="ProjectTypeId" class="control-label"></label>
                 <select asp-for="ProjectTypeId" class="form-control" asp-items="ViewBag.ProjectTypeId"></select>

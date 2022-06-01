@@ -27,6 +27,7 @@ namespace Etaa.Controllers
             {
                 List<ProjectTypesAssets> ProjectTypesAssets = await (from ProjectTypesAsset in _context.ProjectTypesAssets
                                                                      where ProjectTypesAsset.ProjectTypeId == ProjectTypeId
+                                                                     && ProjectTypesAsset.IsCanceled == false
                                                                      select new ProjectTypesAssets
                                                                      {
                                                                          ProjectTypesAssetsId = ProjectTypesAsset.ProjectTypesAssetsId,
@@ -169,7 +170,9 @@ namespace Etaa.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
+                    // the ProjectTypeId to select from that's used in the Index action method
+                    return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
                 return View(projectTypesAssets);
             }
@@ -214,7 +217,9 @@ namespace Etaa.Controllers
                 var projectTypesAssets = await _context.ProjectTypesAssets.FindAsync(id);
                 projectTypesAssets.IsCanceled = true;
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
+                // the ProjectTypeId to select from that's used in the Index action method
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
             catch (Exception ex)
             {
