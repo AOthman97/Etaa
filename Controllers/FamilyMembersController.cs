@@ -293,7 +293,8 @@ namespace Etaa.Controllers
             try
             {
                 var familyMember = await _context.FamilyMembers.FindAsync(id);
-                _context.FamilyMembers.Remove(familyMember);
+                familyMember.IsCanceled = true;
+                //_context.FamilyMembers.Remove(familyMember);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
