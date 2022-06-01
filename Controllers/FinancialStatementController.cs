@@ -218,7 +218,7 @@ namespace Etaa.Controllers
             try
             {
                 var financialStatement = await _context.FinancialStatements.FindAsync(id);
-                _context.FinancialStatements.Remove(financialStatement);
+                financialStatement.IsCanceled = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
