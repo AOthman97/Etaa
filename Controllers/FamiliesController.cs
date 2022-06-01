@@ -304,7 +304,9 @@ namespace Etaa.Controllers
             try
             {
                 var family = await _context.Families.FindAsync(id);
-                _context.Families.Remove(family);
+                //_context.Families.Remove(family);
+                family.IsCanceled = true;
+                //_context.Families.Remove(family);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
