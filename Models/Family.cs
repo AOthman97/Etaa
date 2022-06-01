@@ -9,9 +9,9 @@ namespace Etaa.Models
         public int FamilyId { get; set; }
         [Required(ErrorMessage = "حقل الإسم عربي مطلوب!")]
         [DataType(DataType.Text)]
-        [Display(Name = "Name (Ar)")]
+        [Display(Name = "حقل الإسم عربي")]
         public string NameAr { get; set; }
-        [Display(Name = "Name (En)")]
+        [Display(Name = "حقل الإسم إنجليزي")]
         [DataType(DataType.Text)]
         [Required(ErrorMessage = "حقل الإسم إنجليزي مطلوب!")]
         public string NameEn { get; set; }

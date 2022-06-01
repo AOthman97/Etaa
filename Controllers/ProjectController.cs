@@ -235,16 +235,16 @@ namespace Etaa.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                _logger.LogInformation("Project Created with user {@userId}", userId);
+                //_logger.LogInformation("Project Created with user {@userId}", userId);
 
-                try
-                {
-                    throw new NotImplementedException();
-                }
-                catch (NotImplementedException ex)
-                {
-                    _logger.LogError(ex, ex.Message);
-                }
+                //try
+                //{
+                //    throw new NotImplementedException();
+                //}
+                //catch (NotImplementedException ex)
+                //{
+                //    _logger.LogError(ex, ex.Message);
+                //}
 
                 return RedirectToAction(nameof(Index));
             }

@@ -4,6 +4,56 @@
     ViewData["Title"] = "Edit";
 }
 
+<script>
+    $(function () {
+        // Just arabic letters
+        $("#ProjectActivity").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just arabic letters
+        $("#ProjectPurpose").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just english or arabic letters without numbers
+        $('#txtFamily').keydown(function (e) {
+          if (e.shiftKey || e.ctrlKey || e.altKey) {
+              e.preventDefault();
+          } else {
+              var key = e.keyCode;
+              if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                  e.preventDefault();
+              }
+          }
+        });
+    });
+</script>
+
 <h1>Edit</h1>
 
 <h4>Projects</h4>
@@ -13,6 +63,13 @@
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProjectId" />
+            <div class="form-group">
+                @*<label asp-for="FamilyId" class="control-label"></label>
+                <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
+                <label class="control-label">Select Family</label>
+                <input id="txtFamily" class="form-control" />
+                <input id="hdnFamilyId" type="hidden" name="FamilyId" />
+            </div>
             <div class="form-group">
                 <label asp-for="SignatureofApplicantPath" class="control-label"></label>
                 @*<input asp-for="SignatureofApplicantPath" class="form-control" />
@@ -31,17 +88,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="Capital" class="control-label"></label>
-                <input asp-for="Capital" class="form-control" />
+                <input asp-for="Capital" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Capital" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MonthlyInstallmentAmount" class="control-label"></label>
-                <input asp-for="MonthlyInstallmentAmount" class="form-control" />
+                <input asp-for="MonthlyInstallmentAmount" class="form-control" type="number" min="1" />
                 <span asp-validation-for="MonthlyInstallmentAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfInstallments" class="control-label"></label>
-                <input asp-for="NumberOfInstallments" class="form-control" />
+                <input asp-for="NumberOfInstallments" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NumberOfInstallments" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -54,21 +111,21 @@
                 <input asp-for="WaiverPeriod" class="form-control" />
                 <span asp-validation-for="WaiverPeriod" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+            @*<div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsApprovedByManagement" /> @Html.DisplayNameFor(model => model.IsApprovedByManagement)
                 </label>
-            </div>
+            </div>*@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsCanceled" /> @Html.DisplayNameFor(model => model.IsCanceled)
                 </label>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class="form-control" asp-items="ViewBag.FamilyId"></select>
                 <span asp-validation-for="FamilyId" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="NumberOfFundsId" class="control-label"></label>
                 <select asp-for="NumberOfFundsId" class="form-control" asp-items="ViewBag.NumberOfFundsId"></select>
@@ -79,7 +136,7 @@
                 <select asp-for="ProjectTypeId" class="form-control" asp-items="ViewBag.ProjectTypeId"></select>
                 <span asp-validation-for="ProjectTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
@@ -88,7 +145,7 @@
                 <label asp-for="ManagementUserId" class="control-label"></label>
                 <input asp-for="ManagementUserId" class="form-control" />
                 <span asp-validation-for="ManagementUserId" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -101,5 +158,197 @@
 </div>
 
 @section Scripts {
+    <script>
+        // Should already get the data on page load
+    function saveData(){
+            // Firstly the project data, Then the project assets, then the project selection reasons and finally the social benefits
+            var projectItem = [];
+            let ProjectActivity = $("#ProjectActivity").val();
+            let ProjectPurpose = $("#ProjectPurpose").val();
+            let Capital = $("#Capital").val();
+            let MonthlyInstallmentAmount = $("#MonthlyInstallmentAmount").val();
+            let NumberOfInstallments = $("#NumberOfInstallments").val();
+            let Date = $("#Date").val();
+            let WaiverPeriod = $("#WaiverPeriod").val();
+            let FirstInstallmentDueDate = $("#FirstInstallmentDueDate").val();
+            let FamilyId = $("#hdnFamilyId").val();
+            let NumberOfFundsId = $("#NoOfFunds").val();
+            let ProjectTypeId = $("#ProjectTypes").val();
+
+            let project = {
+                "ProjectActivity": ProjectActivity,
+                "ProjectPurpose": ProjectPurpose,
+                "Capital": Capital,
+                "MonthlyInstallmentAmount": MonthlyInstallmentAmount,
+                "NumberOfInstallments": NumberOfInstallments,
+                "Date": Date,
+                "WaiverPeriod": WaiverPeriod,
+                "FirstInstallmentDueDate": FirstInstallmentDueDate,
+                "FamilyId": FamilyId,
+                "NumberOfFundsId": NumberOfFundsId,
+                "ProjectTypeId": ProjectTypeId
+            }
+            projectItem.push(project);
+
+            // Project assets
+            // This represents the divs that are inside the main div #ProjectAssets, It divides its length on 4 because we would
+            // have 4 controls inside each one of these divs
+            const noOfloops = $("#ProjectAssets").children().children().length / 4;
+            var selected = [];
+            for(let i=0; i< noOfloops ; i++){
+
+            let amount = $(`#txtAmount${i}`).val();
+            let qty = $(`#txtQty${i}`).val();
+            let id = $(`#hdnAssetId${i}`).val();
+            let Items = {
+                            "ProjectTypesAssetsId": id,
+                            "Amount": amount,
+                            "Quantity": qty
+                        }
+            selected.push(Items);
+            }
+
+            // Selection Reasons
+            var selectedReasons = [];
+            $('#ProjectSelectionReasons input:checked').each(function() {
+                var reasonNo = $(this).attr('value');
+                let selectedReasonsItems = {
+                    "ProjectSelectionReasonsId": reasonNo
+                }
+                selectedReasons.push(selectedReasonsItems);
+            });
+
+            // Social Benefits
+            var socialBenefits = [];
+            $('#ProjectSocialBenefits input:checked').each(function() {
+                var socialBenefitNo = $(this).attr('value');
+                let socialBenefitItems = {
+                    "ProjectSocialBenefitsId": socialBenefitNo
+                }
+                socialBenefits.push(socialBenefitItems);
+            });
+
+
+        $.ajax({
+            url: "/Project/Edit",
+            type: 'Post',
+            data: {
+                projectsAssets: selected, 
+                projectsSelectionReasons: selectedReasons, 
+                projectsSocialBenefits: socialBenefits, 
+                project: project
+            },
+            headers:
+            {
+                "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (result) {
+                alert("Success");
+                var res = result;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+            $(function ()
+            {
+                // Should already get the data on page load
+                $.post(`/Project/GetProjectSelectionReasons`, function (data) {
+                    $.each(data, function (i, e) {
+                        $("#ProjectSelectionReasons").append(`
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
+                          <label class="form-check-label" for="chk_${i}">
+                            ${e.text}
+                          </label>
+                        </div>
+                        `)
+                    });
+                });
+
+                // Should already get the data on page load
+                $.post(`/Project/GetProjectSocialBenefits`, function (data) {
+                    $.each(data, function (i, e) {
+                        $("#ProjectSocialBenefits").append(`
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
+                          <label class="form-check-label" for="chk_${i}">
+                            ${e.text}
+                          </label>
+                        </div>
+                        `)
+                    });
+                });
+
+                // Should already get the data on page load
+                $.post(`/Project/GetProjectTypes`, function (data) {
+                    $.each(data, function (i, e) {
+                        $("#ProjectTypes").append(`
+                            <option value="${e.value}">${e.text}</option>
+                        `)
+                    });
+                });
+
+                // Should already get the data on page load
+                $.post(`/Project/GetNumberOfFunds`, function (data) {
+                    $.each(data, function (i, e) {
+                        $("#NoOfFunds").append(`
+                            <option value="${e.value}">${e.text}</option>
+                        `)
+                    });
+                });
+
+                // Should already get the data on page load
+                //$("select#ProjectTypes").change(function () {
+                //            var itemVal = $(this).val();
+                //            $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
+                //             $.each(data, function (i, e) {
+                //                    var parent = $(`<div class="form-group">`);
+                //                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
+                //                    var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
+                //                    var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
+                //                    var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
+                //                    parent.append(lblProjectAssetName);
+                //                    parent.append(txtAmount);
+                //                    parent.append(txtQuantity);
+                //                    parent.append(hdnAssetId);
+                //                    $("#ProjectAssets").append(parent);
+                //                 });
+                //             });
+                //});
+
+
+                // Should already get the data on page load
+                // Autocomplete for getting the families
+                $("#txtFamily").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/FamilyMembers/AutoComplete/',
+                        data: { "prefix": request.term },
+                        type: "POST",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#hdnFamilyId").val(i.item.val);
+                    // Get it's value: $("#hdnFamilyId").val();
+                    //$("#SelectedFamilyId").text = $("#hdnFamilyId").val;
+                },
+                minLength: 1
+            });
+            });
+</script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

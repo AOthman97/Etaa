@@ -18,16 +18,23 @@ namespace Etaa.Models
         public string? ProjectActivity { get; set; }
         [Display(Name = "Project Purpose")]
         public string? ProjectPurpose { get; set; }
+        [Required(ErrorMessage = "!حقل رأس المال مطلوب")]
         public decimal? Capital { get; set; }
         [Display(Name = "Monthly Installment Amount")]
+        [Required(ErrorMessage = "!حقل القسط الشهري مطلوب")]
         public decimal? MonthlyInstallmentAmount { get; set; }
         [Display(Name = "Number of Installments")]
+        [Required(ErrorMessage = "!حقل عدد الأقساط مطلوب")]
         public int? NumberOfInstallments { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? Date { get; set; }
         [Display(Name = "Waifer Period")]
+        [DataType(DataType.Date)]
         public DateTime? WaiverPeriod { get; set; }
         public bool IsApprovedByManagement { get; set; }
         public bool IsCanceled { get; set; }
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "!حقل تاريخ إستحقاق القسط الأول مطلوب")]
         public DateTime? FirstInstallmentDueDate { get; set; }
 
         // Relationship between the projects and families

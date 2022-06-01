@@ -12,6 +12,56 @@ public string GetAntiXsrfRequestToken()
     ViewData["Title"] = "Create";
 }
 
+<script>
+    $(function () {
+        // Just arabic letters
+        $("#ProjectActivity").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just arabic letters
+        $("#ProjectPurpose").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+        });
+
+        // Just english or arabic letters without numbers
+        $('#txtFamily').keydown(function (e) {
+          if (e.shiftKey || e.ctrlKey || e.altKey) {
+              e.preventDefault();
+          } else {
+              var key = e.keyCode;
+              if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                  e.preventDefault();
+              }
+          }
+        });
+    });
+</script>
+
 <h1>Create</h1>
 
 <h4>Projects</h4>
@@ -20,6 +70,13 @@ public string GetAntiXsrfRequestToken()
     <div class="col-md-4">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @*<label asp-for="FamilyId" class="control-label"></label>
+                <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
+                <label class="control-label">Select Family</label>
+                <input id="txtFamily" class="form-control" />
+                <input id="hdnFamilyId" type="hidden" name="FamilyId" />
+            </div>
             <div class="form-group">
                 <label>Attachments:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
@@ -53,17 +110,17 @@ public string GetAntiXsrfRequestToken()
             </div>
             <div class="form-group">
                 <label asp-for="Capital" class="control-label"></label>
-                <input asp-for="Capital" class="form-control" />
+                <input asp-for="Capital" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Capital" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MonthlyInstallmentAmount" class="control-label"></label>
-                <input asp-for="MonthlyInstallmentAmount" class="form-control" />
+                <input asp-for="MonthlyInstallmentAmount" class="form-control" type="number" min="1" />
                 <span asp-validation-for="MonthlyInstallmentAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfInstallments" class="control-label"></label>
-                <input asp-for="NumberOfInstallments" class="form-control" />
+                <input asp-for="NumberOfInstallments" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NumberOfInstallments" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -90,14 +147,7 @@ public string GetAntiXsrfRequestToken()
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsCanceled" /> @Html.DisplayNameFor(model => model.IsCanceled)
                 </label>
-            </div>
-            <div class="form-group">
-                @*<label asp-for="FamilyId" class="control-label"></label>
-                <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
-                <label class="control-label">Select Family</label>
-                <input id="txtFamily" class="form-control" />
-                <input id="hdnFamilyId" type="hidden" name="FamilyId" />
-            </div>
+            </div
             <div class="form-group dropdown">
                 <label class="control-label">Funds Number</label>
                 <select id="NoOfFunds" class="form-select">
@@ -235,24 +285,6 @@ public string GetAntiXsrfRequestToken()
             }
         });
 
-        // The data was previously sent with this .post method
-        //// Send the data from the view to the controller and pass it there as an object of each model
-        //$.post(`/Project/Create`, {projectsAssets:selected, projectsSelectionReasons: selectedReasons, projectsSocialBenefits: socialBenefits, project: project} , function (data) {
-        //            Headers= {
-        //                "XSRF-TOKEN": t
-        //            }
-        //        });
-        };
-
-
-    //Dropzone.options.uploader = {
-    //               init: function () {
-    //                   this.on("addedfile", function (file) {
-                           
-    //                   });
-    //               }
-    //           };
-
             $(function ()
             {
                 $.post(`/Project/GetProjectSelectionReasons`, function (data) {
@@ -303,8 +335,8 @@ public string GetAntiXsrfRequestToken()
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group">`);
                                     var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
-                                    var txtAmount = $(`<input type="text" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
-                                    var txtQuantity = $(`<input type="text" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
+                                    var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
+                                    var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
                                     var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
                                     parent.append(lblProjectAssetName);
                                     parent.append(txtAmount);
