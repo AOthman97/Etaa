@@ -356,7 +356,7 @@ namespace Etaa.Controllers
             try
             {
                 var projects = await _context.Projects.FindAsync(id);
-                _context.Projects.Remove(projects);
+                projects.IsCanceled = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
