@@ -200,6 +200,7 @@ namespace Etaa.Controllers
                 ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
+                ViewData["FamilyNameAr"] = _context.Families.Where(f => f.FamilyId == familyMember.FamilyId).Select(f => f.NameAr).Single();
                 return View(familyMember);
             }
             catch (Exception ex)

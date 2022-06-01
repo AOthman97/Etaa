@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var FamilyNameAr = ViewData["FamilyNameAr"];
 }
 
 <script type="text/javascript">
@@ -108,8 +109,8 @@
             <input type="hidden" asp-for="FamilyMemberId" />
             <div class="form-group">
                 <label asp-for="Family" class="control-label"></label>
-                <input id="txtFamily" class="form-control" autofocus />
-                <input id="hdnFamilyId" type="hidden" name="FamilyId" />
+                <input id="txtFamily" asp-for="@FamilyNameAr" class="form-control" autofocus />
+                <input id="hdnFamilyId" asp-for="FamilyId" type="hidden" name="FamilyId" />
             </div>
             <div class="form-group">
                 <label asp-for="NameAr" class="control-label"></label>
@@ -123,19 +124,19 @@
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" type="number" min="1" />
+                <input asp-for="Age" class="form-control" type="number" min="1" max="110" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Note" class="control-label"></label>
-                <input asp-for="Note" class="form-control" type="number" min="1" />
+                <input asp-for="Note" class="form-control" />
                 <span asp-validation-for="Note" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="IsCanceled" class="control-label"></label>
                 <input type="checkbox" asp-for="IsCanceled" class="form-check-input" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="KinshipId" class="control-label"></label>
                 <select asp-for="KinshipId" class="form-control" asp-items="ViewBag.KinshipId"></select>
