@@ -293,7 +293,8 @@ namespace Etaa.Controllers
                 var clearance = await _context.Clearances.FindAsync(id);
                 if (clearance != null)
                 {
-                    _context.Clearances.Remove(clearance);
+                    clearance.IsCanceled = true;
+                    //_context.Clearances.Remove(clearance);
                 }
 
                 await _context.SaveChangesAsync();
