@@ -525,7 +525,7 @@ namespace Etaa.Controllers
             try
             {
                 var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
-                _context.PaymentVouchers.Remove(paymentVoucher);
+                paymentVoucher.IsCanceled = true;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
