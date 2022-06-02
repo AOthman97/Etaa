@@ -56,7 +56,8 @@
             </div>
             <div class="form-group">
                <label class="control-label">Remain Amount:</label>
-               <label id="RemainAmount" class="control-label text-info">--Remain Amount--</label>
+               @*text-info*@
+               <label id="RemainAmount" class="control-label">--Remain Amount--</label>
             </div>
             <div class="form-group">
                 <label asp-for="Comments" class="control-label"></label>
@@ -164,9 +165,15 @@
                         type: "POST",
                         success: function (data) {
                             //console.log(data);
-                            if(data != null && data != 0){
+                            if(data != null){
                                 //console.log(data); 
                                 $("#RemainAmount").text(data);
+                                if(data > 0){
+                                    $("#RemainAmount").addClass("text-warning");
+                                }
+                                else{
+                                    $("#RemainAmount").addClass("text-success");
+                                }
                             }
                         },
                         error: function (response) {

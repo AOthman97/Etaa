@@ -201,6 +201,7 @@ namespace Etaa.Controllers
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", clearance.UserId);
+                ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == clearance.ProjectId).Select(f => f.NameAr).Single();
                 return View(clearance);
             }
             catch (Exception ex)
@@ -214,11 +215,11 @@ namespace Etaa.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClearanceId,ClearanceDocumentPath,Comments,ClearanceDate,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] Clearance clearance)
+        public async Task<IActionResult> Edit(int clearanceId, [Bind("ClearanceId,ClearanceDocumentPath,Comments,ClearanceDate,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] Clearance clearance)
         {
             try
             {
-                if (id != clearance.ClearanceId)
+                if (clearanceId != clearance.ClearanceId)
                 {
                     return NotFound();
                 }
@@ -227,6 +228,21 @@ namespace Etaa.Controllers
                 {
                     try
                     {
+                        // If the session value exists then the user has added a file to update instead of the existing file
+                        var NewFilePath = HttpContext.Session.GetString("filePath");
+                        if (NewFilePath != null)
+                        {
+                            HttpContext.Session.Clear();
+                            var OldFilePath = "";
+                            OldFilePath = _context.Clearances.Where(f => f.ClearanceId == clearance.ClearanceId).Select(f => f.ClearanceDocumentPath).Single();
+                            FileInfo file = new FileInfo(OldFilePath);
+                            if (file.Exists)
+                            {
+                                file.Delete();
+                            }
+                            clearance.ClearanceDocumentPath = NewFilePath;
+                        }
+
                         _context.Update(clearance);
                         await _context.SaveChangesAsync();
                     }
