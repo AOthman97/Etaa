@@ -132,6 +132,7 @@ namespace Etaa.Controllers
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+                ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == financialStatement.ProjectId).Select(f => f.NameAr).Single();
                 return View(financialStatement);
             }
             catch (Exception ex)
@@ -145,11 +146,11 @@ namespace Etaa.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FinancialStatementId,DocumentPath,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] FinancialStatement financialStatement)
+        public async Task<IActionResult> Edit(int financialStatementId, [Bind("FinancialStatementId,DocumentPath,IsApprovedByManagement,IsCanceled,ProjectId,UserId,ManagementUserId")] FinancialStatement financialStatement)
         {
             try
             {
-                if (id != financialStatement.FinancialStatementId)
+                if (financialStatementId != financialStatement.FinancialStatementId)
                 {
                     return NotFound();
                 }
@@ -158,6 +159,21 @@ namespace Etaa.Controllers
                 {
                     try
                     {
+                        // If the session value exists then the user has added a file to update instead of the existing file
+                        var NewFilePath = HttpContext.Session.GetString("filePath");
+                        if (NewFilePath != null)
+                        {
+                            HttpContext.Session.Clear();
+                            var OldFilePath = "";
+                            OldFilePath = _context.FinancialStatements.Where(f => f.FinancialStatementId == financialStatement.FinancialStatementId).Select(f => f.DocumentPath).Single();
+                            FileInfo file = new FileInfo(OldFilePath);
+                            if (file.Exists)
+                            {
+                                file.Delete();
+                            }
+                            financialStatement.DocumentPath = NewFilePath;
+                        }
+
                         _context.Update(financialStatement);
                         await _context.SaveChangesAsync();
                     }
