@@ -134,7 +134,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NameAr" class="control-label"></label>
-                <input asp-for="NameAr" class="form-control" />
+                <input asp-for="NameAr" class="form-control" autofocus />
                 <span asp-validation-for="NameAr" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -143,15 +143,9 @@
                 <span asp-validation-for="NameEn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                @*rejex for only english onkeyup="this.value=this.value.replace(/[^a-z]/g,'');"*@
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="HouseNumber" class="control-label"></label>
-                <input asp-for="HouseNumber" class="form-control" type="number" min="1" />
-                <span asp-validation-for="HouseNumber" class="text-danger"></span>
+                <input asp-for="HouseNumber" class="form-control" type="number" min="0" />
+                @*<span asp-validation-for="HouseNumber" class="text-danger"></span>*@
             </div>
             <div class="form-group">
                 <label asp-for="Alleyway" class="control-label"></label>
@@ -185,17 +179,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="NumberOfIndividuals" class="control-label"></label>
-                <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="0" />
+                <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="0" value="0" />
                 <span asp-validation-for="NumberOfIndividuals" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" type="number" min="1" />
+                <input asp-for="Age" class="form-control" type="number" min="1" value="1" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MonthlyIncome" class="control-label"></label>
-                <input asp-for="MonthlyIncome" class="form-control" type="number" min="0" />
+                <input asp-for="MonthlyIncome" class="form-control" type="number" min="0" value="0" />
                 <span asp-validation-for="MonthlyIncome" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -227,6 +221,12 @@
             <div class="form-group">
                 <label asp-for="DistrictId" class="control-label"></label>
                 <select asp-for="DistrictId" class ="form-control" asp-items="ViewBag.DistrictId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                @*rejex for only english onkeyup="this.value=this.value.replace(/[^a-z]/g,'');"*@
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GenderId" class="control-label"></label>
