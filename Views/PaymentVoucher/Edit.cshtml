@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var ProjectNameAr = ViewData["ProjectNameAr"];
 }
 
 <script>
@@ -26,13 +27,24 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PaymentVoucherId" />
+            <input type="hidden" id="hdnPaymentVoucherId" asp-for="PaymentVoucherId" />
             <div class="form-group">
                 <label class="control-label">Select Project</label>
-                <input id="txtProject" class="form-control" autofocus readonly />
-                <input id="hdnProjectId" type="hidden" name="ProjectId" />
+                <input id="txtProject" asp-for="@ProjectNameAr" class="form-control" readonly />
+                <input id="hdnProjectId" type="hidden" name="ProjectId" asp-for="ProjectId" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentAmount" class="control-label"></label>
+                <input asp-for="PaymentAmount" class="form-control" type="number" min="1" autofocus />
+                <span asp-validation-for="PaymentAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group dropdown">
+                <label class="control-label">Installment Number</label>
+                <select id="InstallmentsNo" class="form-select" disabled asp-for="InstallmentsId">
+                    <option value="0">--Select--</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="PaymentDocumentPath" class="control-label"></label>
@@ -41,23 +53,30 @@
                 <a asp-action="Download" asp-route-PaymentVoucherId="@Model.PaymentVoucherId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
+                <label>Attachments:</label>
+                <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="col-md-12 border border-info" id="dropzone">
+                            <div class="dropzone" style="border:none" action="/PaymentVoucher/Upload" id="uploader">
+                                <div class="dz-message needsclick">
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                    <div class="ms-4">
+                                        <h3 class="fs-5 fw-bolder text-gray-900 mb-1">Drop files here or click to upload</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group">
                 <label asp-for="PaymentDate" class="control-label"></label>
                 <input asp-for="PaymentDate" class="form-control" />
                 <span asp-validation-for="PaymentDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PaymentAmount" class="control-label"></label>
-                <input asp-for="PaymentAmount" class="form-control" type="number" min="1" />
-                <span asp-validation-for="PaymentAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group dropdown">
-                <label class="control-label">Installment Number</label>
-                <select id="InstallmentsNo" class="form-select">
-                    <option value="0">--Select--</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                @*<input type="submit" value="Save" class="btn btn-primary" />*@
+                <a class="btn btn-primary" onclick="saveData()">Save</a>
             </div>
         </form>
     </div>
@@ -68,5 +87,53 @@
 </div>
 
 @section Scripts {
+    <script>
+        function saveData(){
+            let paymentVoucherId = $("#hdnPaymentVoucherId").val();
+            let projectId = $("#hdnProjectId").val();
+            let installmentNo = $("#InstallmentsNo").val();
+            let paidAmount = $("#PaymentAmount").val();
+            let paymentDate = $("#PaymentDate").val();
+
+            let paymentVoucher = {
+                "PaymentVoucherId": paymentVoucherId,
+                "ProjectId": projectId,
+                "InstallmentsId": installmentNo,
+                "PaymentAmount": paidAmount,
+                "PaymentDate": paymentDate
+            }
+
+            $.ajax({
+                url: "/PaymentVoucher/Edit",
+                type: 'Post',
+                data: {
+                   paymentVoucherId : paymentVoucherId,
+                   paymentVoucher : paymentVoucher
+                },
+                headers:
+                {
+                    "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    //alert("Success");
+                    //var res = result;
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        };
+
+        $(function () {
+            $.post(`/PaymentVoucher/GetInstallmentForPaymentVoucher`, {PaymentVoucherId: $("#hdnPaymentVoucherId").val()}, function (data) {
+                    $.each(data, function (i, e) {
+                        $("#InstallmentsNo").append(`
+                            <option selected="true" value="${e.value}">${e.text}</option>
+                        `)
+                    });
+            });
+        });
+    </script>
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

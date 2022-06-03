@@ -38,6 +38,22 @@ namespace Etaa.Controllers
             }
         }
 
+        // Get the Installment no select item for current payment voucher
+        public async Task<JsonResult> GetInstallmentForPaymentVoucher(int PaymentVoucherId)
+        {
+            try
+            {
+                // await _context.PaymentVouchers.Where(f => f.PaymentVoucherId == PaymentVoucherId).Select(f => f.InstallmentsId).ToListAsync()
+                var InstallmentId = _context.PaymentVouchers.Where(p => p.PaymentVoucherId == PaymentVoucherId).Select(p => p.InstallmentsId).Single();
+                var Result = new SelectList(await _context.Installments.Where(i => i.InstallmentsId == InstallmentId).ToListAsync(), "InstallmentsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
         // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
         [HttpPost]  
         public JsonResult AutoComplete(string prefix)
@@ -434,9 +450,10 @@ namespace Etaa.Controllers
                 {
                     return NotFound();
                 }
-                ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
+                ViewData["InstallmentsId"] = paymentVoucher.InstallmentsId;
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+                ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == paymentVoucher.ProjectId).Select(f => f.NameAr).Single();
                 return View(paymentVoucher);
             }
             catch (Exception ex)
@@ -450,11 +467,11 @@ namespace Etaa.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PaymentVoucherId,PaymentDocumentPath,PaymentDate,PaymentAmount,IsApprovedByManagement,IsCanceled,ProjectId,InstallmentsId,UserId,ManagementUserId")] PaymentVoucher paymentVoucher)
+        public async Task<IActionResult> Edit(int paymentVoucherId, [Bind("PaymentVoucherId,PaymentDocumentPath,PaymentDate,PaymentAmount,IsApprovedByManagement,IsCanceled,ProjectId,InstallmentsId,UserId,ManagementUserId")] PaymentVoucher paymentVoucher)
         {
             try
             {
-                if (id != paymentVoucher.PaymentVoucherId)
+                if (paymentVoucherId != paymentVoucher.PaymentVoucherId)
                 {
                     return NotFound();
                 }
@@ -463,6 +480,21 @@ namespace Etaa.Controllers
                 {
                     try
                     {
+                        // If the session value exists then the user has added a file to update instead of the existing file
+                        var NewFilePath = HttpContext.Session.GetString("filePath");
+                        if (NewFilePath != null)
+                        {
+                            HttpContext.Session.Clear();
+                            var OldFilePath = "";
+                            OldFilePath = _context.PaymentVouchers.Where(f => f.PaymentVoucherId == paymentVoucher.PaymentVoucherId).Select(f => f.PaymentDocumentPath).Single();
+                            FileInfo file = new FileInfo(OldFilePath);
+                            if (file.Exists)
+                            {
+                                file.Delete();
+                            }
+                            paymentVoucher.PaymentDocumentPath = NewFilePath;
+                        }
+
                         _context.Update(paymentVoucher);
                         await _context.SaveChangesAsync();
                     }
