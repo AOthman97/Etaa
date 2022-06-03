@@ -62,7 +62,7 @@
     <div class="col-md-4">
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProjectId" />
+            <input type="hidden" id="hdnProjectId" asp-for="ProjectId" />
             <div class="form-group">
                 @*<label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
@@ -112,17 +112,43 @@
                 <span asp-validation-for="WaiverPeriod" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberOfFundsId" class="control-label"></label>
-                <select asp-for="NumberOfFundsId" class="form-control" asp-items="ViewBag.NumberOfFundsId"></select>
-                <span asp-validation-for="NumberOfFundsId" class="text-danger"></span>
+                <label asp-for="FirstInstallmentDueDate" class="control-label"></label>
+                <input asp-for="FirstInstallmentDueDate" class="form-control" />
+                <span asp-validation-for="FirstInstallmentDueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group dropdown">
+                <label class="control-label">Funds Number</label>
+                <select id="NoOfFunds" class="form-select">
+                    <option value="0">--Select--</option>
+                </select>
+                @*<label asp-for="NumberOfFundsId" class="control-label"></label>
+                <select asp-for="NumberOfFundsId" class ="form-control" asp-items="ViewBag.NumberOfFundsId"></select>*@
+            </div>
+            <div class="form-group dropdown">
+                <label for="ProjectTypes" class="form-label">Project Types</label>
+                <select id="ProjectTypes" class="form-select">
+                    <option value="0">--Select--</option>
+                </select>
+                @*<label asp-for="ProjectTypeId" class="control-label"></label>
+                <select asp-for="ProjectTypeId" class ="form-control" asp-items="ViewBag.ProjectTypeId"></select>*@
+            </div>
+            <div id="ProjectAssets" class="form-group row col-12">
+
+            </div>
+            <div id="ProjectSelectionReasons">
+                <label class="control-label">Project Selection Reasons</label>
+                @*Was replaced with the post function of the GetProjectSelectionReasons*@
+                @*<label asp-for="ProjectSelectionReasonsId" class="control-label"></label>
+                <select multiple="multiple" asp-for="ProjectSelectionReasonsId" class ="form-control" asp-items="ViewBag.ProjectSelectionReasonsId"></select>*@
+            </div>
+            <div id="ProjectSocialBenefits">
+                <label class="control-label">Project Social Benefits</label>
+                @*<label asp-for="ProjectSocialBenefitsId" class="control-label"></label>
+                <select multiple="multiple" asp-for="ProjectSocialBenefitsId" class ="form-control" asp-items="ViewBag.ProjectSocialBenefitsId"></select>*@
             </div>
             <div class="form-group">
-                <label asp-for="ProjectTypeId" class="control-label"></label>
-                <select asp-for="ProjectTypeId" class="form-control" asp-items="ViewBag.ProjectTypeId"></select>
-                <span asp-validation-for="ProjectTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                @*<input type="submit" value="Save" class="btn btn-primary" />*@
+                <a class="btn btn-primary" onclick="saveData()">Save</a>
             </div>
         </form>
     </div>
@@ -224,7 +250,8 @@
             error: function (error) {
                 console.log(error);
             }
-        });
+        })
+        };
 
             $(function ()
             {
@@ -243,16 +270,28 @@
                 });
 
                 // Should already get the data on page load
-                $.post(`/Project/GetProjectSocialBenefits`, function (data) {
+                $.post(`/Project/GetProjectSocialBenefits`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
-                        $("#ProjectSocialBenefits").append(`
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
-                          <label class="form-check-label" for="chk_${i}">
-                            ${e.text}
-                          </label>
-                        </div>
-                        `)
+                        if(e.selected){
+                            $("#ProjectSocialBenefits").append(`
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}" checked>
+                                  <label class="form-check-label" for="chk_${i}">
+                                    ${e.text}
+                                  </label>
+                                </div>
+                            `)
+                        }
+                        else{
+                            $("#ProjectSocialBenefits").append(`
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
+                                  <label class="form-check-label" for="chk_${i}">
+                                    ${e.text}
+                                  </label>
+                                </div>
+                            `)
+                        }
                     });
                 });
 
