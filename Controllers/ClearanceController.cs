@@ -167,15 +167,23 @@ namespace Etaa.Controllers
                                                          where paymentVoucherVar.ProjectId == clearance.ProjectId
                                                          select (decimal)paymentVoucherVar.PaymentAmount).Sum();
 
-                if(SumPaidAmount == Capital)
+                var Project = _context.Clearances.Where(c => c.ProjectId == clearance.ProjectId).Select(c => c.ProjectId);
+                if(Project.Any() == false)
                 {
-                    _context.Add(clearance);
-                    await _context.SaveChangesAsync();
-                    return View(clearance);
+                    if (SumPaidAmount == Capital)
+                    {
+                        _context.Add(clearance);
+                        await _context.SaveChangesAsync();
+                        return View(clearance);
+                    }
+                    else
+                    {
+                        return View("Create", clearance);
+                    }
                 }
                 else
                 {
-                    return View("Create", clearance);
+                    return NotFound();
                 }
             }
             catch (Exception ex)

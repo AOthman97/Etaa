@@ -98,16 +98,24 @@ namespace Etaa.Controllers
         {
             try
             {
-                var userId = User.GetLoggedInUserId<string>();
-                financialStatement.UserId = userId;
-                var filePath = HttpContext.Session.GetString("filePath");
-                HttpContext.Session.Clear();
-                financialStatement.DocumentPath = filePath;
-                financialStatement.IsApprovedByManagement = false;
-                _context.Add(financialStatement);
-                await _context.SaveChangesAsync();
+                var Project = _context.FinancialStatements.Where(f => f.ProjectId == financialStatement.ProjectId && f.IsCanceled == false).Select(f => f.ProjectId);
+                if(Project.Any() == false)
+                {
+                    var userId = User.GetLoggedInUserId<string>();
+                    financialStatement.UserId = userId;
+                    var filePath = HttpContext.Session.GetString("filePath");
+                    HttpContext.Session.Clear();
+                    financialStatement.DocumentPath = filePath;
+                    financialStatement.IsApprovedByManagement = false;
+                    _context.Add(financialStatement);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -234,9 +242,17 @@ namespace Etaa.Controllers
             try
             {
                 var financialStatement = await _context.FinancialStatements.FindAsync(id);
-                financialStatement.IsCanceled = true;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var Project = _context.PaymentVouchers.Where(p => p.ProjectId == financialStatement.ProjectId && p.IsCanceled == false).Select(p => p.Projects);
+                if (Project.Any() == false)
+                {
+                    financialStatement.IsCanceled = true;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
