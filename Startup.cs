@@ -69,7 +69,7 @@ namespace Etaa
             {
                 endpoints.MapControllerRoute(
                         name: "default",
-                        pattern: "{controller=Home}/{action/Index}/{id?}"
+                        pattern: "{controller=Families}/{action/Index}/{id?}"
                     );
             });
 

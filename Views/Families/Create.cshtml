@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.Family
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "إضافة أسرة";
 }
 
 <script type="text/javascript">
@@ -124,9 +124,9 @@
     }); 
 </script>
 
-<h1>Create</h1>
+<h1>إضافة</h1>
 
-<h4>Family</h4>
+<h4>أسرة</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -207,15 +207,15 @@
                 @Html.DropDownList("States", (IEnumerable <SelectListItem>)ViewData["States"], "-Select-", htmlAttributes: new { @class = "form-control"})
             </div>*@
             <div class="form-group">
-                <label>State</label>
+                <label>الولاية</label>
                 <select id="StatesList" asp-items="@ViewBag.States" class="form-control">
-                    <option>-Select State-</option>
+                    <option>-إختر الولاية-</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>City</label>
+                <label>المدينة</label>
                 <select id="CitiesList" class="form-control">
-                    <option>-Select City-</option>
+                    <option>-إختر المدينة-</option>
                 </select>
             </div>
             <div class="form-group">
@@ -261,14 +261,14 @@
                 <select asp-for="InvestmentTypeId" class ="form-control" asp-items="ViewBag.InvestmentTypeId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="الحفظ" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {

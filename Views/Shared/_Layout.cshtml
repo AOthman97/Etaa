@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Etaa</title>
+    <title>@ViewData["Title"] - إعطاء</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Etaa.styles.css" asp-append-version="true" />
@@ -29,38 +29,38 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Etaa</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">إعطاء</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Families" asp-action="Index">العائلات</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Families" asp-action="Index">Families</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="FamilyMembers" asp-action="Index">أعضاء العائلات</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="FamilyMembers" asp-action="Index">Family Members</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contributors" asp-action="Index">المساهمون</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contributors" asp-action="Index">Contributors</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ProjectType" asp-action="Index">أنواع المشاريع</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProjectType" asp-action="Index">Project Types</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">المشاريع</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="FinancialStatement" asp-action="Index">الإقرارات المالية</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="FinancialStatement" asp-action="Index">Financial Statements</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PaymentVoucher" asp-action="Index">Payment Vouchers</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="PaymentVoucher" asp-action="Index">مستندات الدفع</a>
                         </li><li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clearance" asp-action="Index">Clearances</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Clearance" asp-action="Index">خلو الطرف</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -90,7 +90,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now.Year - Etaa
+            &copy; @DateTime.Now.Year - إعطاء
         </div>
     </footer>
 </body>

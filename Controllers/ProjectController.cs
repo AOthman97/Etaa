@@ -288,41 +288,40 @@ namespace Etaa.Controllers
                 project.NameEn = String.Concat(ProjectTypeNameEn.Result, " ", FamilyNameEn.Result);
                 project.NameAr = String.Concat(ProjectTypeNameAr.Result, " ", FamilyNameAr.Result);
 
-                _context.Add(project);
-                await _context.SaveChangesAsync();
-                foreach (var item in projectsAssets)
+                decimal Capital = (decimal)project.Capital;
+                decimal MonthlyInstallmentAmount = (decimal)project.MonthlyInstallmentAmount;
+                int NumberOfInstallments = (int)project.NumberOfInstallments;
+                int MaxInstallmentsNo = _context.Installments.Select(i => i.InstallmentsId).Max();
+
+                if((NumberOfInstallments > MaxInstallmentsNo) || (Capital / MonthlyInstallmentAmount != NumberOfInstallments))
                 {
-                    item.ProjectId = project.ProjectId;
-                    _context.Add(item);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-
-                foreach (var item in projectsSelectionReasons)
+                else
                 {
-                    item.ProjectId = project.ProjectId;
-                    _context.Add(item);
+                    _context.Add(project);
+                    foreach (var item in projectsAssets)
+                    {
+                        item.ProjectId = project.ProjectId;
+                        _context.Add(item);
+                    }
+
+                    foreach (var item in projectsSelectionReasons)
+                    {
+                        item.ProjectId = project.ProjectId;
+                        _context.Add(item);
+                    }
+
+                    foreach (var item in projectsSocialBenefits)
+                    {
+                        item.ProjectId = project.ProjectId;
+                        _context.Add(item);
+                    }
+
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
-
-                foreach (var item in projectsSocialBenefits)
-                {
-                    item.ProjectId = project.ProjectId;
-                    _context.Add(item);
-                    await _context.SaveChangesAsync();
-                }
-
-                //_logger.LogInformation("Project Created with user {@userId}", userId);
-
-                //try
-                //{
-                //    throw new NotImplementedException();
-                //}
-                //catch (NotImplementedException ex)
-                //{
-                //    _logger.LogError(ex, ex.Message);
-                //}
-
-                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {

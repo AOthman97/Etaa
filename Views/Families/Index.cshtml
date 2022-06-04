@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Etaa.Models.Family>
 
 @{
-    ViewData["Title"] = "Family Data";
+    ViewData["Title"] = "بيانات الأسر";
 }
 
-<h1>Family Data</h1>
+<h1>بيانات الأسر</h1>
 
 <table class="table">
     <thead>
@@ -58,9 +58,9 @@
                 @Html.DisplayFor(modelItem => item.FirstPhoneNumber)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.FamilyId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FamilyId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FamilyId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.FamilyId">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyId">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyId">الحذف</a>
             </td>
         </tr>
 }
@@ -68,5 +68,5 @@
 </table>
 
 <div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
-    <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> Add Family</a>
+    <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة عائلة</a>
 </div>

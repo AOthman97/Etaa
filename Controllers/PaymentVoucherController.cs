@@ -339,7 +339,8 @@ namespace Etaa.Controllers
                                                      where financialStatement.ProjectId == ProjectId
                                                      select financialStatement.FinancialStatementId).SingleOrDefaultAsync();
 
-                if(!IsFinancialStatementConfirmed.Equals(null) && IsFinancialStatementConfirmed.Result != 0) 
+                // Meaning it should have a financial statement before this step
+                if (!IsFinancialStatementConfirmed.Equals(null) && IsFinancialStatementConfirmed.Result != 0) 
                 {
                     int NumberOfInstallments = (from project in _context.Projects
                                                 where project.ProjectId == paymentVoucher.ProjectId
@@ -354,75 +355,84 @@ namespace Etaa.Controllers
                     List<PaymentVoucher> paymentVouchers = new List<PaymentVoucher>();
                     //_context.Add(paymentVoucher);
 
-                    for (int Increment = paymentVoucher.InstallmentsId; Increment <= NumberOfInstallments; Increment++)
+                    // Make sure that the installment no that we're paying to is not greater than the number of installments
+                    // that the project already saved with
+                    if(paymentVoucher.InstallmentsId <= NumberOfInstallments)
                     {
-                        if (PaymentAmount > 0)
+                        for (int Increment = paymentVoucher.InstallmentsId; Increment <= NumberOfInstallments; Increment++)
                         {
-                            decimal SumPaidAmountForInstallmentNo = (from paymentVoucherVar in _context.PaymentVouchers
-                                                                     where paymentVoucherVar.ProjectId == paymentVoucher.ProjectId &&
-                                                                     paymentVoucherVar.InstallmentsId == paymentVoucher.InstallmentsId
-                                                                     select (decimal)paymentVoucherVar.PaymentAmount).Sum();
+                            if (PaymentAmount > 0)
+                            {
+                                decimal SumPaidAmountForInstallmentNo = (from paymentVoucherVar in _context.PaymentVouchers
+                                                                         where paymentVoucherVar.ProjectId == paymentVoucher.ProjectId &&
+                                                                         paymentVoucherVar.InstallmentsId == paymentVoucher.InstallmentsId
+                                                                         select (decimal)paymentVoucherVar.PaymentAmount).Sum();
 
-                            if (SumPaidAmountForInstallmentNo.Equals(0) || SumPaidAmountForInstallmentNo.Equals(null) || SumPaidAmountForInstallmentNo == 0)
-                            {
-                                // First payment for this installment no
-                                if (PaymentAmount <= MonthlyInstallmentAmount)
+                                if (SumPaidAmountForInstallmentNo.Equals(0) || SumPaidAmountForInstallmentNo.Equals(null) || SumPaidAmountForInstallmentNo == 0)
                                 {
-                                    paymentVoucher.PaymentAmount = PaymentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
-                                    PaymentAmount = 0;
+                                    // First payment for this installment no
+                                    if (PaymentAmount <= MonthlyInstallmentAmount)
+                                    {
+                                        paymentVoucher.PaymentAmount = PaymentAmount;
+                                        paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                        PaymentAmount = 0;
+                                    }
+                                    else if (PaymentAmount > MonthlyInstallmentAmount)
+                                    {
+                                        paymentVoucher.PaymentAmount = MonthlyInstallmentAmount;
+                                        paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = MonthlyInstallmentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                        //_context.Add(paymentVoucher);
+                                        //await _context.SaveChangesAsync();
+                                        PaymentAmount -= MonthlyInstallmentAmount;
+                                        //Increment++;
+                                        paymentVoucher.InstallmentsId += 1;
+                                    }
                                 }
-                                else if (PaymentAmount > MonthlyInstallmentAmount)
+                                else if (SumPaidAmountForInstallmentNo > 0 && SumPaidAmountForInstallmentNo < MonthlyInstallmentAmount)
                                 {
-                                    paymentVoucher.PaymentAmount = MonthlyInstallmentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = MonthlyInstallmentAmount, PaymentDate = paymentVoucher.PaymentDate });
-                                    //_context.Add(paymentVoucher);
-                                    //await _context.SaveChangesAsync();
-                                    PaymentAmount -= MonthlyInstallmentAmount;
+                                    // Pay the remaining/part of this installment no and maybe proceed to the next installment no if there's
+                                    // still remaining to pay from the PaymentAmount
+                                    if ((PaymentAmount + SumPaidAmountForInstallmentNo) <= MonthlyInstallmentAmount)
+                                    {
+                                        paymentVoucher.PaymentAmount = PaymentAmount;
+                                        paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
+                                        //_context.Add(paymentVoucher);
+                                        //await _context.SaveChangesAsync();
+                                        PaymentAmount = 0;
+                                    }
+                                    else if ((PaymentAmount + SumPaidAmountForInstallmentNo) > MonthlyInstallmentAmount)
+                                    {
+                                        paymentVoucher.PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
+                                        paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo), PaymentDate = paymentVoucher.PaymentDate });
+                                        //_context.Add(paymentVoucher);
+                                        //await _context.SaveChangesAsync();
+                                        PaymentAmount -= (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
+                                        //Increment++;
+                                        paymentVoucher.InstallmentsId += 1;
+                                    }
+                                }
+                                else if (SumPaidAmountForInstallmentNo >= MonthlyInstallmentAmount)
+                                {
+                                    // Current installment no is fully paid and thus go the next installments no
                                     //Increment++;
                                     paymentVoucher.InstallmentsId += 1;
                                 }
                             }
-                            else if (SumPaidAmountForInstallmentNo > 0 && SumPaidAmountForInstallmentNo < MonthlyInstallmentAmount)
+                            else
                             {
-                                // Pay the remaining/part of this installment no and maybe proceed to the next installment no if there's
-                                // still remaining to pay from the PaymentAmount
-                                if ((PaymentAmount + SumPaidAmountForInstallmentNo) <= MonthlyInstallmentAmount)
-                                {
-                                    paymentVoucher.PaymentAmount = PaymentAmount;
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
-                                    //_context.Add(paymentVoucher);
-                                    //await _context.SaveChangesAsync();
-                                    PaymentAmount = 0;
-                                }
-                                else if ((PaymentAmount + SumPaidAmountForInstallmentNo) > MonthlyInstallmentAmount)
-                                {
-                                    paymentVoucher.PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
-                                    paymentVouchers.Add(new PaymentVoucher { UserId = userId, ManagementUserId = null, PaymentDocumentPath = filePath, ProjectId = ProjectId, InstallmentsId = Increment, PaymentAmount = (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo), PaymentDate = paymentVoucher.PaymentDate });
-                                    //_context.Add(paymentVoucher);
-                                    //await _context.SaveChangesAsync();
-                                    PaymentAmount -= (MonthlyInstallmentAmount - SumPaidAmountForInstallmentNo);
-                                    //Increment++;
-                                    paymentVoucher.InstallmentsId += 1;
-                                }
-                            }
-                            else if (SumPaidAmountForInstallmentNo >= MonthlyInstallmentAmount)
-                            {
-                                // Current installment no is fully paid and thus go the next installments no
-                                //Increment++;
-                                paymentVoucher.InstallmentsId += 1;
+                                break;
                             }
                         }
-                        else
-                        {
-                            break;
-                        }
+
+                        _context.Set<PaymentVoucher>().AddRange(paymentVouchers);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Index));
                     }
-
-                    _context.Set<PaymentVoucher>().AddRange(paymentVouchers);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
                 else
                 {
