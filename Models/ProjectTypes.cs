@@ -13,14 +13,17 @@ namespace Etaa.Models
         [Required(ErrorMessage = "!حقل الإسم إنجليزي مطلوب")]
         [Display(Name = "الإسم إنجليزي")]
         public string NameEn { get; set; }
+        [Display(Name = "هل تم الحذف")]
         public bool IsCanceled { get; set; }
 
         // Relationship between the project type and project domain
+        [Display(Name = "مجال المشروع")]
         public int ProjectDomainTypeId { get; set; }
         [ForeignKey("ProjectDomainTypeId")]
         public ProjectDomainTypes? ProjectDomainTypes { get; set; }
 
         // Relationship between the project type and project group
+        [Display(Name = "مجموعة المشروع")]
         public int ProjectGroupId { get; set; }
         [ForeignKey("ProjectGroupId")]
         public ProjectGroup? ProjectGroup { get; set; }

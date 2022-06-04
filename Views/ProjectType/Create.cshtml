@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.ProjectTypes
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "إضافة نوع مشروع";
 }
 
 <script>
@@ -42,9 +42,9 @@
     });
 </script>
 
-<h1>Create</h1>
+<h1>الإضافة</h1>
 
-<h4>ProjectTypes</h4>
+<h4>نوع المشروع</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -74,14 +74,14 @@
                 <select asp-for="ProjectGroupId" class ="form-control" asp-items="ViewBag.ProjectGroupId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="الحفظ" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {

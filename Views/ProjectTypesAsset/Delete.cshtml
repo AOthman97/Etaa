@@ -1,14 +1,14 @@
 ﻿@model Etaa.Models.ProjectTypesAssets
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "حذف أصول نوع المشروع";
 }
 
-<h1>Delete</h1>
+<h1>الحذف</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>هل تريد حذف أصول نوع المشروع ؟</h3>
 <div>
-    <h4>ProjectTypesAssets</h4>
+    <h4>أصول نوع المشروع</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -33,7 +33,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProjectTypesAssetsId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="الحذف" class="btn btn-danger" /> |
+        <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
     </form>
 </div>
