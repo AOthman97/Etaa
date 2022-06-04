@@ -1,14 +1,14 @@
 ﻿@model Etaa.Models.Family
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "حذف أسرة";
 }
 
-<h1>Delete</h1>
+<h1>حذف</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>هل تريد حذف هذه الأسرة ؟</h3>
 <div>
-    <h4>Family</h4>
+    <h4>أسرة</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -28,12 +28,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HouseNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HouseNumber)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Alleyway)
@@ -60,18 +54,6 @@
             @Html.DisplayFor(model => model.SecondPhoneNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NationalNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NationalNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PassportNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PassportNumber)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NumberOfIndividuals)
         </dt>
         <dd class = "col-sm-10">
@@ -90,100 +72,34 @@
             @Html.DisplayFor(model => model.MonthlyIncome)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCurrentInvestmentProject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCurrentInvestmentProject)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsApprovedByManagement)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsApprovedByManagement)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCanceled)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCanceled)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfBirth)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DateOfBirth)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.District)
+            المحلية
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.District.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
+            النوع
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Gender.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Religion)
+            الديانة
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Religion.NameAr)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MartialStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MartialStatus.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Job)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Job.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HealthStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HealthStatus.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationalStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EducationalStatus.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccommodationType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccommodationType.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InvestmentType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.InvestmentType.NameAr)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ManagementUserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ManagementUserId)
-        </dd>
-        @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users.NameAr)
-        </dd>*@
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="FamilyId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="حذف" class="btn btn-danger" /> |
+        <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
     </form>
 </div>

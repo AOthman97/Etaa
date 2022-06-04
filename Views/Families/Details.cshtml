@@ -1,13 +1,13 @@
 ﻿@model Etaa.Models.Family
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "تفاصيل الأسرة";
 }
 
-<h1>Details</h1>
+<h1>تفاصيل</h1>
 
 <div>
-    <h4>Family</h4>
+    <h4>الأسرة</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -113,65 +113,65 @@
             @Html.DisplayFor(model => model.DateOfBirth)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.District)
+            المحلية
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.District.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
+            النوع
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Gender.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Religion)
+            الديانة
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Religion.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MartialStatus)
+            الحالة الإجتماعية
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MartialStatus.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Job)
+            الوظيفة
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Job.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HealthStatus)
+            الحالة الصحية
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.HealthStatus.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationalStatus)
+            الحالة التعليمية
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EducationalStatus.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccommodationType)
+            نوع الإقامة
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.AccommodationType.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.InvestmentType)
+            نوع الإستثمار
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.InvestmentType.NameAr)
         </dd>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ManagementUserId)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ManagementUserId)
-        </dd>
+        </dd>*@
         @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Users)
         </dt>
@@ -181,6 +181,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.FamilyId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model?.FamilyId">Edit</a> |*@
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>

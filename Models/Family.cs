@@ -43,7 +43,7 @@ namespace Etaa.Models
         [Display(Name = "هل يوجد مشروع إستثماري حاليا")]
         public bool IsCurrentInvestmentProject { get; set; }
         [Display(Name = "هل تمت الموافقة من الإدارة")]
-        public bool? IsApprovedByManagement { get; set; }
+        public bool IsApprovedByManagement { get; set; }
         [Display(Name = "هل تم الحذف")]
         public bool IsCanceled { get; set; }
         [Display(Name = "حقل تاريخ الميلاد")]
