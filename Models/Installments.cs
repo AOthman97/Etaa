@@ -7,8 +7,8 @@ namespace Etaa.Models
     {
         [Key]
         public int InstallmentsId { get; set; }
-        [Required(ErrorMessage = "Name(Ar) is Required!")]
-        [Display(Name = "Name(Ar)")]
+        [Required(ErrorMessage = "إسم القسط عربي مطلوب !")]
+        [Display(Name = "إسم القسط عربي")]
         public string NameAr { get; set; }
         public string? NameEn { get; set; }
         public int? InstallmentNumber { get; set; }
