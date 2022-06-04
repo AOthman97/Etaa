@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.FamilyMember
 
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "إضافة عضو أسرة";
 }
 
    <script type="text/javascript">
@@ -97,9 +97,9 @@
         });
     </script>
 
-<h1>Add</h1>
+<h1>الإضافة</h1>
 
-<h4>Family Member</h4>
+<h4>عضو أسرة</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -107,7 +107,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="FamilyMemberId" />
             <div class="form-group">
-                <label asp-for="Family" class="control-label"></label>
+                <label asp-for="Family" class="control-label">الأسرة</label>
                 <input id="txtFamily" class="form-control" autofocus />
                 <input id="hdnFamilyId" type="hidden" name="FamilyId" />
             </div>
@@ -167,14 +167,14 @@
                 <span asp-validation-for="FamilyId" class="text-danger"></span>
             </div>*@
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="الحفظ" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {

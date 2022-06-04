@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<Etaa.Models.FamilyMember>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "بيانات أعضاء الأسر";
 }
-<h1>Index</h1>
+<h1>بيانات أعضاء الأسر</h1>
 
 <p>
     @*//AddOrEdit*@
     @*asp-action="AddOrEdit" *@
-    <a asp-action="AddOrEdit">Add</a>
+    @*<a asp-action="AddOrEdit">إضافة عضو أسرة</a>*@
     @*<a onclick="ShowPopup('@Url.Action("AddOrEdit","FamilyMembers",null,Context.Request.Scheme)', 'New Family Member')" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#form-modal">Create New</a>*@
 </p>
 <table class="table">
@@ -24,13 +24,13 @@
                 @Html.DisplayNameFor(model => model.Age)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Kinship)
+                صلة القرابة
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EducationalStatus)
+                الحالة التعليمية
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Family)
+                الأسرة
             </th>
             <th></th>
         </tr>
@@ -57,11 +57,15 @@
                 @Html.DisplayFor(modelItem => item.Family.NameAr)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.FamilyMemberId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FamilyMemberId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FamilyMemberId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.FamilyMemberId">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyMemberId">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyMemberId">الحذف</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
+    <a asp-action="AddOrEdit" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة عضو أسرة</a>
+</div>
