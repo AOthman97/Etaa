@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<Etaa.Models.PaymentVoucher>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "بيانات مستندات الدفع";
 }
 
-<h1>Index</h1>
+<h1>بيانات مستندات الدفع</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
 <table class="table">
     <thead>
         <tr>
@@ -19,10 +19,10 @@
                 @Html.DisplayNameFor(model => model.PaymentAmount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Projects)
+                المشروع
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Installments)
+                القسط
             </th>
             <th></th>
         </tr>
@@ -44,11 +44,15 @@
             </td>
             <td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PaymentVoucherId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PaymentVoucherId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PaymentVoucherId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.PaymentVoucherId">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.PaymentVoucherId">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.PaymentVoucherId">الحذف</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
+    <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة مستند دفع</a>
+</div>

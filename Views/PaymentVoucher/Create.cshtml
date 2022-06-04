@@ -3,7 +3,7 @@
 @Html.AntiForgeryToken()
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "إضافة مستند دفع";
 }
 
 <script>
@@ -22,21 +22,21 @@
     });
 </script>
 
-<h1>Create</h1>
+<h1>الإضافة</h1>
 
-<h4>Payment Voucher</h4>
+<h4>مستند دفع</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">Select Project</label>
+                <label class="control-label">إختيار المشروع</label>
                 <input id="txtProject" class="form-control" autofocus />
                 <input id="hdnProjectId" type="hidden" name="ProjectId" />
             </div>
             <div class="form-group dropdown">
-                <label class="control-label">Installment Number</label>
+                <label class="control-label">القسط</label>
                 <select id="InstallmentsNo" class="form-select" disabled>
                     <option value="0">--Select--</option>
                 </select>
@@ -49,7 +49,7 @@
                 <span asp-validation-for="PaymentAmount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Attachments:</label>
+                <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <div class="col-md-12 border border-info" id="dropzone">
@@ -73,7 +73,7 @@
             </div>
             <div class="form-group">
                 @*<input type="submit" value="Create" class="btn btn-primary" />*@
-                <a class="btn btn-primary" onclick="saveData()">Save</a>
+                <a class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>
         </form>
     </div>
@@ -82,11 +82,11 @@
             <table id="Installments" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Installment</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Monthly Installment Amount</th>
-                        <th scope="col">Paid Amount</th>
-                        <th scope="col">Remain Amount</th>
+                        <th scope="col">القسط</th>
+                        <th scope="col">تاريخ الإستحقاق</th>
+                        <th scope="col">مبلغ القسط الشهري</th>
+                        <th scope="col">المبلغ المدفوع</th>
+                        <th scope="col">المبلغ المتبقي</th>
                     </tr>
                 </thead>
                 <tbody class="tbody">
@@ -97,7 +97,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {

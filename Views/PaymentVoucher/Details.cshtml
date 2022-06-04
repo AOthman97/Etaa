@@ -1,13 +1,13 @@
 ﻿@model Etaa.Models.PaymentVoucher
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "تفاصيل مستند الدفع";
 }
 
-<h1>Details</h1>
+<h1>التفاصيل</h1>
 
 <div>
-    <h4>PaymentVoucher</h4>
+    <h4>مستند الدفع</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -42,23 +42,23 @@
             @Html.DisplayFor(model => model.IsCanceled)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Projects)
+            المشروع
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Projects.ProjectId)
+            @Html.DisplayFor(model => model.Projects.NameAr)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Installments)
+            القسط
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Installments.NameAr)
         </dd>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ManagementUserId)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ManagementUserId)
-        </dd>
+        </dd>*@
         @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Users)
         </dt>
@@ -68,6 +68,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.PaymentVoucherId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model?.PaymentVoucherId">Edit</a> |*@
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
