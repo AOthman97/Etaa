@@ -256,16 +256,28 @@
             $(function ()
             {
                 // Should already get the data on page load
-                $.post(`/Project/GetProjectSelectionReasons`, function (data) {
+                $.post(`/Project/GetProjectSelectionReasons`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
-                        $("#ProjectSelectionReasons").append(`
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
-                          <label class="form-check-label" for="chk_${i}">
-                            ${e.text}
-                          </label>
-                        </div>
-                        `)
+                        if(e.selected){
+                            $("#ProjectSelectionReasons").append(`
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}" checked>
+                                  <label class="form-check-label" for="chk_${i}">
+                                    ${e.text}
+                                  </label>
+                                </div>
+                            `)
+                        }
+                        else{
+                            $("#ProjectSelectionReasons").append(`
+                                <div class="form-check">
+                                  <input class="form-check-input" type="checkbox" value="${e.value}" id="chk_${i}">
+                                  <label class="form-check-label" for="chk_${i}">
+                                    ${e.text}
+                                  </label>
+                                </div>
+                            `)
+                        }
                     });
                 });
 

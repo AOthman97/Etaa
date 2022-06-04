@@ -114,6 +114,21 @@ namespace Etaa.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetProjectSelectionReasons(int ProjectId)
+        {
+            try
+            {
+                IEnumerable SelectedValues = _context.ProjectsSelectionReasons.Where(p => p.ProjectId == ProjectId).Select(p => p.ProjectSelectionReasonsId);
+                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.ToListAsync(), "ProjectSelectionReasonsId", "NameAr", SelectedValues);
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
         public async Task<JsonResult> GetProjectSocialBenefits()
         {
             try
