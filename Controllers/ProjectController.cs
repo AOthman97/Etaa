@@ -365,7 +365,13 @@ namespace Etaa.Controllers
         {
             try
             {
-                if (projectId != projects.ProjectId)
+                // In each of these models create actions you should check first if there's no not canceled rows that have
+                // the same ProjectId in them
+                var FinancialStatemntId = _context.FinancialStatements.Where(f => f.ProjectId == projectId && f.IsCanceled == false).Select(f => f.FinancialStatementId);
+                var ClearanceId = _context.Clearances.Where(c => c.ProjectId == projectId && c.IsCanceled == false).Select(c => c.ClearanceId);
+                var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == projectId && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
+                // This is a business validation
+                if (projectId != projects.ProjectId || FinancialStatemntId != null || ClearanceId != null || PaymentVoucherId != null)
                 {
                     return NotFound();
                 }
@@ -501,10 +507,23 @@ namespace Etaa.Controllers
         {
             try
             {
-                var projects = await _context.Projects.FindAsync(id);
-                projects.IsCanceled = true;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var project = await _context.Projects.FindAsync(id);
+                // In each of these models create actions you should check first if there's no not canceled rows that have
+                // the same ProjectId in them
+                var FinancialStatemntId = _context.FinancialStatements.Where(f => f.ProjectId == id && f.IsCanceled == false).Select(f => f.FinancialStatementId);
+                var ClearanceId = _context.Clearances.Where(c => c.ProjectId == id && c.IsCanceled == false).Select(c => c.ClearanceId);
+                var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == id && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
+                // This is a business validation
+                if (FinancialStatemntId != null || ClearanceId != null || PaymentVoucherId != null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    project.IsCanceled = true;
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
