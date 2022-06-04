@@ -1,5 +1,5 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -9,10 +9,21 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
+    
+}
+
+@font-face {
+    font-family: 'Amiri', sans-serif;
+    src: url('Amiri-Regular.woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Amiri', sans-serif !important;
+    font-weight: 400;
+    font-style: normal;
 }

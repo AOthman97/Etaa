@@ -1,16 +1,19 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - إعطاء</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Etaa.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/js/dropzone/dropzone.css" asp-append-version="true" />
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" asp-append-version="true" />*@
     <link rel="stylesheet" href="~/lib/jquery-ui/jquery-ui.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Etaa.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @*<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri&family=El+Messiri&display=swap" rel="stylesheet">*@
 </head>
 <body>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -25,6 +28,7 @@
     <script src="~/js/dropzone/dropzone.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="~/js/sweetalert@2.1.2.min.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -39,18 +43,36 @@
                         @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>*@
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                الأسر
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Families" asp-action="Index">الأسر</a></li>
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="FamilyMembers" asp-action="Index">أعضاء الأسر</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                الإعدادات
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Contributors" asp-action="Index">المساهمون</a></li>
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="ProjectType" asp-action="Index">أنواع المشاريع</a></li>
+                            </ul>
+                        </li>
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Families" asp-action="Index">الأسر</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="FamilyMembers" asp-action="Index">أعضاء الأسر</a>
-                        </li>
-                        <li class="nav-item">
+                        </li>*@
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Contributors" asp-action="Index">المساهمون</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProjectType" asp-action="Index">أنواع المشاريع</a>
-                        </li>
+                        </li>*@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Project" asp-action="Index">المشاريع</a>
                         </li>

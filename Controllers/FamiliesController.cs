@@ -146,6 +146,7 @@ namespace Etaa.Controllers
             try
             {
                 var userId = User.GetLoggedInUserId<string>();
+                ModelState.IsValid.Equals(false);
                 if (ModelState.IsValid)
                 {
                     family.IsCanceled = false;
@@ -153,19 +154,23 @@ namespace Etaa.Controllers
                     family.UserId = userId;
                     _context.Add(family);
                     await _context.SaveChangesAsync();
+                    TempData["Family"] = family.NameAr;
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["AccommodationTypeId"] = new SelectList(_context.AccommodationTypes, "AccommodationTypeId", "NameAr", family.AccommodationTypeId);
-                ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", family.DistrictId);
-                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", family.EducationalStatusId);
-                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", family.GenderId);
-                ViewData["HealthStatusId"] = new SelectList(_context.HealthStatuses, "HealthStatusId", "NameAr", family.HealthStatusId);
-                ViewData["InvestmentTypeId"] = new SelectList(_context.InvestmentTypes, "InvestmentTypeId", "NameAr", family.InvestmentTypeId);
-                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
-                ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
-                ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
-                //ViewData["FamilyId"] = family.FamilyId;
-                return View(family);
+                else
+                {
+                    TempData["Family"] = family.NameAr;
+                    ViewData["AccommodationTypeId"] = new SelectList(_context.AccommodationTypes, "AccommodationTypeId", "NameAr", family.AccommodationTypeId);
+                    ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", family.DistrictId);
+                    ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", family.EducationalStatusId);
+                    ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", family.GenderId);
+                    ViewData["HealthStatusId"] = new SelectList(_context.HealthStatuses, "HealthStatusId", "NameAr", family.HealthStatusId);
+                    ViewData["InvestmentTypeId"] = new SelectList(_context.InvestmentTypes, "InvestmentTypeId", "NameAr", family.InvestmentTypeId);
+                    ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
+                    ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
+                    ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
+                    return View("Create");
+                }
             }
             catch (Exception ex)
             {

@@ -262,6 +262,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="الحفظ" class="btn btn-primary" />
+                @*<a class="btn btn-primary" onclick="showalert()">show</a>*@
             </div>
         </form>
     </div>
@@ -272,5 +273,18 @@
 </div>
 
 @section Scripts {
+@if (TempData["Family"] != null)
+{
+    <script>
+        $(function () {
+                    swal({
+                      title: "الرجاء التحقق من المدخلات!",
+                      text: "الرجاء التحقق من المدخلات!",
+                      icon: "error"
+                    });
+                });
+            </script>
+}
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

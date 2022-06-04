@@ -70,3 +70,17 @@
 <div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
     <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة أسرة</a>
 </div>
+
+
+@if (TempData["Family"] != null)
+{
+    <script>
+        $(function () {
+                    swal({
+                      title: "تمت إضافة بيانات الأسرة بنجاح!",
+                      text: "تمت إضافة بيانات الأسرة بنجاح!",
+                      icon: "success"
+                    });
+                });
+            </script>
+}
