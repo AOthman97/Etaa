@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<Etaa.Models.Contributor>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "بيانات المساهمين";
 }
 
-<h1>Index</h1>
+<h1>بيانات المساهمين</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
+
 <table class="table">
     <thead>
         <tr>
@@ -55,11 +56,15 @@
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ContributorId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ContributorId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ContributorId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.ContributorId">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.ContributorId">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ContributorId">الحذف</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
+    <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة مساهم</a>
+</div>

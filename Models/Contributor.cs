@@ -13,29 +13,32 @@ namespace Etaa.Models
         [Required(ErrorMessage = "!حقل الإسم إنجليزي مطلوب")]
         [Display(Name = "الإسم إنجليزي")]
         public string? NameEn { get; set; }
+        [Display(Name = "رقم التلفون")]
         public string? Mobile { get; set; }
-        [Display(Name = "Whatsapp Mobile")]
+        [Display(Name = "رقم الواتساب")]
         public string? WhatsappMobile { get; set; }
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "البريد الإلكتروني")]
         public string? Email { get; set; }
+        [Display(Name = "العنوان")]
         public string? Address { get; set; }
-        [Display(Name = "Start Date")]
+        [Display(Name = "تاريخ البداية")]
         [DataType(DataType.Date)]
         public DateTime? StartDate { get; set; }
-        [Display(Name = "End Date")]
+        [Display(Name = "تاريخ الإنتهاء")]
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
-        [Display(Name = "Monthly Share Amount")]
+        [Display(Name = "مبلغ القسط الشهري")]
         public decimal? MonthlyShareAmount { get; set; }
-        [Display(Name = "Number of Shares")]
+        [Display(Name = "عدد الأسهم")]
         public int? NumberOfShares { get; set; }
-        [Display(Name = "Active")]
+        [Display(Name = "نشط حاليا")]
         public bool IsActive { get; set; }
-        [Display(Name = "Canceled")]
+        [Display(Name = "هل تم الحذف")]
         public bool IsCanceled { get; set; }
 
         // Relationship between the contributor and district
-        [Display(Name = "District")]
+        [Display(Name = "المحلية")]
         public int DistrictId { get; set; }
         [ForeignKey("DistrictId")]
         public District? District { get; set; }
