@@ -1,7 +1,7 @@
 ﻿@model Etaa.Models.Clearance
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "تعديل خلو الطرف";
     var ProjectNameAr = ViewData["ProjectNameAr"];
 }
 
@@ -38,9 +38,9 @@
     });
 </script>
 
-<h1>Edit</h1>
+<h1>التعديل</h1>
 
-<h4>Clearance</h4>
+<h4>خلو الطرف</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -48,7 +48,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" id="hdnClearanceId" asp-for="ClearanceId" />
             <div class="form-group">
-                <label class="control-label">Select Project</label>
+                <label class="control-label">إختيار المشروع</label>
                 <input id="txtProject" asp-for="@ProjectNameAr" class="form-control" readonly />
                 <input id="hdnProjectId" type="hidden" name="ProjectId" asp-for="ProjectId" />
                 @*<label asp-for="ProjectId" class="control-label"></label>
@@ -61,7 +61,7 @@
                 <a asp-action="Download" asp-route-ClearanceId="@Model.ClearanceId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
-                <label>Attachments:</label>
+                <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <div class="col-md-12 border border-info" id="dropzone">
@@ -89,14 +89,14 @@
             </div>
             <div class="form-group">
                 @*<input type="submit" value="Save" class="btn btn-primary" />*@
-                <a id="btnSave" class="btn btn-primary" onclick="saveData()">Save</a>
+                <a id="btnSave" class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {
