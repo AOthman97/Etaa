@@ -1,13 +1,13 @@
 ﻿@model Etaa.Models.Projects
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "تعديل المشروع";
     var FamilyNameAr = ViewData["FamilyNameAr"];
 }
 
-<h1>Edit</h1>
+<h1>التعديل</h1>
 
-<h4>Projects</h4>
+<h4>المشروع</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,7 +17,7 @@
             <div class="form-group">
                 @*<label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
-                <label class="control-label">Select Family</label>
+                <label class="control-label">إختيار الأسرة</label>
                 <input id="txtFamily" asp-for="@FamilyNameAr" class="form-control" autofocus />
                 <input id="hdnFamilyId" asp-for="FamilyId" type="hidden" name="FamilyId" />
             </div>
@@ -28,7 +28,7 @@
                 <a asp-action="Download" asp-route-ProjectId="@Model.ProjectId" class="btn btn-outline-primary">Download</a>
             </div>
             <div class="form-group">
-                <label>Attachments:</label>
+                <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <div class="col-md-12 border border-info" id="dropzone">
@@ -85,7 +85,7 @@
                 <span asp-validation-for="FirstInstallmentDueDate" class="text-danger"></span>
             </div>
             <div class="form-group dropdown">
-                <label class="control-label">Funds Number</label>
+                <label class="control-label">رقم التمويل</label>
                 <select id="NoOfFunds" class="form-select">
                     <option value="0">--Select--</option>
                 </select>
@@ -93,7 +93,7 @@
                 <select asp-for="NumberOfFundsId" class ="form-control" asp-items="ViewBag.NumberOfFundsId"></select>*@
             </div>
             <div class="form-group dropdown">
-                <label for="ProjectTypes" class="form-label">Project Types</label>
+                <label for="ProjectTypes" class="form-label">نوع المشروع</label>
                 <select id="ProjectTypes" class="form-select">
                     <option value="0">--Select--</option>
                 </select>
@@ -104,26 +104,26 @@
 
             </div>
             <div id="ProjectSelectionReasons">
-                <label class="control-label">Project Selection Reasons</label>
+                <label class="control-label">أسباب إختيار المشروع</label>
                 @*Was replaced with the post function of the GetProjectSelectionReasons*@
                 @*<label asp-for="ProjectSelectionReasonsId" class="control-label"></label>
                 <select multiple="multiple" asp-for="ProjectSelectionReasonsId" class ="form-control" asp-items="ViewBag.ProjectSelectionReasonsId"></select>*@
             </div>
             <div id="ProjectSocialBenefits">
-                <label class="control-label">Project Social Benefits</label>
+                <label class="control-label">الفوائد الإجتماعية للمشروع</label>
                 @*<label asp-for="ProjectSocialBenefitsId" class="control-label"></label>
                 <select multiple="multiple" asp-for="ProjectSocialBenefitsId" class ="form-control" asp-items="ViewBag.ProjectSocialBenefitsId"></select>*@
             </div>
             <div class="form-group">
                 @*<input type="submit" value="Save" class="btn btn-primary" />*@
-                <a class="btn btn-primary" onclick="saveData()">Save</a>
+                <a class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
 </div>
 
 @section Scripts {
@@ -286,7 +286,7 @@
                             $.post('/Project/GetProjectTypeAssetsForEdit', {ProjectId: $("#hdnProjectId").val()} , function (data) {
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group">`);
-                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
+                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameAr}</label>`);
                                     var txtAmount = $(`<input type="number" min="0" value="${e.amount}" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
                                     var txtQuantity = $(`<input type="number" min="0" value="${e.quantity}" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
                                     var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
@@ -329,7 +329,7 @@
                             $("#ProjectAssets").children().empty();
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group">`);
-                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
+                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameAr}</label>`);
                                     var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
                                     var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
                                     var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);

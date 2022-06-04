@@ -11,42 +11,55 @@ namespace Etaa.Models
         // Make the name an auto-generated field, how?
         // When saving or editing the project data it should concatenate the ProjectTypeName with the FamilyName, One for
         // NameAr, the other for NameEn
+        [Display(Name = "الإسم عربي")]
         public string? NameAr { get; set; }
+        [Display(Name = "الإسم إنجليزي")]
         public string? NameEn { get; set; }
+        [Display(Name = "مستند المشروع")]
         public string? SignatureofApplicantPath { get; set; }
-        [Display(Name = "Project Activity")]
+        [Display(Name = "نشاط المشروع")]
         public string? ProjectActivity { get; set; }
-        [Display(Name = "Project Purpose")]
+        [Display(Name = "الغرض من المشروع")]
         public string? ProjectPurpose { get; set; }
         [Required(ErrorMessage = "!حقل رأس المال مطلوب")]
+        [Display(Name = "رأس مال المشروع")]
         public decimal? Capital { get; set; }
-        [Display(Name = "Monthly Installment Amount")]
+        [Display(Name = "مبلغ القسط الشهري")]
         [Required(ErrorMessage = "!حقل القسط الشهري مطلوب")]
         public decimal? MonthlyInstallmentAmount { get; set; }
-        [Display(Name = "Number of Installments")]
+        [Display(Name = "عدد الأقساط")]
         [Required(ErrorMessage = "!حقل عدد الأقساط مطلوب")]
         public int? NumberOfInstallments { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "التاريخ")]
         public DateTime? Date { get; set; }
-        [Display(Name = "Waifer Period")]
+        [Display(Name = "فترة السماحية")]
         [DataType(DataType.Date)]
         public DateTime? WaiverPeriod { get; set; }
+        [Display(Name = "هل تمت الموافقة من قبل الإدارة")]
         public bool IsApprovedByManagement { get; set; }
+        [Display(Name = "هل تم الحذف")]
         public bool IsCanceled { get; set; }
         [DataType(DataType.Date)]
+        [Display(Name = "تاريخ إستحقاق أول قسط")]
         [Required(ErrorMessage = "!حقل تاريخ إستحقاق القسط الأول مطلوب")]
         public DateTime? FirstInstallmentDueDate { get; set; }
 
         // Relationship between the projects and families
+        [Display(Name = "الأسرة")]
         public int FamilyId { get; set; }
+        [Display(Name = "رقم التمويل")]
         public int NumberOfFundsId { get; set; }
         [NotMapped]
         public virtual ICollection<NumberOfFunds>? NumberOfFunds { get; set; }
         // Relationship between the projects and families
+        [Display(Name = "نوع المشروع")]
         public int ProjectTypeId { get; set; }
         [NotMapped]
         public virtual ICollection<ProjectTypes>? ProjectTypes { get; set; }
+        [Display(Name = "إسم المستخدم")]
         public string? UserId { get; set; }
+        [Display(Name = "إسم مستخدم الإدارة")]
         public string? ManagementUserId { get; set; }
 
         [ForeignKey("ProjectId")]
