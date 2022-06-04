@@ -332,6 +332,7 @@ public string GetAntiXsrfRequestToken()
                 $("select#ProjectTypes").change(function () {
                             var itemVal = $(this).val();
                             $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
+                            $("#ProjectAssets").children().empty();
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group">`);
                                     var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);

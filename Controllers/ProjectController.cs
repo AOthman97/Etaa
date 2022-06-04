@@ -170,6 +170,22 @@ namespace Etaa.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<JsonResult> GetProjectTypes(int ProjectId)
+        {
+            try
+            {
+                ProjectTypes projectTypes = new ProjectTypes();
+                projectTypes.ProjectTypeId = _context.Projects.Where(p => p.ProjectId == ProjectId).Select(p => p.ProjectTypeId).SingleOrDefault();
+                var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr", projectTypes.ProjectTypeId);
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
         public async Task<JsonResult> GetProjectTypeAssets(int ProjectTypeId)
         {
             try
@@ -183,11 +199,41 @@ namespace Etaa.Controllers
             }
         }
 
+        public async Task<JsonResult> GetProjectTypeAssetsForEdit(int ProjectId)
+        {
+            try
+            {
+                //var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).ToListAsync();
+                var Result = await _context.ProjectAssetesProjectTypeAssets.Where(ProjectsAssets => ProjectsAssets.ProjectId == ProjectId).ToListAsync();
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
         public async Task<JsonResult> GetNumberOfFunds()
         {
             try
             {
                 var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr");
+                return Json(Result);
+            }
+            catch (Exception ex)
+            {
+                return Json(default);
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetNumberOfFunds(int ProjectId)
+        {
+            try
+            {
+                NumberOfFunds numberOfFunds = new NumberOfFunds();
+                numberOfFunds.NumberOfFundsId = _context.Projects.Where(p => p.ProjectId == ProjectId).Select(p => p.NumberOfFundsId).SingleOrDefault();
+                var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr", numberOfFunds.NumberOfFundsId);
                 return Json(Result);
             }
             catch (Exception ex)
@@ -300,6 +346,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
+                ViewData["FamilyNameAr"] = _context.Families.Where(f => f.FamilyId == projects.FamilyId).Select(f => f.NameAr).Single();
                 //HttpContext.Session.SetString("filePath", projects.SignatureofApplicantPath);
                 return View(projects);
             }
@@ -314,37 +361,106 @@ namespace Etaa.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,SignatureofApplicantPath,ProjectActivity,ProjectPurpose,Capital,MonthlyInstallmentAmount,NumberOfInstallments,Date,WaiverPeriod,IsApprovedByManagement,IsCanceled,FamilyId,NumberOfFundsId,ProjectTypeId,UserId,ManagementUserId")] Projects projects)
+        public async Task<IActionResult> Edit(int projectId, Projects projects, List<ProjectsAssets> projectsAssets, List<ProjectsSelectionReasons> projectsSelectionReasons, List<ProjectsSocialBenefits> projectsSocialBenefits)
         {
             try
             {
-                if (id != projects.ProjectId)
+                if (projectId != projects.ProjectId)
                 {
                     return NotFound();
                 }
 
-                if (ModelState.IsValid)
+                try
                 {
-                    try
+                    // If the session value exists then the user has added a file to update instead of the existing file
+                    var NewFilePath = HttpContext.Session.GetString("filePath");
+                    if (NewFilePath != null)
                     {
-                        _context.Update(projects);
-                        await _context.SaveChangesAsync();
+                        HttpContext.Session.Clear();
+                        var OldFilePath = "";
+                        OldFilePath = _context.Projects.Where(f => f.ProjectId == projects.ProjectId).Select(f => f.SignatureofApplicantPath).Single();
+                        FileInfo file = new FileInfo(OldFilePath);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                        projects.SignatureofApplicantPath = NewFilePath;
                     }
-                    catch (DbUpdateConcurrencyException)
+
+                    string ProjectTypeNameEn = (from projectType in _context.ProjectTypes
+                                             where projectType.ProjectTypeId == projects.ProjectTypeId
+                                             select projectType.NameEn).Single();
+                    string ProjectTypeNameAr = (from projectType in _context.ProjectTypes
+                                             where projectType.ProjectTypeId == projects.ProjectTypeId
+                                             select (string)projectType.NameAr).Single();
+                    string FamilyNameEn = (from family in _context.Families
+                                        where family.FamilyId == projects.FamilyId
+                                        select (string)family.NameEn).Single();
+                    string FamilyNameAr = (from family in _context.Families
+                                        where family.FamilyId == projects.FamilyId
+                                        select (string)family.NameAr).Single();
+                    projects.NameEn = String.Concat(ProjectTypeNameEn, " ", FamilyNameEn);
+                    projects.NameAr = String.Concat(ProjectTypeNameAr, " ", FamilyNameAr);
+
+                    _context.Update(projects);
+                    //await _context.SaveChangesAsync();
+
+                    // For this model and the other two models instead of directly updating their rows and the hassle of it,
+                    // Just delete the rows and add new rows with the new values
+                    List<ProjectsAssets> projectsAssetsRemoved = await _context.ProjectsAssets.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                    foreach (var item in projectsAssetsRemoved)
                     {
-                        if (!ProjectsExists(projects.ProjectId))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        _context.Remove(item);
                     }
-                    return RedirectToAction(nameof(Index));
+
+                    List<ProjectsSelectionReasons> projectsSelectionReasonsRemoved = await _context.ProjectsSelectionReasons.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                    foreach (var item in projectsSelectionReasonsRemoved)
+                    {
+                        _context.Remove(item);
+                    }
+
+                    List<ProjectsSocialBenefits> projectsSocialBenefitsRemoved = await _context.ProjectsSocialBenefits.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                    foreach (var item in projectsSocialBenefitsRemoved)
+                    {
+                        _context.Remove(item);
+                    }
+
+                    foreach (var item in projectsAssets)
+                    {
+                        item.ProjectId = projects.ProjectId;
+                        _context.Add(item);
+                    }
+
+                    foreach (var item in projectsSelectionReasons)
+                    {
+                        item.ProjectId = projects.ProjectId;
+                        _context.Add(item);
+                    }
+
+                    foreach (var item in projectsSocialBenefits)
+                    {
+                        item.ProjectId = projects.ProjectId;
+                        _context.Add(item);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectsExists(projects.ProjectId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
-                return View(projects);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {

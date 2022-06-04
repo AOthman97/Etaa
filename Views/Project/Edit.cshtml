@@ -2,9 +2,10 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var FamilyNameAr = ViewData["FamilyNameAr"];
 }
 
-<script>
+@*<script>
     $(function () {
         // Just arabic letters
         $("#ProjectActivity").keypress(function(event){
@@ -52,7 +53,7 @@
           }
         });
     });
-</script>
+</script>*@
 
 <h1>Edit</h1>
 
@@ -67,14 +68,31 @@
                 @*<label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
                 <label class="control-label">Select Family</label>
-                <input id="txtFamily" class="form-control" autofocus />
-                <input id="hdnFamilyId" type="hidden" name="FamilyId" />
+                <input id="txtFamily" asp-for="@FamilyNameAr" class="form-control" autofocus />
+                <input id="hdnFamilyId" asp-for="FamilyId" type="hidden" name="FamilyId" />
             </div>
             <div class="form-group">
                 <label asp-for="SignatureofApplicantPath" class="control-label"></label>
                 @*<input asp-for="SignatureofApplicantPath" class="form-control" />
                 <span asp-validation-for="SignatureofApplicantPath" class="text-danger"></span>*@
                 <a asp-action="Download" asp-route-ProjectId="@Model.ProjectId" class="btn btn-outline-primary">Download</a>
+            </div>
+            <div class="form-group">
+                <label>Attachments:</label>
+                <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <div class="col-md-12 border border-info" id="dropzone">
+                            <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader">
+                                <div class="dz-message needsclick">
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                    <div class="ms-4">
+                                        <h3 class="fs-5 fw-bolder text-gray-900 mb-1">Drop files here or click to upload</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="form-group">
                 <label asp-for="ProjectActivity" class="control-label"></label>
@@ -164,6 +182,7 @@
     function saveData(){
             // Firstly the project data, Then the project assets, then the project selection reasons and finally the social benefits
             var projectItem = [];
+            let ProjectId = $("#hdnProjectId").val();
             let ProjectActivity = $("#ProjectActivity").val();
             let ProjectPurpose = $("#ProjectPurpose").val();
             let Capital = $("#Capital").val();
@@ -177,6 +196,7 @@
             let ProjectTypeId = $("#ProjectTypes").val();
 
             let project = {
+                "ProjectId": ProjectId,
                 "ProjectActivity": ProjectActivity,
                 "ProjectPurpose": ProjectPurpose,
                 "Capital": Capital,
@@ -193,7 +213,7 @@
 
             // Project assets
             // This represents the divs that are inside the main div #ProjectAssets, It divides its length on 4 because we would
-            // have 4 controls inside each one of these divs
+            // have 4 controls inside each one of these divs: one label, one amount input, one qty input and one id hidden field
             const noOfloops = $("#ProjectAssets").children().children().length / 4;
             var selected = [];
             for(let i=0; i< noOfloops ; i++){
@@ -229,15 +249,15 @@
                 socialBenefits.push(socialBenefitItems);
             });
 
-
         $.ajax({
             url: "/Project/Edit",
             type: 'Post',
             data: {
+                projectId: ProjectId,
                 projectsAssets: selected, 
                 projectsSelectionReasons: selectedReasons, 
                 projectsSocialBenefits: socialBenefits, 
-                project: project
+                projects: project
             },
             headers:
             {
@@ -307,42 +327,70 @@
                     });
                 });
 
-                // Should already get the data on page load
-                $.post(`/Project/GetProjectTypes`, function (data) {
+                $.post(`/Project/GetProjectTypes`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
-                        $("#ProjectTypes").append(`
-                            <option value="${e.value}">${e.text}</option>
-                        `)
+                        if(e.selected){
+                            $("#ProjectTypes").append(`
+                                <option value="${e.value}" selected>${e.text}</option>
+                            `);
+                            $.post('/Project/GetProjectTypeAssetsForEdit', {ProjectId: $("#hdnProjectId").val()} , function (data) {
+                             $.each(data, function (i, e) {
+                                    var parent = $(`<div class="form-group">`);
+                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
+                                    var txtAmount = $(`<input type="number" min="0" value="${e.amount}" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
+                                    var txtQuantity = $(`<input type="number" min="0" value="${e.quantity}" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
+                                    var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
+                                    parent.append(lblProjectAssetName);
+                                    parent.append(txtAmount);
+                                    parent.append(txtQuantity);
+                                    parent.append(hdnAssetId);
+                                    $("#ProjectAssets").append(parent);
+                                 });
+                             });
+                        }
+                        else{
+                            $("#ProjectTypes").append(`
+                                <option value="${e.value}">${e.text}</option>
+                            `)
+                        }
                     });
                 });
 
                 // Should already get the data on page load
-                $.post(`/Project/GetNumberOfFunds`, function (data) {
+                $.post(`/Project/GetNumberOfFunds`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
-                        $("#NoOfFunds").append(`
-                            <option value="${e.value}">${e.text}</option>
-                        `)
+                        if(e.selected){
+                            $("#NoOfFunds").append(`
+                                <option value="${e.value}" selected>${e.text}</option>
+                            `)
+                        }
+                        else{
+                            $("#NoOfFunds").append(`
+                                <option value="${e.value}">${e.text}</option>
+                            `)
+                        };
                     });
                 });
 
                 // Should already get the data on page load
-                //$("select#ProjectTypes").change(function () {
-                //            var itemVal = $(this).val();
-                //            $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
-                //             $.each(data, function (i, e) {
-                //                    var parent = $(`<div class="form-group">`);
-                //                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
-                //                    var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
-                //                    var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
-                //                    var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
-                //                    parent.append(lblProjectAssetName);
-                //                    parent.append(txtAmount);
-                //                    parent.append(txtQuantity);
-                //                    parent.append(hdnAssetId);
-                //                    $("#ProjectAssets").append(parent);
-                //                 });
-                //             });
-                //});
+                $("select#ProjectTypes").change(function () {
+                            var itemVal = $(this).val();
+                            $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
+                            $("#ProjectAssets").children().empty();
+                             $.each(data, function (i, e) {
+                                    var parent = $(`<div class="form-group">`);
+                                    var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameEn}</label>`);
+                                    var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
+                                    var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
+                                    var hdnAssetId = $(`<input type="hidden" id="hdnAssetId${i}" value="${e.projectTypesAssetsId}">`);
+                                    parent.append(lblProjectAssetName);
+                                    parent.append(txtAmount);
+                                    parent.append(txtQuantity);
+                                    parent.append(hdnAssetId);
+                                    $("#ProjectAssets").append(parent);
+                                 });
+                             });
+                });
 
 
                 // Should already get the data on page load
@@ -373,6 +421,52 @@
                 },
                 minLength: 1
             });
+
+            $("#ProjectActivity").keypress(function(event){
+            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+            var ew = event.which;
+            if(ew == 32)
+                return true;
+            if(ew == 169)
+                return true;
+
+            var str = String.fromCharCode(ew);
+            if (arabicCharUnicodeRange.test(str) )
+            {
+              return true;
+            }
+            return false;
+            });
+
+            // Just arabic letters
+            $("#ProjectPurpose").keypress(function(event){
+                var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+                var ew = event.which;
+                if(ew == 32)
+                    return true;
+                if(ew == 169)
+                    return true;
+
+                var str = String.fromCharCode(ew);
+                if (arabicCharUnicodeRange.test(str) )
+                {
+                  return true;
+                }
+                return false;
+            });
+
+            // Just english or arabic letters without numbers
+            $('#txtFamily').keydown(function (e) {
+              if (e.shiftKey || e.ctrlKey || e.altKey) {
+                  e.preventDefault();
+              } else {
+                  var key = e.keyCode;
+                  if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
+                      e.preventDefault();
+                  }
+              }
+            });
+
             });
 </script>
 

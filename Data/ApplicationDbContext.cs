@@ -1,4 +1,5 @@
 ﻿using Etaa.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,15 @@ namespace Etaa.Data
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+            .Entity<ProjectAssetesProjectTypeAssets>()
+            .ToView(nameof(ProjectAssetesProjectTypeAssets))
+            .HasNoKey();
+            base.OnModelCreating(modelBuilder);
         }
 
         // Each individual db set represents a table in our DB
@@ -63,5 +73,6 @@ namespace Etaa.Data
         public DbSet<Religion> Religions { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<ProjectAssetesProjectTypeAssets> ProjectAssetesProjectTypeAssets { get; set; }
     }
 }
