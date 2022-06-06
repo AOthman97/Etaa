@@ -242,11 +242,11 @@ namespace Etaa.Controllers
                     {
                         if (!FamilyExists(family.FamilyId))
                         {
-                            return View("Create");
+                            return View("Edit");
                         }
                         else
                         {
-                            return View("Create");
+                            return View("Edit");
                         }
                     }
                     return RedirectToAction(nameof(Index));

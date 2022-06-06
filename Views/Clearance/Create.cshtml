@@ -103,6 +103,43 @@
 </div>
 
 @section Scripts {
+    @if (TempData["Clearance"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+    @if(TempData["PaidAmount"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم دفع كل أقساط المشروع !",
+                          text: "لم يتم دفع كل أقساط المشروع !",
+                          icon: "warning"
+                        });
+                    });
+                </script>
+    }
+    @if(TempData["ProjectAlreadyHasAClearance"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "هذا المشروع لديه خلو طرف مسبقا !",
+                          text: "هذا المشروع لديه خلو طرف مسبقا !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+
     <script>
         function saveData(){
             let projectId = $("#hdnProjectId").val();

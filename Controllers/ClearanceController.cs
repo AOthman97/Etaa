@@ -174,21 +174,25 @@ namespace Etaa.Controllers
                     {
                         _context.Add(clearance);
                         await _context.SaveChangesAsync();
-                        return View(clearance);
+                        TempData["Clearance"] = clearance.ClearanceDate;
+                        return RedirectToAction(nameof(Index));
                     }
                     else
                     {
+                        TempData["PaidAmount"] = clearance.ClearanceDate;
                         return View("Create", clearance);
                     }
                 }
                 else
                 {
-                    return NotFound();
+                    TempData["ProjectAlreadyHasAClearance"] = clearance.ClearanceDate;
+                    return View("Create", clearance);
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["Clearance"] = clearance.ClearanceDate;
+                return View("Create", clearance);
             }
         }
 
@@ -232,6 +236,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
 
+                TempData["Clearance"] = "Clearance";
                 if (ModelState.IsValid)
                 {
                     try
@@ -258,22 +263,22 @@ namespace Etaa.Controllers
                     {
                         if (!ClearanceExists(clearance.ClearanceId))
                         {
-                            return NotFound();
+                            return View("Edit");
                         }
                         else
                         {
-                            throw;
+                            return View("Edit");
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", clearance.UserId);
-                return View(clearance);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -310,23 +315,29 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["Clearance"] = "Clearance";
                 if (_context.Clearances == null)
                 {
-                    return Problem("Entity set 'ApplicationDbContext.Clearances'  is null.");
+                    return View("Delete");
+                    //return Problem("Entity set 'ApplicationDbContext.Clearances'  is null.");
                 }
                 var clearance = await _context.Clearances.FindAsync(id);
+                
                 if (clearance != null)
                 {
                     clearance.IsCanceled = true;
                     //_context.Clearances.Remove(clearance);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                else 
+                {
+                    return View("Delete");
+                }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 

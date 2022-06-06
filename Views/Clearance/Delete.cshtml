@@ -67,3 +67,20 @@
         <a asp-action="Index">العودة إلى القائمة الرئيسية</a>
     </form>
 </div>
+
+@section Scripts {
+    @if (TempData["Clearance"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحذف !",
+                          text: "لم يتم الحذف !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
