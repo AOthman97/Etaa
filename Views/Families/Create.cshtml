@@ -132,72 +132,72 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NameAr" class="control-label"></label>
                 <input asp-for="NameAr" class="form-control" autofocus />
                 <span asp-validation-for="NameAr" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NameEn" class="control-label"></label>
                 <input asp-for="NameEn" class="form-control" />
                 <span asp-validation-for="NameEn" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="HouseNumber" class="control-label"></label>
                 <input asp-for="HouseNumber" class="form-control" type="number" min="0" />
                 @*<span asp-validation-for="HouseNumber" class="text-danger"></span>*@
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Alleyway" class="control-label"></label>
                 <input asp-for="Alleyway" class="form-control" />
                 <span asp-validation-for="Alleyway" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ResidentialSquare" class="control-label"></label>
                 <input asp-for="ResidentialSquare" class="form-control" />
                 <span asp-validation-for="ResidentialSquare" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="FirstPhoneNumber" class="control-label"></label>
                 <input asp-for="FirstPhoneNumber" class="form-control" type="number" />
                 <span asp-validation-for="FirstPhoneNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="SecondPhoneNumber" class="control-label"></label>
                 <input asp-for="SecondPhoneNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="SecondPhoneNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NationalNumber" class="control-label"></label>
                 <input asp-for="NationalNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="NationalNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="PassportNumber" class="control-label"></label>
                 <input asp-for="PassportNumber" class="form-control" type="number" min="1" />
                 <span asp-validation-for="PassportNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NumberOfIndividuals" class="control-label"></label>
                 <input asp-for="NumberOfIndividuals" class="form-control" type="number" min="0" value="0" />
                 <span asp-validation-for="NumberOfIndividuals" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Age" class="control-label"></label>
                 <input asp-for="Age" class="form-control" type="number" min="1" value="1" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="MonthlyIncome" class="control-label"></label>
                 <input asp-for="MonthlyIncome" class="form-control" type="number" min="0" value="0" />
                 <span asp-validation-for="MonthlyIncome" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="IsCurrentInvestmentProject" class="control-label"></label>
                 <input type="checkbox" asp-for="IsCurrentInvestmentProject" class="form-check-input">
                 <span asp-validation-for="IsCurrentInvestmentProject" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="DateOfBirth" class="control-label"></label>
                 <input asp-for="DateOfBirth" class="form-control" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
@@ -206,61 +206,61 @@
                 @Html.Label("State")
                 @Html.DropDownList("States", (IEnumerable <SelectListItem>)ViewData["States"], "-Select-", htmlAttributes: new { @class = "form-control"})
             </div>*@
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>الولاية</label>
                 <select id="StatesList" asp-items="@ViewBag.States" class="form-control">
                     <option>-إختر الولاية-</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>المدينة</label>
                 <select id="CitiesList" class="form-control">
                     <option>-إختر المدينة-</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="DistrictId" class="control-label"></label>
                 <select asp-for="DistrictId" class ="form-control" asp-items="ViewBag.DistrictId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Address" class="control-label"></label>
                 @*rejex for only english onkeyup="this.value=this.value.replace(/[^a-z]/g,'');"*@
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="GenderId" class="control-label"></label>
                 <select asp-for="GenderId" class ="form-control" asp-items="ViewBag.GenderId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ReligionId" class="control-label"></label>
                 <select asp-for="ReligionId" class ="form-control" asp-items="ViewBag.ReligionId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="MartialStatusId" class="control-label"></label>
                 <select asp-for="MartialStatusId" class ="form-control" asp-items="ViewBag.MartialStatusId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="JobId" class="control-label"></label>
                 <select asp-for="JobId" class ="form-control" asp-items="ViewBag.JobId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="HealthStatusId" class="control-label"></label>
                 <select asp-for="HealthStatusId" class ="form-control" asp-items="ViewBag.HealthStatusId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="EducationalStatusId" class="control-label"></label>
                 <select asp-for="EducationalStatusId" class ="form-control" asp-items="ViewBag.EducationalStatusId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="AccommodationTypeId" class="control-label"></label>
                 <select asp-for="AccommodationTypeId" class ="form-control" asp-items="ViewBag.AccommodationTypeId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="InvestmentTypeId" class="control-label"></label>
                 <select asp-for="InvestmentTypeId" class ="form-control" asp-items="ViewBag.InvestmentTypeId"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <input type="submit" value="الحفظ" class="btn btn-primary" />
                 @*<a class="btn btn-primary" onclick="showalert()">show</a>*@
             </div>

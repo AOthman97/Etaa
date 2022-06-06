@@ -14,23 +14,23 @@
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" id="hdnProjectId" asp-for="ProjectId" />
-            <div class="form-group">
+            <div class="form-group mb-3">
                 @*<label asp-for="FamilyId" class="control-label"></label>
                 <select asp-for="FamilyId" class ="form-control" asp-items="ViewBag.FamilyId"></select>*@
                 <label class="control-label">إختيار الأسرة</label>
                 <input id="txtFamily" asp-for="@FamilyNameAr" class="form-control" autofocus />
                 <input id="hdnFamilyId" asp-for="FamilyId" type="hidden" name="FamilyId" />
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="SignatureofApplicantPath" class="control-label"></label>
                 @*<input asp-for="SignatureofApplicantPath" class="form-control" />
                 <span asp-validation-for="SignatureofApplicantPath" class="text-danger"></span>*@
                 <a asp-action="Download" asp-route-ProjectId="@Model.ProjectId" class="btn btn-outline-primary">Download</a>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <div class="col-md-12 border border-info" id="dropzone">
                             <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader">
                                 <div class="dz-message needsclick">
@@ -44,42 +44,42 @@
                     </div>
                 </form>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProjectActivity" class="control-label"></label>
                 <input asp-for="ProjectActivity" class="form-control" />
                 <span asp-validation-for="ProjectActivity" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProjectPurpose" class="control-label"></label>
                 <input asp-for="ProjectPurpose" class="form-control" />
                 <span asp-validation-for="ProjectPurpose" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Capital" class="control-label"></label>
                 <input asp-for="Capital" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Capital" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="MonthlyInstallmentAmount" class="control-label"></label>
                 <input asp-for="MonthlyInstallmentAmount" class="form-control" type="number" min="1" />
                 <span asp-validation-for="MonthlyInstallmentAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NumberOfInstallments" class="control-label"></label>
                 <input asp-for="NumberOfInstallments" class="form-control" type="number" min="1" max="15" />
                 <span asp-validation-for="NumberOfInstallments" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="WaiverPeriod" class="control-label"></label>
                 <input asp-for="WaiverPeriod" class="form-control" />
                 <span asp-validation-for="WaiverPeriod" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="FirstInstallmentDueDate" class="control-label"></label>
                 <input asp-for="FirstInstallmentDueDate" class="form-control" />
                 <span asp-validation-for="FirstInstallmentDueDate" class="text-danger"></span>
@@ -114,7 +114,7 @@
                 @*<label asp-for="ProjectSocialBenefitsId" class="control-label"></label>
                 <select multiple="multiple" asp-for="ProjectSocialBenefitsId" class ="form-control" asp-items="ViewBag.ProjectSocialBenefitsId"></select>*@
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 @*<input type="submit" value="Save" class="btn btn-primary" />*@
                 <a class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>
@@ -334,7 +334,7 @@
                             `);
                             $.post('/Project/GetProjectTypeAssetsForEdit', {ProjectId: $("#hdnProjectId").val()} , function (data) {
                              $.each(data, function (i, e) {
-                                    var parent = $(`<div class="form-group">`);
+                                    var parent = $(`<div class="form-group mb-3">`);
                                     var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameAr}</label>`);
                                     var txtAmount = $(`<input type="number" min="0" value="${e.amount}" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
                                     var txtQuantity = $(`<input type="number" min="0" value="${e.quantity}" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);
@@ -377,7 +377,7 @@
                             $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
                             $("#ProjectAssets").children().empty();
                              $.each(data, function (i, e) {
-                                    var parent = $(`<div class="form-group">`);
+                                    var parent = $(`<div class="form-group mb-3">`);
                                     var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameAr}</label>`);
                                     var txtAmount = $(`<input type="number" min="0" class="form-control col-lg-4 mb-2" id="txtAmount${i}" placeholder="Enter Amount">`);
                                     var txtQuantity = $(`<input type="number" min="0" class="form-control col-lg-4 mb-4" id="txtQty${i}" placeholder="Enter Quantity">`);

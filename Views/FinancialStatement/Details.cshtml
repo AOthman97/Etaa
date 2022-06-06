@@ -10,41 +10,41 @@
     <h4>الإقرار المالي</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-2 mb-3">
             @Html.DisplayNameFor(model => model.DocumentPath)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             <a asp-action="Download" asp-route-FinancialStatementId="@Model.FinancialStatementId" class="btn btn-outline-primary">Download</a>
             @*@Html.DisplayFor(model => model.DocumentPath)*@
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-2 mb-3">
             @Html.DisplayNameFor(model => model.IsApprovedByManagement)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             @Html.DisplayFor(model => model.IsApprovedByManagement)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-2 mb-3">
             @Html.DisplayNameFor(model => model.IsCanceled)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             @Html.DisplayFor(model => model.IsCanceled)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-2 mb-3">
             المشروع
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             @Html.DisplayFor(model => model.Projects.NameAr)
         </dd>
-        @*<dt class = "col-sm-2">
+        @*<dt class = "col-sm-2 mb-3">
             @Html.DisplayNameFor(model => model.ManagementUserId)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             @Html.DisplayFor(model => model.ManagementUserId)
         </dd>*@
-        @*<dt class = "col-sm-2">
+        @*<dt class = "col-sm-2 mb-3">
             @Html.DisplayNameFor(model => model.Users)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-9 mb-3">
             @Html.DisplayFor(model => model.Users.NameAr)
         </dd>*@
     </dl>

@@ -51,12 +51,12 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProjectTypeId" />
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NameAr" class="control-label"></label>
                 <input asp-for="NameAr" class="form-control" autofocus />
                 <span asp-validation-for="NameAr" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="NameEn" class="control-label"></label>
                 <input asp-for="NameEn" class="form-control" />
                 <span asp-validation-for="NameEn" class="text-danger"></span>
@@ -66,17 +66,17 @@
                     <input class="form-check-input" asp-for="IsCanceled" /> @Html.DisplayNameFor(model => model.IsCanceled)
                 </label>
             </div>*@
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProjectDomainTypeId" class="control-label"></label>
                 <select asp-for="ProjectDomainTypeId" class="form-control" asp-items="ViewBag.ProjectDomainTypeId"></select>
                 <span asp-validation-for="ProjectDomainTypeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ProjectGroupId" class="control-label"></label>
                 <select asp-for="ProjectGroupId" class="form-control" asp-items="ViewBag.ProjectGroupId"></select>
                 <span asp-validation-for="ProjectGroupId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <input type="submit" value="الحفظ" class="btn btn-primary" />
             </div>
         </form>

@@ -30,12 +30,12 @@
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" id="hdnPaymentVoucherId" asp-for="PaymentVoucherId" />
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label class="control-label">إختيار المشروع</label>
                 <input id="txtProject" asp-for="@ProjectNameAr" class="form-control" readonly />
                 <input id="hdnProjectId" type="hidden" name="ProjectId" asp-for="ProjectId" />
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="PaymentAmount" class="control-label"></label>
                 <input asp-for="PaymentAmount" class="form-control" type="number" min="1" autofocus />
                 <span asp-validation-for="PaymentAmount" class="text-danger"></span>
@@ -46,16 +46,16 @@
                     <option value="0">--Select--</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="PaymentDocumentPath" class="control-label"></label>
                 @*<input asp-for="PaymentDocumentPath" class="form-control" />
                 <span asp-validation-for="PaymentDocumentPath" class="text-danger"></span>*@
                 <a asp-action="Download" asp-route-PaymentVoucherId="@Model.PaymentVoucherId" class="btn btn-outline-primary">Download</a>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <div class="col-md-12 border border-info" id="dropzone">
                             <div class="dropzone" style="border:none" action="/PaymentVoucher/Upload" id="uploader">
                                 <div class="dz-message needsclick">
@@ -69,12 +69,12 @@
                     </div>
                 </form>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="PaymentDate" class="control-label"></label>
                 <input asp-for="PaymentDate" class="form-control" />
                 <span asp-validation-for="PaymentDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 @*<input type="submit" value="Save" class="btn btn-primary" />*@
                 <a class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>

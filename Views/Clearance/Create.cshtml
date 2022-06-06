@@ -47,29 +47,29 @@
     <div class="col-md-4">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label class="control-label">إختيار المشروع</label>
                 <input id="txtProject" class="form-control" autofocus />
                 <input id="hdnProjectId" type="hidden" name="ProjectId" />
                 @*<label asp-for="ProjectId" class="control-label"></label>
                 <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>*@
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                <label class="control-label">المبلغ المتبقي:</label>
                @*text-info*@
                <label id="RemainAmount" class="control-label">--المبلغ المتبقي--</label>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Comments" class="control-label"></label>
                 <input asp-for="Comments" class="form-control" />
                 <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="ClearanceDate" class="control-label"></label>
                 <input asp-for="ClearanceDate" class="form-control" />
                 <span asp-validation-for="ClearanceDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>المرفقات:</label>
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
@@ -90,7 +90,7 @@
                 <input asp-for="ClearanceDocumentPath" class="form-control" />
                 <span asp-validation-for="ClearanceDocumentPath" class="text-danger"></span>*@
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 @*<input type="submit" value="Create" class="btn btn-primary" />*@
                 <a id="btnSave" class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>
