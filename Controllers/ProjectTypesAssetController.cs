@@ -100,6 +100,7 @@ namespace Etaa.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
                     projectTypesAssets.IsCanceled = false;
                     _context.Add(projectTypesAssets);
                     await _context.SaveChangesAsync();
@@ -107,11 +108,13 @@ namespace Etaa.Controllers
                     // the ProjectTypeId to select from that's used in the Index action method
                     return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
-                return View(projectTypesAssets);
+                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
+                return View("Create");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
+                return View("Create");
             }
         }
 
@@ -149,13 +152,14 @@ namespace Etaa.Controllers
             {
                 if (id != projectTypesAssets.ProjectTypesAssetsId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 if (ModelState.IsValid)
                 {
                     try
                     {
+                        TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
                         _context.Update(projectTypesAssets);
                         await _context.SaveChangesAsync();
                     }
@@ -163,22 +167,23 @@ namespace Etaa.Controllers
                     {
                         if (!ProjectTypesAssetsExists(projectTypesAssets.ProjectTypesAssetsId))
                         {
-                            return NotFound();
+                            return View("Edit");
                         }
                         else
                         {
-                            throw;
+                            return View("Edit");
                         }
                     }
                     // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
                     // the ProjectTypeId to select from that's used in the Index action method
                     return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
-                return View(projectTypesAssets);
+                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -214,6 +219,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
                 var projectTypesAssets = await _context.ProjectTypesAssets.FindAsync(id);
                 projectTypesAssets.IsCanceled = true;
                 await _context.SaveChangesAsync();
@@ -223,7 +229,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
+                return View("Delete");
             }
         }
 
