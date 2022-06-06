@@ -174,18 +174,18 @@ namespace Etaa.Controllers
                     {
                         _context.Add(clearance);
                         await _context.SaveChangesAsync();
-                        TempData["Clearance"] = clearance.ClearanceDate;
+                        TempData["Clearance"] = "Clearance";
                         return RedirectToAction(nameof(Index));
                     }
                     else
                     {
-                        TempData["PaidAmount"] = clearance.ClearanceDate;
+                        TempData["PaidAmount"] = "Clearance";
                         return View("Create", clearance);
                     }
                 }
                 else
                 {
-                    TempData["ProjectAlreadyHasAClearance"] = clearance.ClearanceDate;
+                    TempData["ProjectAlreadyHasAClearance"] = "Clearance";
                     return View("Create", clearance);
                 }
             }
@@ -233,7 +233,7 @@ namespace Etaa.Controllers
             {
                 if (clearanceId != clearance.ClearanceId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 TempData["Clearance"] = "Clearance";

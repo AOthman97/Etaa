@@ -120,6 +120,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["Contributor"] = "Contributor";
                 if (ModelState.IsValid)
                 {
                     contributor.IsCanceled = false;
@@ -128,11 +129,11 @@ namespace Etaa.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-                return View(contributor);
+                return View("Create");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Create");
             }
         }
 
@@ -173,9 +174,10 @@ namespace Etaa.Controllers
             {
                 if (id != contributor.ContributorId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
+                TempData["Contributor"] = "Contributor";
                 if (ModelState.IsValid)
                 {
                     try
@@ -187,21 +189,21 @@ namespace Etaa.Controllers
                     {
                         if (!ContributorExists(contributor.ContributorId))
                         {
-                            return NotFound();
+                            return View("Edit");
                         }
                         else
                         {
-                            throw;
+                            return View("Edit");
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-                return View(contributor);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -238,6 +240,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["Contributor"] = "Contributor";
                 var contributor = await _context.Contributors.FindAsync(id);
                 contributor.IsCanceled = true;
                 await _context.SaveChangesAsync();
@@ -245,7 +248,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 

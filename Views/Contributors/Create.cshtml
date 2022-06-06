@@ -169,5 +169,18 @@
 </div>
 
 @section Scripts {
+    @if (TempData["Contributor"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
