@@ -85,6 +85,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["ProjectType"] = "ProjectType";
                 if (ModelState.IsValid)
                 {
                     projectTypes.IsCanceled = false;
@@ -94,11 +95,11 @@ namespace Etaa.Controllers
                 }
                 ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes, "ProjectDomainTypeId", "NameAr", projectTypes.ProjectDomainTypeId);
                 ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups, "ProjectGroupId", "NameAr", projectTypes.ProjectGroupId);
-                return View(projectTypes);
+                return View("Create");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Create");
             }
         }
 
@@ -138,7 +139,7 @@ namespace Etaa.Controllers
             {
                 if (id != projectTypes.ProjectTypeId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 if (ModelState.IsValid)
@@ -146,6 +147,7 @@ namespace Etaa.Controllers
                     try
                     {
                         _context.Update(projectTypes);
+                        TempData["ProjectType"] = "ProjectType";
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
@@ -161,13 +163,15 @@ namespace Etaa.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
+                TempData["ProjectType"] = "ProjectType";
                 ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes, "ProjectDomainTypeId", "NameAr", projectTypes.ProjectDomainTypeId);
                 ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups, "ProjectGroupId", "NameAr", projectTypes.ProjectGroupId);
-                return View(projectTypes);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["ProjectType"] = "ProjectType";
+                return View("Edit");
             }
         }
 
@@ -205,6 +209,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["ProjectType"] = "ProjectType";
                 var projectTypes = await _context.ProjectTypes.FindAsync(id);
                 projectTypes.IsCanceled = true;
                 await _context.SaveChangesAsync();
@@ -212,7 +217,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 
