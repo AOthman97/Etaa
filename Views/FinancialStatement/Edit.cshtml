@@ -55,6 +55,19 @@
 </div>
 
 @section Scripts {
+    @if (TempData["FinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+
     <script>
         function saveData(){
                 let financialStatementId = $("#hdnFinancialStatementId").val();

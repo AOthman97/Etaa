@@ -66,6 +66,31 @@
 </div>
 
 @section Scripts {
+    @if (TempData["FinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["ProjectAlreadyHasAFinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "هذا المشروع لديه إقرار مالي مسبقا !",
+                          text: "هذا المشروع لديه إقرار مالي مسبقا !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+
     <script>
         function saveData(){
             let projectId = $("#hdnProjectId").val();

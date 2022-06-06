@@ -109,17 +109,19 @@ namespace Etaa.Controllers
                     financialStatement.IsApprovedByManagement = false;
                     _context.Add(financialStatement);
                     await _context.SaveChangesAsync();
-
+                    TempData["FinancialStatement"] = "FinancialStatement";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return NotFound();
+                    TempData["ProjectAlreadyHasAFinancialStatement"] = "FinancialStatement";
+                    return View("Create");
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["FinancialStatement"] = "FinancialStatement";
+                return View("Create");
             }
         }
 
@@ -160,9 +162,10 @@ namespace Etaa.Controllers
             {
                 if (financialStatementId != financialStatement.FinancialStatementId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
+                TempData["FinancialStatement"] = "FinancialStatement";
                 if (ModelState.IsValid)
                 {
                     try
@@ -189,22 +192,22 @@ namespace Etaa.Controllers
                     {
                         if (!FinancialStatementExists(financialStatement.FinancialStatementId))
                         {
-                            return NotFound();
+                            return View("Edit");
                         }
                         else
                         {
-                            throw;
+                            return View("Edit");
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
-                return View(financialStatement);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -241,6 +244,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["FinancialStatement"] = "FinancialStatement";
                 var financialStatement = await _context.FinancialStatements.FindAsync(id);
                 var Project = _context.PaymentVouchers.Where(p => p.ProjectId == financialStatement.ProjectId && p.IsCanceled == false).Select(p => p.Projects);
                 if (Project.Any() == false)
@@ -251,12 +255,13 @@ namespace Etaa.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    TempData["CantDeleteTheresAProjectAttachedWitIt"] = "FinancialStatement";
+                    return View("Delete");
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 
