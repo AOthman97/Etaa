@@ -427,21 +427,25 @@ namespace Etaa.Controllers
                         _context.Set<PaymentVoucher>().AddRange(paymentVouchers);
                         await _context.SaveChangesAsync();
 
+                        TempData["PaymentVoucher"] = "PaymentVoucher";
                         return RedirectToAction(nameof(Index));
                     }
                     else
                     {
-                        return NotFound();
+                        TempData["InstallmentsNoGreaterThanProjectNumberOfInstallments"] = "PaymentVoucher";
+                        return View("Create");
                     }
                 }
                 else
                 {
-                    return View("Error");
+                    TempData["NoFinancialStatement"] = "PaymentVoucher";
+                    return View("Create");
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["PaymentVoucher"] = "PaymentVoucher";
+                return View("Create");
             }
         }
 
@@ -483,9 +487,10 @@ namespace Etaa.Controllers
             {
                 if (paymentVoucherId != paymentVoucher.PaymentVoucherId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
+                TempData["PaymentVoucher"] = "PaymentVoucher";
                 if (ModelState.IsValid)
                 {
                     try
@@ -524,11 +529,11 @@ namespace Etaa.Controllers
                 ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
-                return View(paymentVoucher);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -566,6 +571,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["PaymentVoucher"] = "PaymentVoucher";
                 var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
                 paymentVoucher.IsCanceled = true;
                 await _context.SaveChangesAsync();
@@ -573,7 +579,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 
