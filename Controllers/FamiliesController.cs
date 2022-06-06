@@ -174,7 +174,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["Family"] = family.NameAr;
+                return View("Create");
             }
         }
 
@@ -229,6 +230,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
 
+                TempData["Family"] = family.NameAr;
                 if (ModelState.IsValid)
                 {
                     try
@@ -240,15 +242,16 @@ namespace Etaa.Controllers
                     {
                         if (!FamilyExists(family.FamilyId))
                         {
-                            return NotFound();
+                            return View("Create");
                         }
                         else
                         {
-                            throw;
+                            return View("Create");
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
+                
                 ViewData["AccommodationTypeId"] = new SelectList(_context.AccommodationTypes, "AccommodationTypeId", "NameAr", family.AccommodationTypeId);
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", family.DistrictId);
                 ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", family.EducationalStatusId);
@@ -259,11 +262,11 @@ namespace Etaa.Controllers
                 ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", family.UserId);
-                return View(family);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -313,11 +316,12 @@ namespace Etaa.Controllers
                 family.IsCanceled = true;
                 //_context.Families.Remove(family);
                 await _context.SaveChangesAsync();
+                TempData["Family"] = family.NameAr;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 

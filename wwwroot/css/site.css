@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Amiri';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Amiri'), local('Amiri-Regular'), url(Amiri-Regular.woff) format('woff');
+}
+
 html {
     font-size: 14px;
 }
@@ -12,13 +19,6 @@ html {
     position: relative;
     min-height: 100%;
     
-}
-
-@font-face {
-    font-family: 'Amiri', sans-serif;
-    src: url('Amiri-Regular.woff');
-    font-weight: 400;
-    font-style: normal;
 }
 
 body {
