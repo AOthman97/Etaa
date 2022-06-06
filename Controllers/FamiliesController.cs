@@ -146,7 +146,7 @@ namespace Etaa.Controllers
             try
             {
                 var userId = User.GetLoggedInUserId<string>();
-                ModelState.IsValid.Equals(false);
+                TempData["Family"] = family.NameAr;
                 if (ModelState.IsValid)
                 {
                     family.IsCanceled = false;
@@ -154,12 +154,10 @@ namespace Etaa.Controllers
                     family.UserId = userId;
                     _context.Add(family);
                     await _context.SaveChangesAsync();
-                    TempData["Family"] = family.NameAr;
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["Family"] = family.NameAr;
                     ViewData["AccommodationTypeId"] = new SelectList(_context.AccommodationTypes, "AccommodationTypeId", "NameAr", family.AccommodationTypeId);
                     ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", family.DistrictId);
                     ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", family.EducationalStatusId);

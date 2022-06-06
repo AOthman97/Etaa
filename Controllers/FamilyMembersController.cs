@@ -156,10 +156,19 @@ namespace Etaa.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FamilyMemberId,NameAr,NameEn,Age,Note,IsCanceled,KinshipId,GenderId,EducationalStatusId,JobId,FamilyId")] FamilyMember familyMember)
+        public async Task<IActionResult> Create([Bind("NameAr,NameEn,Age,Note,IsCanceled,KinshipId,GenderId,EducationalStatusId,JobId,FamilyId")] FamilyMember familyMember)
         {
             try
             {
+                //foreach (var item in ViewData.ModelState.Values)
+                //{
+                //    if(item.Errors != null)
+                //    {
+
+                //    }
+                //}
+
+                TempData["FamilyMember"] = "FamilyMember";
                 if (ModelState.IsValid && (familyMember.FamilyId != 0 && familyMember.FamilyId != null))
                 {
                     _context.Add(familyMember);
@@ -172,11 +181,11 @@ namespace Etaa.Controllers
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
                 ViewData["FamilyId"] = familyMember.FamilyId;
-                return View(familyMember);
+                return View("AddOrEdit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("AddOrEdit");
             }
         }
 
@@ -220,9 +229,10 @@ namespace Etaa.Controllers
             {
                 if (id != familyMember.FamilyMemberId)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
+                TempData["FamilyMember"] = "FamilyMember";
                 if (ModelState.IsValid)
                 {
                     try
@@ -234,11 +244,11 @@ namespace Etaa.Controllers
                     {
                         if (!FamilyMemberExists(familyMember.FamilyMemberId))
                         {
-                            return NotFound();
+                            return View("Edit");
                         }
                         else
                         {
-                            throw;
+                            return View("Edit");
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -248,11 +258,11 @@ namespace Etaa.Controllers
                 ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-                return View(familyMember);
+                return View("Edit");
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -293,6 +303,7 @@ namespace Etaa.Controllers
         {
             try
             {
+                TempData["FamilyMember"] = "FamilyMember";
                 var familyMember = await _context.FamilyMembers.FindAsync(id);
                 familyMember.IsCanceled = true;
                 //_context.FamilyMembers.Remove(familyMember);
@@ -301,7 +312,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Delete");
             }
         }
 

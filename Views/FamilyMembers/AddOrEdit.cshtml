@@ -103,9 +103,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddOrEdit">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="FamilyMemberId" />
             <div class="form-group">
                 <label asp-for="Family" class="control-label">الأسرة</label>
                 <input id="txtFamily" class="form-control" autofocus />
@@ -131,11 +130,11 @@
                 <input asp-for="Note" class="form-control" />
                 <span asp-validation-for="Note" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
+            <div class="form-group" hidden="hidden">
                 <label asp-for="IsCanceled" class="control-label"></label>
                 <input asp-for="IsCanceled" class="form-control" />
                 <span asp-validation-for="IsCanceled" class="text-danger"></span>
-            </div>*@
+            </div>
             <div class="form-group">
                 <label asp-for="KinshipId" class="control-label"></label>
                 <select asp-for="KinshipId" class="form-control" asp-items="ViewBag.KinshipId"></select>
@@ -178,5 +177,18 @@
 </div>
 
 @section Scripts {
+    @if (TempData["FamilyMember"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
