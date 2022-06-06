@@ -136,6 +136,42 @@
 </div>
 
 @section Scripts {
+    @if (TempData["NumberOfInstallmentsGreaterThanMaxInstallmentNo"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "عدد أقساط المشروع أكبر من عدد الأقساط المسموح بها !",
+                          icon: "warning"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "مجموع مبالغ الأقساط لا تساوي رأس المال !",
+                          icon: "warning"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["Project"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات !",
+                          text: "الرجاء التحقق من المدخلات !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
 
 <script>
     function saveData(){

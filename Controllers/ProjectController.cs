@@ -293,9 +293,15 @@ namespace Etaa.Controllers
                 int NumberOfInstallments = (int)project.NumberOfInstallments;
                 int MaxInstallmentsNo = _context.Installments.Select(i => i.InstallmentsId).Max();
 
-                if((NumberOfInstallments > MaxInstallmentsNo) || (Capital / MonthlyInstallmentAmount != NumberOfInstallments))
+                if((NumberOfInstallments > MaxInstallmentsNo))
                 {
-                    return NotFound();
+                    TempData["NumberOfInstallmentsGreaterThanMaxInstallmentNo"] = "Project";
+                    return View("Create");
+                }
+                else if((Capital / MonthlyInstallmentAmount != NumberOfInstallments))
+                {
+                    TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
+                    return View("Create");
                 }
                 else
                 {
@@ -320,12 +326,14 @@ namespace Etaa.Controllers
 
                     await _context.SaveChangesAsync();
 
+                    TempData["Project"] = "Project";
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["Project"] = "Project";
+                return View("Create");
             }
         }
 
@@ -370,9 +378,20 @@ namespace Etaa.Controllers
                 var ClearanceId = _context.Clearances.Where(c => c.ProjectId == projectId && c.IsCanceled == false).Select(c => c.ClearanceId);
                 var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == projectId && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
                 // This is a business validation
-                if (projectId != projects.ProjectId || FinancialStatemntId != null || ClearanceId != null || PaymentVoucherId != null)
+                if (projectId != projects.ProjectId || FinancialStatemntId != null)
                 {
-                    return NotFound();
+                    TempData["FinancialStatemntId"] = "FinancialStatemntId";
+                    return View("Edit");
+                }
+                if (projectId != projects.ProjectId || ClearanceId != null)
+                {
+                    TempData["ClearanceId"] = "ClearanceId";
+                    return View("Edit");
+                }
+                if (projectId != projects.ProjectId || PaymentVoucherId != null)
+                {
+                    TempData["PaymentVoucherId"] = "PaymentVoucherId";
+                    return View("Edit");
                 }
 
                 try
@@ -452,16 +471,18 @@ namespace Etaa.Controllers
                     }
 
                     await _context.SaveChangesAsync();
+
+                    TempData["Project"] = "Project";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProjectsExists(projects.ProjectId))
                     {
-                        return NotFound();
+                        return View("Edit");
                     }
                     else
                     {
-                        throw;
+                        return View("Edit");
                     }
                 }
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", projects.UserId);
@@ -469,7 +490,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                return View("Edit");
             }
         }
 
@@ -513,20 +534,33 @@ namespace Etaa.Controllers
                 var ClearanceId = _context.Clearances.Where(c => c.ProjectId == id && c.IsCanceled == false).Select(c => c.ClearanceId);
                 var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == id && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
                 // This is a business validation
-                if (FinancialStatemntId != null || ClearanceId != null || PaymentVoucherId != null)
+                if (FinancialStatemntId != null)
                 {
-                    return NotFound();
+                    TempData["FinancialStatemntId"] = "FinancialStatemntId";
+                    return View("Delete");
+                }
+                else if (ClearanceId != null)
+                {
+                    TempData["ClearanceId"] = "ClearanceId";
+                    return View("Delete");
+                }
+                else if (PaymentVoucherId != null)
+                {
+                    TempData["PaymentVoucherId"] = "PaymentVoucherId";
+                    return View("Delete");
                 }
                 else
                 {
                     project.IsCanceled = true;
                     await _context.SaveChangesAsync();
+                    TempData["Project"] = "Project";
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["Project"] = "Project";
+                return View("Delete");
             }
         }
 

@@ -85,3 +85,16 @@
 <div class="text-dark" style="position: fixed; right: 30px; bottom: 70px;">
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة مشروع</a>
 </div>
+
+@if (TempData["Project"] != null)
+{
+    <script>
+        $(function () {
+                    swal({
+                      title: "تمت العملية بنجاح !",
+                      text: "تمت العملية بنجاح !",
+                      icon: "success"
+                    });
+                });
+            </script>
+}

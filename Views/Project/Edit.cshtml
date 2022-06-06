@@ -127,6 +127,55 @@
 </div>
 
 @section Scripts {
+    @if (TempData["FinancialStatemntId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "هنالك إقرار  مالي تابع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["ClearanceId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "هنالك خلو طرف تابع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["PaymentVoucherId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "هنالك مستندات دفع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["Project"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "الرجاء التحقق من المدخلات !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+
     <script>
         // Should already get the data on page load
     function saveData(){
@@ -418,7 +467,7 @@
             });
 
             });
-</script>
+    </script>
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
