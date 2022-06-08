@@ -71,8 +71,7 @@
     <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة أسرة</a>
 </div>
 
-
-@if (TempData["Family"] != null)
+@if (TempData["Project"] != null)
 {
     <script>
         $(function () {
@@ -84,3 +83,4 @@
                 });
             </script>
 }
+

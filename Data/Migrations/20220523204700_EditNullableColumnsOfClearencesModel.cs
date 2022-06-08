@@ -9,7 +9,7 @@ namespace Etaa.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances");
 
             migrationBuilder.AlterColumn<int>(
@@ -37,17 +37,17 @@ namespace Etaa.Data.Migrations
                 oldType: "bit");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances");
 
             migrationBuilder.AlterColumn<int>(
@@ -81,10 +81,10 @@ namespace Etaa.Data.Migrations
                 oldNullable: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId",
                 onDelete: ReferentialAction.Cascade);
         }

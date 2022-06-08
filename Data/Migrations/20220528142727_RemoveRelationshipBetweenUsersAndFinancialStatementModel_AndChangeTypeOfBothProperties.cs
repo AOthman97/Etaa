@@ -4,12 +4,12 @@
 
 namespace Etaa.Data.Migrations
 {
-    public partial class RemoveRelationshipBetweenUsersAndFinancialStatementModel_AndChangeTypeOfBothProperties : Migration
+    public partial class RemoveRelationshipBetweenIdentityUserAndFinancialStatementModel_AndChangeTypeOfBothProperties : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_FinancialStatements_Users_UserId",
+                name: "FK_FinancialStatements_IdentityUser_UserId",
                 table: "FinancialStatements");
 
             migrationBuilder.DropIndex(
@@ -79,10 +79,10 @@ namespace Etaa.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FinancialStatements_Users_UserId",
+                name: "FK_FinancialStatements_IdentityUser_UserId",
                 table: "FinancialStatements",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId",
                 onDelete: ReferentialAction.Cascade);
         }

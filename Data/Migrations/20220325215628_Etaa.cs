@@ -269,7 +269,7 @@ namespace Etaa.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "IdentityUser",
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "int", nullable: false)
@@ -282,7 +282,7 @@ namespace Etaa.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_IdentityUser", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -362,9 +362,9 @@ namespace Etaa.Data.Migrations
                         principalColumn: "ModuleId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Logs_Users_UserId",
+                        name: "FK_Logs_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -459,9 +459,9 @@ namespace Etaa.Data.Migrations
                 {
                     table.PrimaryKey("PK_Clearances", x => x.ClearanceId);
                     table.ForeignKey(
-                        name: "FK_Clearances_Users_UserId",
+                        name: "FK_Clearances_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -559,9 +559,9 @@ namespace Etaa.Data.Migrations
                         principalColumn: "ReligionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Families_Users_UserId",
+                        name: "FK_Families_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -663,9 +663,9 @@ namespace Etaa.Data.Migrations
                         principalColumn: "ProjectTypeId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Projects_Users_UserId",
+                        name: "FK_Projects_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.NoAction,
                         onUpdate: ReferentialAction.NoAction);
@@ -693,9 +693,9 @@ namespace Etaa.Data.Migrations
                         principalColumn: "ProjectId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FinancialStatements_Users_UserId",
+                        name: "FK_FinancialStatements_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.NoAction,
                         onUpdate: ReferentialAction.NoAction);
@@ -732,9 +732,9 @@ namespace Etaa.Data.Migrations
                         principalColumn: "ProjectId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PaymentVouchers_Users_UserId",
+                        name: "FK_PaymentVouchers_IdentityUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "IdentityUser",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.NoAction,
                         onUpdate: ReferentialAction.NoAction);
@@ -1149,7 +1149,7 @@ namespace Etaa.Data.Migrations
                 name: "Religions");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "IdentityUser");
 
             migrationBuilder.DropTable(
                 name: "ProjectDomainTypes");

@@ -65,7 +65,7 @@ namespace Etaa.Controllers
             try
             {
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace Etaa.Controllers
         //        return RedirectToAction(nameof(Index));
         //    }
         //    ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+        //    ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", financialStatement.UserId);
         //    return View(financialStatement);
         //}
 
@@ -141,7 +141,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", financialStatement.UserId);
                 ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == financialStatement.ProjectId).Select(f => f.NameAr).Single();
                 return View(financialStatement);
             }
@@ -202,7 +202,7 @@ namespace Etaa.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", financialStatement.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", financialStatement.UserId);
                 return View("Edit");
             }
             catch (Exception ex)

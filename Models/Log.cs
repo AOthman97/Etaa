@@ -23,7 +23,7 @@ namespace Etaa.Models
         [ForeignKey("EventTypeId")]
         public EventTypes? EventTypes { get; set; }
         public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public Users? Users { get; set; }
+        //[ForeignKey("UserId")]
+        //public IdentityUser? IdentityUser { get; set; }
     }
 }

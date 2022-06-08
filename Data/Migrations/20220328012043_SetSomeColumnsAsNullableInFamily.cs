@@ -33,7 +33,7 @@ namespace Etaa.Data.Migrations
                 table: "Families");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Families_Users_UserId",
+                name: "FK_Families_IdentityUser_UserId",
                 table: "Families");
 
             migrationBuilder.AlterColumn<int>(
@@ -143,10 +143,10 @@ namespace Etaa.Data.Migrations
                 principalColumn: "MartialStatusId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Families_Users_UserId",
+                name: "FK_Families_IdentityUser_UserId",
                 table: "Families",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId");
         }
 
@@ -177,7 +177,7 @@ namespace Etaa.Data.Migrations
                 table: "Families");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Families_Users_UserId",
+                name: "FK_Families_IdentityUser_UserId",
                 table: "Families");
 
             migrationBuilder.AlterColumn<int>(
@@ -309,10 +309,10 @@ namespace Etaa.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Families_Users_UserId",
+                name: "FK_Families_IdentityUser_UserId",
                 table: "Families",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId",
                 onDelete: ReferentialAction.Cascade);
         }

@@ -72,7 +72,7 @@ namespace Etaa.Data
         public DbSet<ProjectTypesAssets> ProjectTypesAssets { get; set; }
         public DbSet<Religion> Religions { get; set; }
         public DbSet<State> States { get; set; }
-        public DbSet<Users> Users { get; set; }
+        public DbSet<IdentityUser> IdentityUser { get; set; }
         public DbSet<ProjectAssetesProjectTypeAssets> ProjectAssetesProjectTypeAssets { get; set; }
     }
 }

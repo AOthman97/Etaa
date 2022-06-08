@@ -69,7 +69,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                // .Include(c => c.Users)
+                // .Include(c => c.IdentityUser)
                 var applicationDbContext = _context.Clearances.Include(c => c.Projects);
                 return View(await applicationDbContext.ToListAsync());
             }
@@ -111,7 +111,7 @@ namespace Etaa.Controllers
             try
             {
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -136,7 +136,7 @@ namespace Etaa.Controllers
         //            return RedirectToAction(nameof(Index));
         //        }
         //        ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
-        //        ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", clearance.UserId);
+        //        ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", clearance.UserId);
         //        return View(clearance);
         //    }
         //    catch (Exception ex)
@@ -212,7 +212,7 @@ namespace Etaa.Controllers
                     return NotFound();
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", clearance.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", clearance.UserId);
                 ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == clearance.ProjectId).Select(f => f.NameAr).Single();
                 return View(clearance);
             }
@@ -273,7 +273,7 @@ namespace Etaa.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", clearance.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", clearance.UserId);
                 return View("Edit");
             }
             catch (Exception ex)

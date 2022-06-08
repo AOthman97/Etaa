@@ -1113,7 +1113,7 @@ namespace Etaa.Data.Migrations
                     b.ToTable("States");
                 });
 
-            modelBuilder.Entity("Etaa.Models.Users", b =>
+            modelBuilder.Entity("Etaa.Models.IdentityUser", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -1143,7 +1143,7 @@ namespace Etaa.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1260,7 +1260,7 @@ namespace Etaa.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetIdentityUser", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -1515,7 +1515,7 @@ namespace Etaa.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ModuleId");
 
-                    b.HasOne("Etaa.Models.Users", "Users")
+                    b.HasOne("Etaa.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1525,7 +1525,7 @@ namespace Etaa.Data.Migrations
 
                     b.Navigation("Modules");
 
-                    b.Navigation("Users");
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Etaa.Models.PaymentVoucher", b =>

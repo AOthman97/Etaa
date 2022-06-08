@@ -1,5 +1,6 @@
 ﻿using Etaa.Data;
 using Etaa.Data.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
@@ -34,7 +35,7 @@ namespace Etaa
                     Path.Combine(Directory.GetCurrentDirectory(),
                     "./wwwroot/ProjectFiles")));
 
-            // For the users
+            // For the IdentityUser
             services.AddHttpContextAccessor();
         }
 

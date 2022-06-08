@@ -4,12 +4,12 @@
 
 namespace Etaa.Data.Migrations
 {
-    public partial class RemoveRelationshipBetweenUsersAndClearanceModel_AndChangeTypeOfBothProperties : Migration
+    public partial class RemoveRelationshipBetweenIdentityUserAndClearanceModel_AndChangeTypeOfBothProperties : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances");
 
             migrationBuilder.DropIndex(
@@ -61,10 +61,10 @@ namespace Etaa.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Clearances_Users_UserId",
+                name: "FK_Clearances_IdentityUser_UserId",
                 table: "Clearances",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId");
         }
     }

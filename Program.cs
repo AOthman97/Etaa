@@ -30,7 +30,7 @@ builder.Services.AddScoped<IContributorsService, ContributorsService>();
 
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
 
-// For the users
+// For the IdentityUser
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession();

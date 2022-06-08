@@ -4,12 +4,12 @@
 
 namespace Etaa.Data.Migrations
 {
-    public partial class RemoveRelationshipBetweenUsersAndPaymentVoucherModel_AndChangeTypeOfBothProperties : Migration
+    public partial class RemoveRelationshipBetweenIdentityUserAndPaymentVoucherModel_AndChangeTypeOfBothProperties : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_PaymentVouchers_Users_UserId",
+                name: "FK_PaymentVouchers_IdentityUser_UserId",
                 table: "PaymentVouchers");
 
             migrationBuilder.DropIndex(
@@ -61,10 +61,10 @@ namespace Etaa.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_PaymentVouchers_Users_UserId",
+                name: "FK_PaymentVouchers_IdentityUser_UserId",
                 table: "PaymentVouchers",
                 column: "UserId",
-                principalTable: "Users",
+                principalTable: "IdentityUser",
                 principalColumn: "UserId",
                 onDelete: ReferentialAction.Cascade);
         }

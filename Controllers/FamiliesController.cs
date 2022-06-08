@@ -65,7 +65,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                // .Include(f => f.Users)
+                // .Include(f => f.IdentityUser)
                 // .Include(f => f.AccommodationType).Include(f => f.District).Include(f => f.EducationalStatus).Include(f => f.Gender).Include(f => f.HealthStatus).Include(f => f.InvestmentType).Include(f => f.Job).Include(f => f.MartialStatus).Include(f => f.Religion)
                 var applicationDbContext = _context.Families;
                 return View(await applicationDbContext.ToListAsync());
@@ -202,7 +202,7 @@ namespace Etaa.Controllers
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
                 ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
-                //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", family.UserId);
+                //ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", family.UserId);
 
                 var StatesList = new SelectList(_context.States.ToList(), "StateId", "NameAr");
                 ViewData["States"] = StatesList;
@@ -259,7 +259,7 @@ namespace Etaa.Controllers
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
                 ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", family.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", family.UserId);
                 return View("Edit");
             }
             catch (Exception ex)

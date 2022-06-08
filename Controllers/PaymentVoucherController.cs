@@ -293,7 +293,7 @@ namespace Etaa.Controllers
             {
                 ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr");
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -317,7 +317,7 @@ namespace Etaa.Controllers
         //    }
         //    ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
         //    ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
-        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+        //    ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", paymentVoucher.UserId);
         //    return View(paymentVoucher);
         //}
 
@@ -466,7 +466,7 @@ namespace Etaa.Controllers
                 }
                 ViewData["InstallmentsId"] = paymentVoucher.InstallmentsId;
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", paymentVoucher.UserId);
                 ViewData["ProjectNameAr"] = _context.Projects.Where(f => f.ProjectId == paymentVoucher.ProjectId).Select(f => f.NameAr).Single();
                 return View(paymentVoucher);
             }
@@ -528,7 +528,7 @@ namespace Etaa.Controllers
                 }
                 ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
-                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "NameAr", paymentVoucher.UserId);
+                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", paymentVoucher.UserId);
                 return View("Edit");
             }
             catch (Exception ex)
