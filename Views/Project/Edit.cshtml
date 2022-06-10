@@ -136,8 +136,57 @@
 </div>
 
 @section Scripts {
+    @if (TempData["FinancialStatemntId"] != null)
+                {
+                    <script>
+                        $(function () {
+                                    swal({
+                                      title: "لم يتم التعديل !",
+                                      text: "هنالك إقرار  مالي تابع لهذا المشروع !",
+                                      icon: "info"
+                                    });
+                                });
+                            </script>
+                }
+    @if (TempData["ClearanceId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم التعديل !",
+                          text: "هنالك خلو طرف تابع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["PaymentVoucherId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم التعديل !",
+                          text: "هنالك مستندات دفع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+
+    @if (TempData["Project"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات !",
+                          text: "الرجاء التحقق من المدخلات !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+
     <script>
-        // Should already get the data on page load
     function saveData(){
             // Firstly the project data, Then the project assets, then the project selection reasons and finally the social benefits
             var projectItem = [];

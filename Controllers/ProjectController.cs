@@ -361,8 +361,8 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 _logger.LogInformation("df", ex.Message);
-                TempData["Project"] = "Project";
-                var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                TempData["ProjectError"] = "Project";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
                 return Json(new
                 {
                     redirectUrl = RedirectURL
@@ -537,7 +537,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Error");
+                TempData["ProjectError"] = "Project";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -581,20 +586,32 @@ namespace Etaa.Controllers
                 var ClearanceId = _context.Clearances.Where(c => c.ProjectId == id && c.IsCanceled == false).Select(c => c.ClearanceId);
                 var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == id && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
                 // This is a business validation
-                if (FinancialStatemntId != null)
+                if (FinancialStatemntId.Any())
                 {
                     TempData["FinancialStatemntId"] = "FinancialStatemntId";
-                    return View("Delete");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
-                else if (ClearanceId != null)
+                else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
-                    return View("Delete");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
-                else if (PaymentVoucherId != null)
+                else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
-                    return View("Delete");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 else
                 {
@@ -606,8 +623,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Project"] = "Project";
-                return View("Delete");
+                TempData["ProjectError"] = "Project";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 

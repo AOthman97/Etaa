@@ -124,6 +124,18 @@
                     });
                 </script>
     }
+    @if (TempData["ProjectError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "الرجاء مراجعة المدخلات !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
     @if (TempData["Project"] != null)
     {
         <script>
