@@ -180,19 +180,31 @@ namespace Etaa.Controllers
                     else
                     {
                         TempData["PaidAmount"] = "Clearance";
-                        return View("Create", clearance);
+                        var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                        return Json(new
+                        {
+                            redirectUrl = RedirectURL
+                        });
                     }
                 }
                 else
                 {
                     TempData["ProjectAlreadyHasAClearance"] = "Clearance";
-                    return View("Create", clearance);
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
             }
             catch (Exception ex)
             {
-                TempData["Clearance"] = clearance.ClearanceDate;
-                return View("Create", clearance);
+                TempData["ClearanceError"] = clearance.ClearanceDate;
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -233,7 +245,11 @@ namespace Etaa.Controllers
             {
                 if (clearanceId != clearance.ClearanceId)
                 {
-                    return View("Error");
+                    var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFourth
+                    });
                 }
 
                 TempData["Clearance"] = "Clearance";
@@ -263,22 +279,46 @@ namespace Etaa.Controllers
                     {
                         if (!ClearanceExists(clearance.ClearanceId))
                         {
-                            return View("Edit");
+                            TempData["ClearanceError"] = clearance.ClearanceDate;
+                            var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSecond
+                            });
                         }
                         else
                         {
-                            return View("Edit");
+                            TempData["ClearanceError"] = clearance.ClearanceDate;
+                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLThird
+                            });
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    var RedirectURLFifth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFifth
+                    });
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", clearance.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", clearance.UserId);
-                return View("Edit");
+                TempData["ClearanceError"] = clearance.ClearanceDate;
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                TempData["ClearanceError"] = clearance.ClearanceDate;
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -315,11 +355,14 @@ namespace Etaa.Controllers
         {
             try
             {
-                TempData["Clearance"] = "Clearance";
                 if (_context.Clearances == null)
                 {
-                    return View("Delete");
-                    //return Problem("Entity set 'ApplicationDbContext.Clearances'  is null.");
+                    TempData["ClearanceError"] = "Clearance";
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 var clearance = await _context.Clearances.FindAsync(id);
                 
@@ -328,16 +371,27 @@ namespace Etaa.Controllers
                     clearance.IsCanceled = true;
                     //_context.Clearances.Remove(clearance);
                     await _context.SaveChangesAsync();
+                    TempData["Clearance"] = "Clearance";
                     return RedirectToAction(nameof(Index));
                 }
                 else 
                 {
-                    return View("Delete");
+                    TempData["ClearanceError"] = "Clearance";
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["ClearanceError"] = "Clearance";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 

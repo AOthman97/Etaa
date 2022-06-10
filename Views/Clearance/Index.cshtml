@@ -50,15 +50,53 @@
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة خلو الطرف</a>
 </div>
 
-@if (TempData["Clearance"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+@section Scripts{
+    @if(TempData["PaidAmount"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم دفع كل أقساط المشروع !",
+                          text: "لم يتم دفع كل أقساط المشروع !",
+                          icon: "warning"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if(TempData["ProjectAlreadyHasAClearance"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "هذا المشروع لديه خلو طرف مسبقا !",
+                          text: "هذا المشروع لديه خلو طرف مسبقا !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["ClearanceError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم تتم العملية !",
+                          text: "الرجاء التحقق من المدخلات !",
+                          icon: "error"
+                        });
+                    });
+        </script>
+    }
+    @if (TempData["Clearance"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+        </script>
+    }
 }
