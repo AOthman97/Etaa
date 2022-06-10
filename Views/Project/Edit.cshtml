@@ -272,10 +272,10 @@
                 "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
             },
             success: function (result) {
-                //
+                window.location = result.redirectUrl
             },
             error: function (error) {
-                //console.log(result);
+                console.log(error);
             }
         })
         };

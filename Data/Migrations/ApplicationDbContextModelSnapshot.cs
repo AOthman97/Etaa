@@ -631,8 +631,6 @@ namespace Etaa.Data.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Logs");
                 });
 
@@ -1139,39 +1137,6 @@ namespace Etaa.Data.Migrations
                     b.ToTable("States");
                 });
 
-            modelBuilder.Entity("Etaa.Models.IdentityUser", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
-
-                    b.Property<bool?>("IsDisabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NameEn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfileImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Signature")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("IdentityUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1286,7 +1251,7 @@ namespace Etaa.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetIdentityUser", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -1541,17 +1506,9 @@ namespace Etaa.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ModuleId");
 
-                    b.HasOne("Etaa.Models.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("EventTypes");
 
                     b.Navigation("Modules");
-
-                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Etaa.Models.PaymentVoucher", b =>

@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Net.Mail;
 
 namespace Etaa.Areas.Identity.Pages.Account
 {
@@ -115,7 +116,7 @@ namespace Etaa.Areas.Identity.Pages.Account
             // Enable login with either the Email address or the Username, In codebehind we test the value of the input if it's
             // not a valid email then it's a username and hence use it dirctly to login. Else if it's an email then use it to
             // get the value of the Username attribute and login with it.
-            var Username = new EmailAddressAttribute().IsValid(Input.UserName) ? _userManager.FindByEmailAsync(Input.UserName).Result.UserName : Input.UserName;
+            var Username = new EmailAddressAttribute().IsValid(Input.UserName) ? new MailAddress(Input.UserName).User : Input.UserName;
 
             if (ModelState.IsValid)
             {

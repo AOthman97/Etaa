@@ -378,20 +378,21 @@ namespace Etaa.Controllers
                 var ClearanceId = _context.Clearances.Where(c => c.ProjectId == projectId && c.IsCanceled == false).Select(c => c.ClearanceId);
                 var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == projectId && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
                 // This is a business validation
-                if (projectId != projects.ProjectId || FinancialStatemntId != null)
+                if (projectId != projects.ProjectId || FinancialStatemntId.Any())
                 {
-                    ViewBag.FinancialStatemntId = "FinancialStatemntId";
-                    ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId);
-                    return View("Index");
-                    //ViewData["FamilyNameAr"] = _context.Families.Where(f => f.FamilyId == projects.FamilyId).Select(f => f.NameAr);
-                    //return View("Edit", projects);
+                    TempData["FinancialStatemntId"] = "FinancialStatemntId";
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
-                else if (projectId != projects.ProjectId || ClearanceId != null)
+                else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
                     return View("Edit");
                 }
-                else if (projectId != projects.ProjectId || PaymentVoucherId != null)
+                else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
                     return View("Edit");
