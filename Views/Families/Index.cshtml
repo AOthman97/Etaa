@@ -71,8 +71,21 @@
     <a asp-controller="Families" asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة أسرة</a>
 </div>
 
-@if (TempData["Project"] != null)
-{
+@section Scripts{
+    @if (TempData["FamilyError"] != null)
+    {
+    <script>
+        $(function () {
+                    swal({
+                      title: "لم تتم العملية !",
+                      text: "الرجاء التحقق من المدخلات !",
+                      icon: "error"
+                    });
+                });
+    </script>
+    }
+    @if (TempData["Family"] != null)
+    {
     <script>
         $(function () {
                     swal({
@@ -81,6 +94,7 @@
                       icon: "success"
                     });
                 });
-            </script>
+    </script>
+    }
 }
 
