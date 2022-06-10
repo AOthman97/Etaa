@@ -57,16 +57,54 @@
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة مستند دفع</a>
 </div>
 
-@if (TempData["PaymentVoucher"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+@section Scripts {
+    @if (TempData["NoFinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "الرجاء إنشاء إقرار مالي أولا !",
+                          icon: "info"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if (TempData["InstallmentsNoGreaterThanProjectNumberOfInstallments"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "رقم القسط أكبر من عدد أقساط المشروع !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["PaymentVoucherError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["PaymentVoucher"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+                </script>
+    }
 }
 

@@ -185,20 +185,12 @@ namespace Etaa.Controllers
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
                 ViewData["FamilyId"] = familyMember.FamilyId;
                 TempData["FamilyMemberError"] = "FamilyMemberError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 TempData["FamilyMemberError"] = "FamilyMemberError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -243,11 +235,7 @@ namespace Etaa.Controllers
                 if (id != familyMember.FamilyMemberId)
                 {
                     TempData["FamilyMemberError"] = "FamilyMemberError";
-                    var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURLFirst
-                    });
+                    return RedirectToAction(nameof(Index));
                 }
 
                 TempData["FamilyMember"] = "FamilyMember";
@@ -262,11 +250,13 @@ namespace Etaa.Controllers
                     {
                         if (!FamilyMemberExists(familyMember.FamilyMemberId))
                         {
-                            return View("Edit");
+                            TempData["FamilyMemberError"] = "FamilyMemberError";
+                            return RedirectToAction(nameof(Index));
                         }
                         else
                         {
-                            return View("Edit");
+                            TempData["FamilyMemberError"] = "FamilyMemberError";
+                            return RedirectToAction(nameof(Index));
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -277,19 +267,12 @@ namespace Etaa.Controllers
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
                 TempData["FamilyMemberError"] = "FamilyMemberError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                TempData["FamilyMemberError"] = "FamilyMemberError";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -340,11 +323,7 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 TempData["FamilyMemberError"] = "FamilyMemberError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 

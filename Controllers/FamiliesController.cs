@@ -148,9 +148,10 @@ namespace Etaa.Controllers
             try
             {
                 var userId = User.GetLoggedInUserId<string>();
-                TempData["Family"] = family.NameAr;
+                
                 if (ModelState.IsValid)
                 {
+                    TempData["Family"] = family.NameAr;
                     family.IsCanceled = false;
                     family.IsApprovedByManagement = false;
                     family.UserId = userId;
@@ -169,21 +170,14 @@ namespace Etaa.Controllers
                     ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", family.JobId);
                     ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr", family.MartialStatusId);
                     ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
-                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
+                    TempData["FamilyError"] = family.NameAr;
+                    return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
                 TempData["FamilyError"] = family.NameAr;
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -271,20 +265,12 @@ namespace Etaa.Controllers
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr", family.ReligionId);
                 ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", family.UserId);
                 TempData["FamilyError"] = "FamilyError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 TempData["FamilyError"] = "FamilyError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -340,11 +326,7 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 TempData["FamilyError"] = "FamilyError";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 

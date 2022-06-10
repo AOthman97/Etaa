@@ -110,13 +110,13 @@ namespace Etaa.Controllers
                     // the ProjectTypeId to select from that's used in the Index action method
                     return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
-                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
-                return View("Create");
+                TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
             catch (Exception ex)
             {
-                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
-                return View("Create");
+                TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
         }
 
@@ -154,7 +154,8 @@ namespace Etaa.Controllers
             {
                 if (id != projectTypesAssets.ProjectTypesAssetsId)
                 {
-                    return View("Error");
+                    TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                    return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
 
                 if (ModelState.IsValid)
@@ -169,23 +170,26 @@ namespace Etaa.Controllers
                     {
                         if (!ProjectTypesAssetsExists(projectTypesAssets.ProjectTypesAssetsId))
                         {
-                            return View("Edit");
+                            TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                            return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                         }
                         else
                         {
-                            return View("Edit");
+                            TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                            return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                         }
                     }
                     // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
                     // the ProjectTypeId to select from that's used in the Index action method
                     return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 }
-                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
-                return View("Edit");
+                TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
         }
 
@@ -231,8 +235,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
-                return View("Delete");
+                TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
+                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
         }
 

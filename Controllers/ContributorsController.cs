@@ -133,20 +133,12 @@ namespace Etaa.Controllers
                 }
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
                 TempData["ContributorError"] = "Contributor";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 TempData["ContributorError"] = "Contributor";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -188,11 +180,7 @@ namespace Etaa.Controllers
                 if (id != contributor.ContributorId)
                 {
                     TempData["ContributorError"] = "Contributor";
-                    var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURLFirst
-                    });
+                    return RedirectToAction(nameof(Index));
                 }
 
                 if (ModelState.IsValid)
@@ -208,20 +196,12 @@ namespace Etaa.Controllers
                         if (!ContributorExists(contributor.ContributorId))
                         {
                             TempData["ContributorError"] = "Contributor";
-                            var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                            return Json(new
-                            {
-                                redirectUrl = RedirectURLSecond
-                            });
+                            return RedirectToAction(nameof(Index));
                         }
                         else
                         {
                             TempData["ContributorError"] = "Contributor";
-                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                            return Json(new
-                            {
-                                redirectUrl = RedirectURLThird
-                            });
+                            return RedirectToAction(nameof(Index));
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -232,11 +212,7 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 TempData["ContributorError"] = "Contributor";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -282,11 +258,7 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 TempData["ContributorError"] = "Contributor";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURL
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 

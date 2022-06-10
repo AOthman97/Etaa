@@ -435,19 +435,31 @@ namespace Etaa.Controllers
                     else
                     {
                         TempData["InstallmentsNoGreaterThanProjectNumberOfInstallments"] = "PaymentVoucher";
-                        return View("Create");
+                        var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                        return Json(new
+                        {
+                            redirectUrl = RedirectURLThird
+                        });
                     }
                 }
                 else
                 {
                     TempData["NoFinancialStatement"] = "PaymentVoucher";
-                    return View("Create");
+                    var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFourth
+                    });
                 }
             }
             catch (Exception ex)
             {
-                TempData["PaymentVoucher"] = "PaymentVoucher";
-                return View("Create");
+                TempData["PaymentVoucherError"] = "PaymentVoucher";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -489,10 +501,15 @@ namespace Etaa.Controllers
             {
                 if (paymentVoucherId != paymentVoucher.PaymentVoucherId)
                 {
-                    return View("Error");
+                    TempData["PaymentVoucherError"] = "PaymentVoucher";
+                    var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLThird
+                    });
                 }
 
-                TempData["PaymentVoucher"] = "PaymentVoucher";
+                
                 if (ModelState.IsValid)
                 {
                     try
@@ -514,6 +531,7 @@ namespace Etaa.Controllers
 
                         _context.Update(paymentVoucher);
                         await _context.SaveChangesAsync();
+                        TempData["PaymentVoucher"] = "PaymentVoucher";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -531,11 +549,21 @@ namespace Etaa.Controllers
                 ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", paymentVoucher.UserId);
-                return View("Edit");
+                TempData["PaymentVoucherError"] = "PaymentVoucher";
+                var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURLFirst
+                });
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                TempData["PaymentVoucherError"] = "PaymentVoucher";
+                var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURLThird
+                });
             }
         }
 
@@ -581,7 +609,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["PaymentVoucherError"] = "PaymentVoucher";
+                return RedirectToAction(nameof(Index));
             }
         }
 

@@ -44,15 +44,29 @@
     <a asp-action="Create" class="btn btn-outline-primary" asp-route-ProjectTypeId="@ViewBag.ProjectTypeId"><i class="bi bi-plus-circle"></i> إضافة أصول نوع المشروع</a>
 </div>
 
-@if (TempData["ProjectTypesAssets"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+@section Scripts{
+    @if (TempData["ProjectTypesAssetsError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if (TempData["ProjectTypesAssets"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+                </script>
+    }
 }

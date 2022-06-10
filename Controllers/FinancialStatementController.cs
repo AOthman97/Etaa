@@ -291,21 +291,13 @@ namespace Etaa.Controllers
                 else
                 {
                     TempData["CantDeleteTheresAProjectAttachedWitIt"] = "FinancialStatement";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
+                    return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
                 TempData["FinancialStatementError"] = "FinancialStatement";
-                var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                return Json(new
-                {
-                    redirectUrl = RedirectURLFourth
-                });
+                return RedirectToAction(nameof(Index));
             }
         }
 

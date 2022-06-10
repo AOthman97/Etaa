@@ -57,7 +57,20 @@
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة نوع مشروع</a>
 </div>
 
-@if (TempData["ProjectType"] != null)
+@section Scripts{
+    @if (TempData["ProjectTypeError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["ProjectType"] != null)
 {
     <script>
         $(function () {
@@ -68,4 +81,5 @@
                     });
                 });
             </script>
+}
 }

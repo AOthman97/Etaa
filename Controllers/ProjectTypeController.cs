@@ -87,21 +87,23 @@ namespace Etaa.Controllers
         {
             try
             {
-                TempData["ProjectType"] = "ProjectType";
                 if (ModelState.IsValid)
                 {
                     projectTypes.IsCanceled = false;
                     _context.Add(projectTypes);
                     await _context.SaveChangesAsync();
+                    TempData["ProjectType"] = "ProjectType";
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes, "ProjectDomainTypeId", "NameAr", projectTypes.ProjectDomainTypeId);
                 ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups, "ProjectGroupId", "NameAr", projectTypes.ProjectGroupId);
-                return View("Create");
+                TempData["ProjectTypeError"] = "ProjectType";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return View("Create");
+                TempData["ProjectTypeError"] = "ProjectType";
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -141,7 +143,8 @@ namespace Etaa.Controllers
             {
                 if (id != projectTypes.ProjectTypeId)
                 {
-                    return View("Error");
+                    TempData["ProjectTypeError"] = "ProjectType";
+                    return RedirectToAction(nameof(Index));
                 }
 
                 if (ModelState.IsValid)
@@ -156,11 +159,13 @@ namespace Etaa.Controllers
                     {
                         if (!ProjectTypesExists(projectTypes.ProjectTypeId))
                         {
-                            return NotFound();
+                            TempData["ProjectTypeError"] = "ProjectType";
+                            return RedirectToAction(nameof(Index));
                         }
                         else
                         {
-                            throw;
+                            TempData["ProjectTypeError"] = "ProjectType";
+                            return RedirectToAction(nameof(Index));
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -168,12 +173,13 @@ namespace Etaa.Controllers
                 TempData["ProjectType"] = "ProjectType";
                 ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes, "ProjectDomainTypeId", "NameAr", projectTypes.ProjectDomainTypeId);
                 ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups, "ProjectGroupId", "NameAr", projectTypes.ProjectGroupId);
-                return View("Edit");
+                TempData["ProjectTypeError"] = "ProjectType";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["ProjectType"] = "ProjectType";
-                return View("Edit");
+                TempData["ProjectTypeError"] = "ProjectType";=
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -219,7 +225,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["ProjectTypeError"] = "ProjectType";
+                return RedirectToAction(nameof(Index));
             }
         }
 

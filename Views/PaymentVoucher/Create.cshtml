@@ -101,43 +101,6 @@
 </div>
 
 @section Scripts {
-    @if (TempData["PaymentVoucher"] != null)
-    {
-        <script>
-            $(function () {
-                        swal({
-                          title: "الرجاء التحقق من المدخلات!",
-                          text: "الرجاء التحقق من المدخلات!",
-                          icon: "error"
-                        });
-                    });
-                </script>
-    }
-    @if (TempData["NoFinancialStatement"] != null)
-    {
-        <script>
-            $(function () {
-                        swal({
-                          title: "لم يتم الحفظ !",
-                          text: "الرجاء إنشاء إقرار مالي أولا !",
-                          icon: "info"
-                        });
-                    });
-                </script>
-    }
-    @if (TempData["InstallmentsNoGreaterThanProjectNumberOfInstallments"] != null)
-    {
-        <script>
-            $(function () {
-                        swal({
-                          title: "لم يتم الحفظ !",
-                          text: "رقم القسط أكبر من عدد أقساط المشروع !",
-                          icon: "error"
-                        });
-                    });
-                </script>
-    }
-
     <script>
         function saveData(){
             let projectId = $("#hdnProjectId").val();
@@ -163,8 +126,7 @@
                     "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
                 },
                 success: function (result) {
-                    //alert("Success");
-                    //var res = result;
+                    window.location = result.redirectUrl
                 },
                 error: function (error) {
                     console.log(error);
