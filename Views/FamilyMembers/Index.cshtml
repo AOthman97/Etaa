@@ -70,8 +70,21 @@
     <a asp-action="AddOrEdit" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة عضو أسرة</a>
 </div>
 
-@if (TempData["FamilyMember"] != null)
-{
+@section Scripts{
+    @if (TempData["FamilyMemberError"] != null)
+    {
+    <script>
+        $(function () {
+                    swal({
+                      title: "لم تتم العملية !",
+                      text: "الرجاء التحقق من المدخلات !",
+                      icon: "error"
+                    });
+                });
+    </script>
+    }
+    @if (TempData["FamilyMember"] != null)
+    {
     <script>
         $(function () {
                     swal({
@@ -80,5 +93,6 @@
                       icon: "success"
                     });
                 });
-            </script>
+    </script>
+    }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -181,11 +182,21 @@ namespace Etaa.Controllers
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
                 ViewData["FamilyId"] = familyMember.FamilyId;
-                return View("AddOrEdit");
+                TempData["FamilyMemberError"] = "FamilyMemberError";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
             catch (Exception ex)
             {
-                return View("AddOrEdit");
+                TempData["FamilyMemberError"] = "FamilyMemberError";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -229,7 +240,12 @@ namespace Etaa.Controllers
             {
                 if (id != familyMember.FamilyMemberId)
                 {
-                    return View("Error");
+                    TempData["FamilyMemberError"] = "FamilyMemberError";
+                    var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFirst
+                    });
                 }
 
                 TempData["FamilyMember"] = "FamilyMember";
@@ -258,11 +274,20 @@ namespace Etaa.Controllers
                 ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr", familyMember.GenderId);
                 ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr", familyMember.JobId);
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
-                return View("Edit");
+                TempData["FamilyMemberError"] = "FamilyMemberError";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -312,7 +337,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["FamilyMemberError"] = "FamilyMemberError";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
