@@ -100,16 +100,40 @@
                                 });
                             </script>
                 }
-}
-@if (TempData["Project"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+    @if (TempData["ClearanceId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "هنالك خلو طرف تابع لهذا المشروع !",
+                          icon: "info"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if (TempData["PaymentVoucherId"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "هنالك مستندات دفع لهذا المشروع !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["Project"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+                </script>
+    }
 }

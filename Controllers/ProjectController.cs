@@ -265,46 +265,74 @@ namespace Etaa.Controllers
         {
             try
             {
-                var userId = User.GetLoggedInUserId<string>();
                 //var userName = User.GetLoggedInUserName();
                 //var userEmail = User.GetLoggedInUserEmail();
 
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
-                project.SignatureofApplicantPath = filePath;
-                project.UserId = userId;
-                var ProjectTypeNameEn = (from projectType in _context.ProjectTypes
-                                         where projectType.ProjectTypeId == project.ProjectTypeId
-                                         select projectType.NameEn).SingleOrDefaultAsync();
-                var ProjectTypeNameAr = (from projectType in _context.ProjectTypes
-                                         where projectType.ProjectTypeId == project.ProjectTypeId
-                                         select projectType.NameAr).SingleOrDefaultAsync();
-                var FamilyNameEn = (from family in _context.Families
-                                    where family.FamilyId == project.FamilyId
-                                    select family.NameEn).SingleOrDefaultAsync();
-                var FamilyNameAr = (from family in _context.Families
-                                    where family.FamilyId == project.FamilyId
-                                    select family.NameAr).SingleOrDefaultAsync();
-                project.NameEn = String.Concat(ProjectTypeNameEn.Result, " ", FamilyNameEn.Result);
-                project.NameAr = String.Concat(ProjectTypeNameAr.Result, " ", FamilyNameAr.Result);
 
                 decimal Capital = (decimal)project.Capital;
                 decimal MonthlyInstallmentAmount = (decimal)project.MonthlyInstallmentAmount;
                 int NumberOfInstallments = (int)project.NumberOfInstallments;
                 int MaxInstallmentsNo = _context.Installments.Select(i => i.InstallmentsId).Max();
 
-                if((NumberOfInstallments > MaxInstallmentsNo))
+                if(NumberOfInstallments > MaxInstallmentsNo)
                 {
                     TempData["NumberOfInstallmentsGreaterThanMaxInstallmentNo"] = "Project";
-                    return View("Create");
+                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
-                else if((Capital / MonthlyInstallmentAmount != NumberOfInstallments))
+                else if(Capital / MonthlyInstallmentAmount != NumberOfInstallments)
                 {
                     TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
-                    return View("Create");
+                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
+                }
+                else if (project.FamilyId.Equals(null) || project.FamilyId.Equals(0))
+                {
+                    TempData["ChooseFamily"] = "Project";
+                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
+                }
+                else if (project.NumberOfFundsId.Equals(null) || project.NumberOfFundsId.Equals(0))
+                {
+                    TempData["ChooseFundsNumber"] = "Project";
+                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 else
                 {
+                    if(!string.IsNullOrEmpty(filePath))
+                        project.SignatureofApplicantPath = filePath;
+                    var userId = User.GetLoggedInUserId<string>();
+                    project.UserId = userId;
+                    var ProjectTypeNameEn = (from projectType in _context.ProjectTypes
+                                             where projectType.ProjectTypeId == project.ProjectTypeId
+                                             select projectType.NameEn).SingleOrDefaultAsync();
+                    var ProjectTypeNameAr = (from projectType in _context.ProjectTypes
+                                             where projectType.ProjectTypeId == project.ProjectTypeId
+                                             select projectType.NameAr).SingleOrDefaultAsync();
+                    var FamilyNameEn = (from family in _context.Families
+                                        where family.FamilyId == project.FamilyId
+                                        select family.NameEn).SingleOrDefaultAsync();
+                    var FamilyNameAr = (from family in _context.Families
+                                        where family.FamilyId == project.FamilyId
+                                        select family.NameAr).SingleOrDefaultAsync();
+                    project.NameEn = String.Concat(ProjectTypeNameEn.Result, " ", FamilyNameEn.Result);
+                    project.NameAr = String.Concat(ProjectTypeNameAr.Result, " ", FamilyNameAr.Result);
+
                     _context.Add(project);
                     foreach (var item in projectsAssets)
                     {
@@ -332,8 +360,13 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogInformation("df", ex.Message);
                 TempData["Project"] = "Project";
-                return View("Create");
+                var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -390,12 +423,20 @@ namespace Etaa.Controllers
                 else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
-                    return View("Edit");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
-                    return View("Edit");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 else
                 {

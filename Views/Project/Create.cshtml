@@ -160,6 +160,30 @@
                     });
                 </script>
     }
+    @if (TempData["ChooseFamily"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "الرجاء إختيار عائلة !",
+                          icon: "warning"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["ChooseFundsNumber"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "الرجاء إختيار رقم التمويل !",
+                          icon: "warning"
+                        });
+                    });
+                </script>
+    }
     @if (TempData["Project"] != null)
     {
         <script>
@@ -257,8 +281,7 @@
                 "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
             },
             success: function (result) {
-                alert("Success");
-                var res = result;
+                window.location = result.redirectUrl
             },
             error: function (error) {
                 console.log(error);
