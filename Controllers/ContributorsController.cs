@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
@@ -120,20 +121,30 @@ namespace Etaa.Controllers
         {
             try
             {
-                TempData["Contributor"] = "Contributor";
                 if (ModelState.IsValid)
                 {
                     contributor.IsCanceled = false;
                     _context.Add(contributor);
                     await _context.SaveChangesAsync();
+                    TempData["Contributor"] = "Contributor";
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictId", "NameAr", contributor.DistrictId);
-                return View("Create");
+                TempData["ContributorError"] = "Contributor";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
             catch (Exception ex)
             {
-                return View("Create");
+                TempData["ContributorError"] = "Contributor";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -174,26 +185,41 @@ namespace Etaa.Controllers
             {
                 if (id != contributor.ContributorId)
                 {
-                    return View("Error");
+                    TempData["ContributorError"] = "Contributor";
+                    var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFirst
+                    });
                 }
 
-                TempData["Contributor"] = "Contributor";
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         _context.Update(contributor);
                         await _context.SaveChangesAsync();
+                        TempData["Contributor"] = "Contributor";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ContributorExists(contributor.ContributorId))
                         {
-                            return View("Edit");
+                            TempData["ContributorError"] = "Contributor";
+                            var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSecond
+                            });
                         }
                         else
                         {
-                            return View("Edit");
+                            TempData["ContributorError"] = "Contributor";
+                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLThird
+                            });
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -203,7 +229,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                TempData["ContributorError"] = "Contributor";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -248,7 +279,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["ContributorError"] = "Contributor";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 

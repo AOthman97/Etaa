@@ -69,15 +69,29 @@
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة مساهم</a>
 </div>
 
-@if (TempData["Contributor"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+@section Scripts{
+    @if (TempData["ContributorError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء التحقق من المدخلات!",
+                          text: "الرجاء التحقق من المدخلات!",
+                          icon: "error"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if (TempData["Contributor"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+        </script>
+    }
 }
