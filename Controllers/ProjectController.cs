@@ -7,6 +7,7 @@ using Etaa.Models;
 using System.Collections;
 using Etaa.Extensions;
 using Serilog.Context;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
 {
@@ -45,6 +46,7 @@ namespace Etaa.Controllers
             }
         }
 
+        [Authorize]
         // GET: Project
         public async Task<IActionResult> Index()
         {

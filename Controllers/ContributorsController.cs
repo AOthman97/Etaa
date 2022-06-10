@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
 using Etaa.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
 {
@@ -63,6 +64,7 @@ namespace Etaa.Controllers
             }
         }
 
+        [Authorize]
         // GET: Contributors
         public async Task<IActionResult> Index()
         {

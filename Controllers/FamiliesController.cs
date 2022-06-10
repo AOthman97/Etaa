@@ -6,6 +6,7 @@ using Etaa.Data;
 using Etaa.Models;
 using System.Data;
 using Etaa.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
 {
@@ -60,6 +61,7 @@ namespace Etaa.Controllers
             }
         }
 
+        [Authorize]
         // GET: Families
         public async Task<IActionResult> Index()
         {

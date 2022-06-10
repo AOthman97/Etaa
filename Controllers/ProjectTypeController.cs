@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
 {
@@ -20,6 +21,7 @@ namespace Etaa.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: ProjectType
         public async Task<IActionResult> Index()
         {

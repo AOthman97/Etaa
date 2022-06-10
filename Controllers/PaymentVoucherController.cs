@@ -10,6 +10,7 @@ using Etaa.Data;
 using Etaa.Models;
 using Newtonsoft.Json;
 using Etaa.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
 {
@@ -245,6 +246,7 @@ namespace Etaa.Controllers
             }
         }
 
+        [Authorize]
         // GET: PaymentVoucher
         public async Task<IActionResult> Index()
         {
