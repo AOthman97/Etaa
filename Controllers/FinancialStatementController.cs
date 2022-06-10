@@ -115,13 +115,21 @@ namespace Etaa.Controllers
                 else
                 {
                     TempData["ProjectAlreadyHasAFinancialStatement"] = "FinancialStatement";
-                    return View("Create");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
             }
             catch (Exception ex)
             {
-                TempData["FinancialStatement"] = "FinancialStatement";
-                return View("Create");
+                TempData["FinancialStatementError"] = "FinancialStatement";
+                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURL
+                });
             }
         }
 
@@ -162,10 +170,14 @@ namespace Etaa.Controllers
             {
                 if (financialStatementId != financialStatement.FinancialStatementId)
                 {
-                    return View("Error");
+                    TempData["FinancialStatementError"] = "FinancialStatement";
+                    var RedirectURLFirst = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLFirst
+                    });
                 }
 
-                TempData["FinancialStatement"] = "FinancialStatement";
                 if (ModelState.IsValid)
                 {
                     try
@@ -187,27 +199,48 @@ namespace Etaa.Controllers
 
                         _context.Update(financialStatement);
                         await _context.SaveChangesAsync();
+                        TempData["FinancialStatement"] = "FinancialStatement";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!FinancialStatementExists(financialStatement.FinancialStatementId))
                         {
-                            return View("Edit");
+                            TempData["FinancialStatementError"] = "FinancialStatement";
+                            var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSecond
+                            });
                         }
                         else
                         {
-                            return View("Edit");
+                            TempData["FinancialStatementError"] = "FinancialStatement";
+                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLThird
+                            });
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", financialStatement.UserId);
-                return View("Edit");
+                TempData["FinancialStatementError"] = "FinancialStatement";
+                var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURLFourth
+                });
             }
             catch (Exception ex)
             {
-                return View("Edit");
+                TempData["FinancialStatementError"] = "FinancialStatement";
+                var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURLFourth
+                });
             }
         }
 
@@ -244,24 +277,33 @@ namespace Etaa.Controllers
         {
             try
             {
-                TempData["FinancialStatement"] = "FinancialStatement";
                 var financialStatement = await _context.FinancialStatements.FindAsync(id);
                 var Project = _context.PaymentVouchers.Where(p => p.ProjectId == financialStatement.ProjectId && p.IsCanceled == false).Select(p => p.Projects);
                 if (Project.Any() == false)
                 {
                     financialStatement.IsCanceled = true;
                     await _context.SaveChangesAsync();
+                    TempData["FinancialStatement"] = "FinancialStatement";
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     TempData["CantDeleteTheresAProjectAttachedWitIt"] = "FinancialStatement";
-                    return View("Delete");
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
             }
             catch (Exception ex)
             {
-                return View("Delete");
+                TempData["FinancialStatementError"] = "FinancialStatement";
+                var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                return Json(new
+                {
+                    redirectUrl = RedirectURLFourth
+                });
             }
         }
 

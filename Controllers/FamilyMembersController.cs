@@ -169,11 +169,11 @@ namespace Etaa.Controllers
                 //    }
                 //}
 
-                TempData["FamilyMember"] = "FamilyMember";
                 if (ModelState.IsValid && (familyMember.FamilyId != 0 && familyMember.FamilyId != null))
                 {
                     _context.Add(familyMember);
                     await _context.SaveChangesAsync();
+                    TempData["FamilyMember"] = "FamilyMember";
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);

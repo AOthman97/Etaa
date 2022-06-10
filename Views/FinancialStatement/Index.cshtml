@@ -44,15 +44,53 @@
     <a asp-action="Create" class="btn btn-outline-primary"><i class="bi bi-plus-circle"></i> إضافة الإقرار المالي</a>
 </div>
 
-@if (TempData["FinancialStatement"] != null)
-{
-    <script>
-        $(function () {
-                    swal({
-                      title: "تمت العملية بنجاح !",
-                      text: "تمت العملية بنجاح !",
-                      icon: "success"
+@section Scripts{
+    @if (TempData["CantDeleteTheresAProjectAttachedWitIt"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لا يمكن الحذف !",
+                          text: "هذا الإقرار المالي تابع لمشروع قائم !",
+                          icon: "info"
+                        });
                     });
-                });
-            </script>
+                </script>
+    }
+    @if (TempData["ProjectAlreadyHasAFinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "هذا المشروع لديه إقرار مالي مسبقا !",
+                          text: "هذا المشروع لديه إقرار مالي مسبقا !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["FinancialStatementError"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم تتم العملية !",
+                          text: "الرجاء التحقق من المدخلات !",
+                          icon: "error"
+                        });
+                    });
+        </script>
+    }
+    @if (TempData["FinancialStatement"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "تمت العملية بنجاح !",
+                          text: "تمت العملية بنجاح !",
+                          icon: "success"
+                        });
+                    });
+        </script>
+    }
 }

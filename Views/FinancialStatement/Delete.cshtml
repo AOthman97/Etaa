@@ -57,30 +57,5 @@
 </div>
 
 @section Scripts {
-    @if (TempData["FinancialStatement"] != null)
-    {
-        <script>
-            $(function () {
-                        swal({
-                          title: "لم يتم الحذف !",
-                          text: "لم يتم الحذف !",
-                          icon: "error"
-                        });
-                    });
-                </script>
-    }
-    @if (TempData["CantDeleteTheresAProjectAttachedWitIt"] != null)
-    {
-        <script>
-            $(function () {
-                        swal({
-                          title: "لا يمكن الحذف !",
-                          text: "هذا الإقرار المالي تابع لمشروع قائم !",
-                          icon: "info"
-                        });
-                    });
-                </script>
-    }
-
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
