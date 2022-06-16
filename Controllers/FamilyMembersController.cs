@@ -19,7 +19,7 @@ namespace Etaa.Controllers
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the family and get the FamilyID
-        [HttpPost]
+        [HttpGet]
         public JsonResult AutoComplete(string prefix)
         {
             try

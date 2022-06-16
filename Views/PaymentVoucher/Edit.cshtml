@@ -137,7 +137,8 @@
         };
 
         $(function () {
-            $.post(`/PaymentVoucher/GetInstallmentForPaymentVoucher`, {PaymentVoucherId: $("#hdnPaymentVoucherId").val()}, function (data) {
+            //`/PaymentVoucher/GetInstallmentForPaymentVoucher`
+            $.post('@Url.Action("GetInstallmentForPaymentVoucher", "PaymentVoucher")', {PaymentVoucherId: $("#hdnPaymentVoucherId").val()}, function (data) {
                     $.each(data, function (i, e) {
                         $("#InstallmentsNo").append(`
                             <option selected="true" value="${e.value}">${e.text}</option>

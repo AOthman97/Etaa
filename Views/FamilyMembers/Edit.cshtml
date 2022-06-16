@@ -10,7 +10,7 @@
         $("#txtFamily").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: '/FamilyMembers/AutoComplete/',
+                    url: '@Url.Action("AutoComplete", "FamilyMembers")',
                     data: { "prefix": request.term },
                     type: "POST",
                     success: function (data) {

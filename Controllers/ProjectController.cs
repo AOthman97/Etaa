@@ -357,7 +357,12 @@ namespace Etaa.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData["Project"] = "Project";
-                    return RedirectToAction(nameof(Index));
+                    //return RedirectToAction(nameof(Index));
+                    var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLThird
+                    });
                 }
             }
             catch (Exception ex)
@@ -533,8 +538,12 @@ namespace Etaa.Controllers
                             return View("Edit");
                         }
                     }
-                    ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId);
-                    return RedirectToAction(nameof(Index));
+                    //return RedirectToAction(nameof(Index));
+                    var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLThird
+                    });
                 }
             }
             catch (Exception ex)

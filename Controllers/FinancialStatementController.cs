@@ -112,7 +112,11 @@ namespace Etaa.Controllers
                     _context.Add(financialStatement);
                     await _context.SaveChangesAsync();
                     TempData["FinancialStatement"] = "FinancialStatement";
-                    return RedirectToAction(nameof(Index));
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 else
                 {
@@ -224,7 +228,11 @@ namespace Etaa.Controllers
                             });
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
                 }
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", financialStatement.ProjectId);
                 ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", financialStatement.UserId);

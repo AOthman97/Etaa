@@ -26,7 +26,7 @@
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group mb-3">
                         <div class="col-md-12 border border-info" id="dropzone">
-                            <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader">
+                            <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader" formaction="/Project/Upload">
                                 <div class="dz-message needsclick">
                                     <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
                                     <div class="ms-4">
@@ -291,7 +291,9 @@
 
             $(function ()
             {
-                $.post(`/Project/GetProjectSelectionReasons`, function (data) {
+                // '@Url.Action("AutoComplete", "FamilyMembers")'
+                // /Project/GetProjectSelectionReasons
+                $.post(`@Url.Action("GetProjectSelectionReasons", "Project")`, function (data) {
                     $.each(data, function (i, e) {
                         $("#ProjectSelectionReasons").append(`
                         <div class="form-check">
@@ -304,7 +306,8 @@
                     });
                 });
 
-                $.post(`/Project/GetProjectSocialBenefits`, function (data) {
+                ///Project/GetProjectSocialBenefits
+                $.post(`@Url.Action("GetProjectSocialBenefits", "Project")`, function (data) {
                     $.each(data, function (i, e) {
                         $("#ProjectSocialBenefits").append(`
                         <div class="form-check">
@@ -317,7 +320,8 @@
                     });
                 });
 
-                $.post(`/Project/GetProjectTypes`, function (data) {
+                // /Project/GetProjectTypes
+                $.post(`@Url.Action("GetProjectTypes", "Project")`, function (data) {
                     $.each(data, function (i, e) {
                         $("#ProjectTypes").append(`
                             <option value="${e.value}">${e.text}</option>
@@ -325,7 +329,8 @@
                     });
                 });
 
-                $.post(`/Project/GetNumberOfFunds`, function (data) {
+                // /Project/GetNumberOfFunds
+                $.post(`@Url.Action("GetNumberOfFunds", "Project")`, function (data) {
                     $.each(data, function (i, e) {
                         $("#NoOfFunds").append(`
                             <option value="${e.value}">${e.text}</option>
@@ -335,7 +340,8 @@
 
                 $("select#ProjectTypes").change(function () {
                             var itemVal = $(this).val();
-                            $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
+                            // /Project/GetProjectTypeAssets
+                            $.post('@Url.Action("GetProjectTypeAssets", "Project")',{ProjectTypeId: itemVal} , function (data) {
                             $("#ProjectAssets").children().empty();
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group mb-3">`);
@@ -357,9 +363,9 @@
                 $("#txtFamily").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: '/FamilyMembers/AutoComplete/',
+                        url: '@Url.Action("AutoComplete", "FamilyMembers")',
                         data: { "prefix": request.term },
-                        type: "POST",
+                        type: "GET",
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return item;

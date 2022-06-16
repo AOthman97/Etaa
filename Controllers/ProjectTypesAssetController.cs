@@ -236,7 +236,7 @@ namespace Etaa.Controllers
             catch (Exception ex)
             {
                 TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
-                return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
+                return RedirectToAction(nameof(Index));
             }
         }
 

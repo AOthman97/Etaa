@@ -26,6 +26,7 @@ namespace Etaa.Controllers
         }
 
         // Get Installments select list
+        [HttpPost]
         public async Task<JsonResult> GetInstallments()
         {
             try
@@ -67,7 +68,7 @@ namespace Etaa.Controllers
                                {
                                    label = project.NameEn,
                                    val = project.ProjectId
-                               }).ToListAsync();
+                               }).ToList();
                 return Json(Project);
             }
             catch (Exception ex)
@@ -430,7 +431,12 @@ namespace Etaa.Controllers
                         await _context.SaveChangesAsync();
 
                         TempData["PaymentVoucher"] = "PaymentVoucher";
-                        return RedirectToAction(nameof(Index));
+                        //return RedirectToAction(nameof(Index));
+                        var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                        return Json(new
+                        {
+                            redirectUrl = RedirectURLThird
+                        });
                     }
                     else
                     {
@@ -544,7 +550,12 @@ namespace Etaa.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    //return RedirectToAction(nameof(Index));
+                    var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURLThird
+                    });
                 }
                 ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr", paymentVoucher.InstallmentsId);
                 ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", paymentVoucher.ProjectId);

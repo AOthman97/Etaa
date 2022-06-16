@@ -139,8 +139,7 @@
                     "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
                 },
                 success: function (result) {
-                    //alert("Success");
-                    //var res = result;
+                    window.location = result.redirectUrl
                 },
                 error: function (error) {
                     console.log(error);
@@ -154,7 +153,7 @@
                 $("#txtProject").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: '/Clearance/AutoComplete/',
+                        url: '@Url.Action("AutoComplete", "Clearance")',
                         data: { "prefix": request.term },
                         type: "POST",
                         success: function (data) {
@@ -173,7 +172,7 @@
                 select: function (e, i) {
                     $("#hdnProjectId").val(i.item.val);
                     $.ajax({
-                        url: '/Clearance/GetRemainAmount/',
+                        url: '@Url.Action("GetRemainAmount", "Clearance")',
                         data: { "projectId": $("#hdnProjectId").val() },
                         type: "POST",
                         success: function (data) {

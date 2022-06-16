@@ -177,7 +177,11 @@ namespace Etaa.Controllers
                         _context.Add(clearance);
                         await _context.SaveChangesAsync();
                         TempData["Clearance"] = "Clearance";
-                        return RedirectToAction(nameof(Index));
+                        var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                        return Json(new
+                        {
+                            redirectUrl = RedirectURL
+                        });
                     }
                     else
                     {

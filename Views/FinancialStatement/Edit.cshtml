@@ -90,7 +90,7 @@
                         "XSRF-TOKEN": $('input[name="__RequestVerificationToken"]').val()
                     },
                     success: function (result) {
-                        return RedirectToAction(nameof(Index));
+                        window.location = result.redirectUrl
                     },
                     error: function (error) {
                         console.log(error);

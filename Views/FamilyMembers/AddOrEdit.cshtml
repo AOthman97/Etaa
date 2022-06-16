@@ -9,9 +9,10 @@
             $("#txtFamily").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: '/FamilyMembers/AutoComplete/',
+                        // /FamilyMembers/AutoComplete/
+                        url: '@Url.Action("AutoComplete", "FamilyMembers")',
                         data: { "prefix": request.term },
-                        type: "POST",
+                        type: "GET",
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return item;

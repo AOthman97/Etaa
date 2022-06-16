@@ -178,7 +178,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["ProjectTypeError"] = "ProjectType";=
+                TempData["ProjectTypeError"] = "ProjectType";
                 return RedirectToAction(nameof(Index));
             }
         }

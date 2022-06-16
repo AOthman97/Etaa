@@ -140,7 +140,7 @@
                 $("#txtProject").autocomplete({
                 source: function (request, response) {
                     $.ajax({
-                        url: '/Project/AutoComplete/',
+                        url: '@Url.Action("AutoComplete", "Project")',
                         data: { "prefix": request.term },
                         type: "POST",
                         success: function (data) {
@@ -163,7 +163,7 @@
                 minLength: 1
             });
 
-            $.post(`/PaymentVoucher/GetInstallments`, function (data) {
+            $.post('@Url.Action("GetInstallments", "PaymentVoucher")', function (data) {
                     $.each(data, function (i, e) {
                         $("#InstallmentsNo").append(`
                             <option value="${e.value}">${e.text}</option>
@@ -177,15 +177,16 @@
             // Installments no??
             $("#txtProject").change( function () {
                 $.ajax({
-                        url: '/PaymentVoucher/GetMaxInstallmentNo/',
+                        url: '@Url.Action("GetMaxInstallmentNo", "PaymentVoucher")',
                         data: { "projectId": $("#hdnProjectId").val() },
                         type: "POST",
                         success: function (data) {
                             //console.log(data);
                             if(data != null && data != 0){
                                 $('#InstallmentsNo').val(data);
-                                $.ajax({  
-                                    url: "/PaymentVoucher/GetAllInstallments/",  
+                                $.ajax({ 
+                                    // "/PaymentVoucher/GetAllInstallments/"
+                                    url: '@Url.Action("GetAllInstallments", "PaymentVoucher")',  
                                     data: { "ProjectId": $("#hdnProjectId").val() },
                                     type: "POST",  
                                     success: function (data) {  
