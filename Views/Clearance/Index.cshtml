@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Comments)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCanceled)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +38,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ClearanceId">التعديل</a> |

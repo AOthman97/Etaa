@@ -18,6 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.NameEn)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCanceled)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -29,6 +32,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NameEn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectTypesAssetsId">التعديل</a> |
