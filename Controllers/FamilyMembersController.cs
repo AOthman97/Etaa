@@ -12,10 +12,12 @@ namespace Etaa.Controllers
     public class FamilyMembersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<FamilyMembersController> _logger;
 
-        public FamilyMembersController(ApplicationDbContext context)
+        public FamilyMembersController(ApplicationDbContext context, ILogger<FamilyMembersController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the family and get the FamilyID
@@ -36,6 +38,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -50,6 +53,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -65,6 +69,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -95,6 +100,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -133,6 +139,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -150,6 +157,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -175,6 +183,7 @@ namespace Etaa.Controllers
                 {
                     _context.Add(familyMember);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Family member added. User: {User}, Family Member: {FamilyMember}, Family: {Family}", new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { Id = familyMember.FamilyMemberId }, new { Id = familyMember.FamilyId });
                     TempData["FamilyMember"] = "FamilyMember";
                     return RedirectToAction(nameof(Index));
                 }
@@ -185,10 +194,12 @@ namespace Etaa.Controllers
                 ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr", familyMember.KinshipId);
                 ViewData["FamilyId"] = familyMember.FamilyId;
                 TempData["FamilyMemberError"] = "FamilyMemberError";
+                _logger.LogWarning("Family Member not saved! Model is not valid. User: {User}", new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                _logger.LogError("Family member not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.Source, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["FamilyMemberError"] = "FamilyMemberError";
                 return RedirectToAction(nameof(Index));
             }
@@ -219,6 +230,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -250,15 +262,18 @@ namespace Etaa.Controllers
                     {
                         if (!FamilyMemberExists(familyMember.FamilyMemberId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Family member not edited, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["FamilyMemberError"] = "FamilyMemberError";
                             return RedirectToAction(nameof(Index));
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Family member not edited, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["FamilyMemberError"] = "FamilyMemberError";
                             return RedirectToAction(nameof(Index));
                         }
                     }
+                    _logger.LogError("Family member edited, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr", familyMember.EducationalStatusId);
@@ -271,6 +286,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Family Member not edited, Message: {ErrorData}, User: {User}, FamilyMember: {FamilyMemberData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId });
                 TempData["FamilyMemberError"] = "FamilyMemberError";
                 return RedirectToAction(nameof(Index));
             }
@@ -302,6 +318,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -318,10 +335,13 @@ namespace Etaa.Controllers
                 familyMember.IsCanceled = true;
                 //_context.FamilyMembers.Remove(familyMember);
                 await _context.SaveChangesAsync();
+                _logger.LogError("Family member canceled, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                var familyMember = await _context.FamilyMembers.FindAsync(id);
+                _logger.LogError("Family Member not canceled, Message: {ErrorData}, User: {User}, FamilyMember: {FamilyMemberData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId });
                 TempData["FamilyMemberError"] = "FamilyMemberError";
                 return RedirectToAction(nameof(Index));
             }
@@ -335,6 +355,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }

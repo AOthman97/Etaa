@@ -75,6 +75,10 @@
                 <span asp-validation-for="PaymentDate" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
+                <label asp-for="IsCanceled" class="control-label"></label>
+                <input type="checkbox" asp-for="IsCanceled" class="form-check-input" disabled="disabled">
+            </div>
+            <div class="form-group mb-3">
                 @*<input type="submit" value="Save" class="btn btn-primary" />*@
                 <a class="btn btn-primary" onclick="saveData()">الحفظ</a>
             </div>

@@ -16,10 +16,12 @@ namespace Etaa.Controllers
     public class ContributorsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ContributorsController> _logger;
 
-        public ContributorsController(ApplicationDbContext context)
+        public ContributorsController(ApplicationDbContext context, ILogger<ContributorsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // For the create action to load the states first, then load the cities and districts
@@ -32,6 +34,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -46,6 +49,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -60,6 +64,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -75,6 +80,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -101,6 +107,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -128,6 +135,7 @@ namespace Etaa.Controllers
                     contributor.IsCanceled = false;
                     _context.Add(contributor);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Contributor added, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["Contributor"] = "Contributor";
                     return RedirectToAction(nameof(Index));
                 }
@@ -137,6 +145,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Contributor not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ContributorError"] = "Contributor";
                 return RedirectToAction(nameof(Index));
             }
@@ -164,6 +173,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -189,17 +199,20 @@ namespace Etaa.Controllers
                     {
                         _context.Update(contributor);
                         await _context.SaveChangesAsync();
+                        _logger.LogInformation("Contributor edited, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                         TempData["Contributor"] = "Contributor";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ContributorExists(contributor.ContributorId))
                         {
+                            _logger.LogInformation("DbUpdateConcurrencyException Exception, Contributor not edited, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ContributorError"] = "Contributor";
                             return RedirectToAction(nameof(Index));
                         }
                         else
                         {
+                            _logger.LogInformation("DbUpdateConcurrencyException Exception, Contributor not edited, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ContributorError"] = "Contributor";
                             return RedirectToAction(nameof(Index));
                         }
@@ -211,6 +224,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Contributor not edited, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ContributorError"] = "Contributor";
                 return RedirectToAction(nameof(Index));
             }
@@ -238,6 +252,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -253,10 +268,12 @@ namespace Etaa.Controllers
                 var contributor = await _context.Contributors.FindAsync(id);
                 contributor.IsCanceled = true;
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Contributor canceled, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                _logger.LogError("Contributor not canceled, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ContributorError"] = "Contributor";
                 return RedirectToAction(nameof(Index));
             }
@@ -270,6 +287,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }

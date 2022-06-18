@@ -6,7 +6,6 @@ using Etaa.Data;
 using Etaa.Models;
 using System.Collections;
 using Etaa.Extensions;
-using Serilog.Context;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Etaa.Controllers
@@ -42,6 +41,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -58,6 +58,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -85,6 +86,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -99,6 +101,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -112,6 +115,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -127,6 +131,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -140,6 +145,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -155,6 +161,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -168,6 +175,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -184,6 +192,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -197,6 +206,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -211,6 +221,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -224,6 +235,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -240,6 +252,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -335,39 +348,62 @@ namespace Etaa.Controllers
                     project.NameEn = String.Concat(ProjectTypeNameEn.Result, " ", FamilyNameEn.Result);
                     project.NameAr = String.Concat(ProjectTypeNameAr.Result, " ", FamilyNameAr.Result);
 
-                    _context.Add(project);
-                    foreach (var item in projectsAssets)
+                    using (_context)
                     {
-                        item.ProjectId = project.ProjectId;
-                        _context.Add(item);
+                        using (var ContextTransaction = _context.Database.BeginTransaction())
+                        {
+                            _context.Add(project);
+                            await _context.SaveChangesAsync();
+                            List<ProjectsAssets> projectsAssetsList = new List<ProjectsAssets>();
+                            foreach (var item in projectsAssets)
+                            {
+                                if (item.Quantity > 0 && item.Amount > 0)
+                                {
+                                    item.ProjectId = project.ProjectId;
+                                    _context.Add(item);
+                                    await _context.SaveChangesAsync();
+                                    projectsAssetsList.Add(new ProjectsAssets { Amount = item.Amount, ProjectId = item.ProjectId, ProjectsAssetsId = item.ProjectsAssetsId, ProjectTypesAssetsId = item.ProjectTypesAssetsId, Quantity = item.Quantity });
+                                }
+                            }
+
+                            List<ProjectsSelectionReasons> projectsSelectionReasonsList = new List<ProjectsSelectionReasons>();
+                            foreach (var item in projectsSelectionReasons)
+                            {
+                                item.ProjectId = project.ProjectId;
+                                _context.Add(item);
+                                await _context.SaveChangesAsync();
+                                projectsSelectionReasonsList.Add(new ProjectsSelectionReasons { ProjectId = item.ProjectId, ProjectSelectionReasonsId = item.ProjectSelectionReasonsId, ProjectsSelectionReasonsId = item.ProjectsSelectionReasonsId });
+                            }
+
+                            List<ProjectsSocialBenefits> projectsSocialBenefitsList = new List<ProjectsSocialBenefits>();
+                            foreach (var item in projectsSocialBenefits)
+                            {
+                                item.ProjectId = project.ProjectId;
+                                _context.Add(item);
+                                await _context.SaveChangesAsync();
+                                projectsSocialBenefitsList.Add(new ProjectsSocialBenefits { ProjectId = item.ProjectId, ProjectSocialBenefitsId = item.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = item.ProjectsSocialBenefitsId });
+                            }
+
+                            ContextTransaction.Commit();
+
+                            _logger.LogInformation("Project added, Project: {ProjectData}, User: {User}", new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                            projectsAssetsList.ForEach(x => _logger.LogInformation("Project assets added for project, Project assets: {ProjectAssetsData}, User: {User}", new { ProjectsAssetsId = x.ProjectsAssetsId, ProjectId = project.ProjectId, Quantity = x.Quantity, Amount = x.Amount, ProjectTypesAssetsId = x.ProjectTypesAssetsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+                            projectsSelectionReasonsList.ForEach(x => _logger.LogInformation("Project selection reasons added for project, Project selection reasons: {ProjectSelectionReasonsData}, User: {User}", new { ProjectId = project.ProjectId, ProjectSelectionReasonsId = x.ProjectSelectionReasonsId, ProjectsSelectionReasonsId = x.ProjectsSelectionReasonsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+                            projectsSocialBenefitsList.ForEach(x => _logger.LogInformation("Project social benfits added for project, Project social benefits: {ProjectSocialBenefitsData}, User: {User}", new { ProjectId = project.ProjectId, ProjectSocialBenefitsId = x.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = x.ProjectsSocialBenefitsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+
+                            TempData["Project"] = "Project";
+                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLThird
+                            });
+                        }
                     }
-
-                    foreach (var item in projectsSelectionReasons)
-                    {
-                        item.ProjectId = project.ProjectId;
-                        _context.Add(item);
-                    }
-
-                    foreach (var item in projectsSocialBenefits)
-                    {
-                        item.ProjectId = project.ProjectId;
-                        _context.Add(item);
-                    }
-
-                    await _context.SaveChangesAsync();
-
-                    TempData["Project"] = "Project";
-                    //return RedirectToAction(nameof(Index));
-                    var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURLThird
-                    });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("df", ex.Message);
+                _logger.LogError("Project not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
                 return Json(new
@@ -399,6 +435,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -479,63 +516,97 @@ namespace Etaa.Controllers
                         projects.NameEn = String.Concat(ProjectTypeNameEn, " ", FamilyNameEn);
                         projects.NameAr = String.Concat(ProjectTypeNameAr, " ", FamilyNameAr);
 
-                        _context.Update(projects);
-                        //await _context.SaveChangesAsync();
-
-                        // For this model and the other two models instead of directly updating their rows and the hassle of it,
-                        // Just delete the rows and add new rows with the new values
-                        List<ProjectsAssets> projectsAssetsRemoved = await _context.ProjectsAssets.Where(p => p.ProjectId == projectId).ToListAsync();
-
-                        foreach (var item in projectsAssetsRemoved)
+                        using (_context)
                         {
-                            _context.Remove(item);
+                            using (var ContextTransaction = _context.Database.BeginTransaction())
+                            {
+                                _context.Update(projects);
+
+                                // For this model and the other two models instead of directly updating their rows and the hassle of it,
+                                // Just delete the rows and add new rows with the new values
+                                List<ProjectsAssets> projectsAssetsRemoved = await _context.ProjectsAssets.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                                foreach (var item in projectsAssetsRemoved)
+                                {
+                                    _context.Remove(item);
+                                }
+
+                                List<ProjectsSelectionReasons> projectsSelectionReasonsRemoved = await _context.ProjectsSelectionReasons.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                                foreach (var item in projectsSelectionReasonsRemoved)
+                                {
+                                    _context.Remove(item);
+                                }
+
+                                List<ProjectsSocialBenefits> projectsSocialBenefitsRemoved = await _context.ProjectsSocialBenefits.Where(p => p.ProjectId == projectId).ToListAsync();
+
+                                foreach (var item in projectsSocialBenefitsRemoved)
+                                {
+                                    _context.Remove(item);
+                                }
+
+                                List<ProjectsAssets> projectsAssetsList = new List<ProjectsAssets>();
+                                foreach (var item in projectsAssets)
+                                {
+                                    if (item.Quantity > 0 && item.Amount > 0)
+                                    {
+                                        item.ProjectId = projects.ProjectId;
+                                        _context.Add(item);
+                                        //await _context.SaveChangesAsync();
+                                        projectsAssetsList.Add(new ProjectsAssets { Amount = item.Amount, ProjectId = item.ProjectId, ProjectsAssetsId = item.ProjectsAssetsId, ProjectTypesAssetsId = item.ProjectTypesAssetsId, Quantity = item.Quantity });
+                                    }
+                                }
+
+                                List<ProjectsSelectionReasons> projectsSelectionReasonsList = new List<ProjectsSelectionReasons>();
+                                foreach (var item in projectsSelectionReasons)
+                                {
+                                    item.ProjectId = projects.ProjectId;
+                                    _context.Add(item);
+                                    //await _context.SaveChangesAsync();
+                                    projectsSelectionReasonsList.Add(new ProjectsSelectionReasons { ProjectId = item.ProjectId, ProjectSelectionReasonsId = item.ProjectSelectionReasonsId, ProjectsSelectionReasonsId = item.ProjectsSelectionReasonsId });
+                                }
+
+                                List<ProjectsSocialBenefits> projectsSocialBenefitsList = new List<ProjectsSocialBenefits>();
+                                foreach (var item in projectsSocialBenefits)
+                                {
+                                    item.ProjectId = projects.ProjectId;
+                                    _context.Add(item);
+                                    //await _context.SaveChangesAsync();
+                                    projectsSocialBenefitsList.Add(new ProjectsSocialBenefits { ProjectId = item.ProjectId, ProjectSocialBenefitsId = item.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = item.ProjectsSocialBenefitsId });
+                                }
+
+                                await _context.SaveChangesAsync();
+                                ContextTransaction.Commit();
+
+                                _logger.LogInformation("Project edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                                projectsAssetsList.ForEach(x => _logger.LogInformation("Project assets edited for project, Project assets: {ProjectAssetsData}, User: {User}", new { ProjectsAssetsId = x.ProjectsAssetsId, ProjectId = projects.ProjectId, Quantity = x.Quantity, Amount = x.Amount, ProjectTypesAssetsId = x.ProjectTypesAssetsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+                                projectsSelectionReasonsList.ForEach(x => _logger.LogInformation("Project selection reasons edited for project, Project selection reasons: {ProjectSelectionReasonsData}, User: {User}", new { ProjectId = projects.ProjectId, ProjectSelectionReasonsId = x.ProjectSelectionReasonsId, ProjectsSelectionReasonsId = x.ProjectsSelectionReasonsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+                                projectsSocialBenefitsList.ForEach(x => _logger.LogInformation("Project social benfits edited for project, Project social benefits: {ProjectSocialBenefitsData}, User: {User}", new { ProjectId = projects.ProjectId, ProjectSocialBenefitsId = x.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = x.ProjectsSocialBenefitsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
+                                TempData["Project"] = "Project";
+                            }
                         }
-
-                        List<ProjectsSelectionReasons> projectsSelectionReasonsRemoved = await _context.ProjectsSelectionReasons.Where(p => p.ProjectId == projectId).ToListAsync();
-
-                        foreach (var item in projectsSelectionReasonsRemoved)
-                        {
-                            _context.Remove(item);
-                        }
-
-                        List<ProjectsSocialBenefits> projectsSocialBenefitsRemoved = await _context.ProjectsSocialBenefits.Where(p => p.ProjectId == projectId).ToListAsync();
-
-                        foreach (var item in projectsSocialBenefitsRemoved)
-                        {
-                            _context.Remove(item);
-                        }
-
-                        foreach (var item in projectsAssets)
-                        {
-                            item.ProjectId = projects.ProjectId;
-                            _context.Add(item);
-                        }
-
-                        foreach (var item in projectsSelectionReasons)
-                        {
-                            item.ProjectId = projects.ProjectId;
-                            _context.Add(item);
-                        }
-
-                        foreach (var item in projectsSocialBenefits)
-                        {
-                            item.ProjectId = projects.ProjectId;
-                            _context.Add(item);
-                        }
-
-                        await _context.SaveChangesAsync();
-
-                        TempData["Project"] = "Project";
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ProjectsExists(projects.ProjectId))
                         {
-                            return View("Edit");
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Project not edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                            TempData["ProjectError"] = "ProjectError";
+                            var RedirectURLSixth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSixth
+                            });
                         }
                         else
                         {
-                            return View("Edit");
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Project not edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                            TempData["ProjectError"] = "ProjectError";
+                            var RedirectURLSeventh = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSeventh
+                            });
                         }
                     }
                     //return RedirectToAction(nameof(Index));
@@ -548,6 +619,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Project not edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                 return Json(new
@@ -579,6 +651,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -628,12 +701,15 @@ namespace Etaa.Controllers
                 {
                     project.IsCanceled = true;
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Project canceled, Project: {ProjectData}, User: {User}", new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["Project"] = "Project";
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch (Exception ex)
             {
+                var project = await _context.Projects.FindAsync(id);
+                _logger.LogError("Error, Project not canceled, Project: {ProjectData}, User: {User}", new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -651,6 +727,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }
@@ -730,6 +807,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -793,6 +871,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }

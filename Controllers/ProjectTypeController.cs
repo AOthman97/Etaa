@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
 using Microsoft.AspNetCore.Authorization;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
     public class ProjectTypeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProjectTypeController> _logger;
 
-        public ProjectTypeController(ApplicationDbContext context)
+        public ProjectTypeController(ApplicationDbContext context, ILogger<ProjectTypeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [Authorize]
@@ -32,6 +35,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -59,6 +63,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -74,6 +79,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -92,6 +98,7 @@ namespace Etaa.Controllers
                     projectTypes.IsCanceled = false;
                     _context.Add(projectTypes);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("ProjectType added, ProjectType: {ProjectTypeData}, User: {User}", new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["ProjectType"] = "ProjectType";
                     return RedirectToAction(nameof(Index));
                 }
@@ -102,6 +109,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("ProjectType not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectTypeError"] = "ProjectType";
                 return RedirectToAction(nameof(Index));
             }
@@ -128,6 +136,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -152,18 +161,21 @@ namespace Etaa.Controllers
                     try
                     {
                         _context.Update(projectTypes);
-                        TempData["ProjectType"] = "ProjectType";
                         await _context.SaveChangesAsync();
+                        TempData["ProjectType"] = "ProjectType";
+                        _logger.LogInformation("ProjectType edited, ProjectType: {ProjectTypeData}, User: {User}", new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ProjectTypesExists(projectTypes.ProjectTypeId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, ProjectType not edited, ProjectType: {ProjectTypeData}, User: {User}", new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectTypeError"] = "ProjectType";
                             return RedirectToAction(nameof(Index));
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, ProjectType not edited, ProjectType: {ProjectTypeData}, User: {User}", new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectTypeError"] = "ProjectType";
                             return RedirectToAction(nameof(Index));
                         }
@@ -178,6 +190,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("ProjectType not edited, Message: {ErrorData}, User: {User}, ProjectType: {ProjectTypeData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId });
                 TempData["ProjectTypeError"] = "ProjectType";
                 return RedirectToAction(nameof(Index));
             }
@@ -206,6 +219,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -221,10 +235,13 @@ namespace Etaa.Controllers
                 var projectTypes = await _context.ProjectTypes.FindAsync(id);
                 projectTypes.IsCanceled = true;
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("ProjectType canceled, ProjectType: {ProjectTypeData}, User: {User}", new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                var projectTypes = await _context.ProjectTypes.FindAsync(id);
+                _logger.LogError("ProjectType not canceled, Message: {ErrorData}, User: {User}, ProjectType: {ProjectTypeData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ProjectTypeId = projectTypes.ProjectTypeId, NameAr = projectTypes.NameAr, NameEn = projectTypes.NameEn, ProjectDomainTypeId = projectTypes.ProjectDomainTypeId, ProjectGroupId = projectTypes.ProjectGroupId });
                 TempData["ProjectTypeError"] = "ProjectType";
                 return RedirectToAction(nameof(Index));
             }
@@ -238,6 +255,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }

@@ -9,16 +9,19 @@ using Microsoft.EntityFrameworkCore;
 using Etaa.Data;
 using Etaa.Models;
 using Microsoft.AspNetCore.Authorization;
+using Etaa.Extensions;
 
 namespace Etaa.Controllers
 {
     public class ProjectTypesAssetController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProjectTypesAssetController> _logger;
 
-        public ProjectTypesAssetController(ApplicationDbContext context)
+        public ProjectTypesAssetController(ApplicationDbContext context, ILogger<ProjectTypesAssetController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [Authorize]
@@ -44,6 +47,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -69,6 +73,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -87,6 +92,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -106,6 +112,7 @@ namespace Etaa.Controllers
                     projectTypesAssets.IsCanceled = false;
                     _context.Add(projectTypesAssets);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("ProjectTypesAssets added, ProjectTypesAssets: {ProjectTypesAssetsData}, User: {User}", new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
                     // the ProjectTypeId to select from that's used in the Index action method
                     return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
@@ -115,6 +122,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("ProjectTypesAssets not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
                 return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
@@ -139,6 +147,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -162,19 +171,22 @@ namespace Etaa.Controllers
                 {
                     try
                     {
-                        TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
                         _context.Update(projectTypesAssets);
                         await _context.SaveChangesAsync();
+                        TempData["ProjectTypesAssets"] = "ProjectTypesAssets";
+                        _logger.LogInformation("ProjectTypesAssets added, ProjectTypesAssets: {ProjectTypesAssetsData}, User: {User}", new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ProjectTypesAssetsExists(projectTypesAssets.ProjectTypesAssetsId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, ProjectTypesAssets not edited, ProjectTypesAssets: {ProjectTypesAssetsData}, User: {User}", new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
                             return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, ProjectTypesAssets not edited, ProjectTypesAssets: {ProjectTypesAssetsData}, User: {User}", new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
                             return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
                         }
@@ -188,6 +200,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("ProjectTypeAssets not edited, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
                 return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
@@ -214,6 +227,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -229,12 +243,15 @@ namespace Etaa.Controllers
                 var projectTypesAssets = await _context.ProjectTypesAssets.FindAsync(id);
                 projectTypesAssets.IsCanceled = true;
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("ProjectTypesAssets canceled, ProjectTypesAssets: {ProjectTypesAssetsData}, User: {User}", new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 // When the view just returned the Index the category items weren't shown, That's because we didn't pass-in
                 // the ProjectTypeId to select from that's used in the Index action method
                 return RedirectToAction(nameof(Index), new { ProjectTypeId = projectTypesAssets.ProjectTypeId });
             }
             catch (Exception ex)
             {
+                var projectTypesAssets = await _context.ProjectTypesAssets.FindAsync(id);
+                _logger.LogError("ProjectTypesAssets not canceled, Message: {ErrorData}, User: {User}, ProjectTypesAssets: {ProjectTypesAssetsData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ProjectTypesAssetsId = projectTypesAssets.ProjectTypesAssetsId, NameAr = projectTypesAssets.NameAr, NameEn = projectTypesAssets.NameEn, ProjectTypeId = projectTypesAssets.ProjectTypeId });
                 TempData["ProjectTypesAssetsError"] = "ProjectTypesAssets";
                 return RedirectToAction(nameof(Index));
             }
@@ -248,6 +265,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }

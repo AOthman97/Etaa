@@ -18,11 +18,13 @@ namespace Etaa.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IWebHostEnvironment hostingEnv;
+        private readonly ILogger<PaymentVoucherController> _logger;
 
-        public PaymentVoucherController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public PaymentVoucherController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<PaymentVoucherController> logger)
         {
             _context = context;
             hostingEnv = webHostEnvironment;
+            _logger = logger;
         }
 
         // Get Installments select list
@@ -36,6 +38,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -52,6 +55,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -73,6 +77,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -134,7 +139,8 @@ namespace Etaa.Controllers
 
                     decimal SumPaidAmountForInstallmentNo = (from paymentVoucher in _context.PaymentVouchers
                                                              where paymentVoucher.ProjectId == ProjectId &&
-                                                             paymentVoucher.InstallmentsId == Increment
+                                                             paymentVoucher.InstallmentsId == Increment &&
+                                                             paymentVoucher.IsCanceled == false
                                                              select (decimal)paymentVoucher.PaymentAmount).Sum();
 
                     Installments.Add(SumPaidAmountForInstallmentNo.ToString());
@@ -195,6 +201,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -205,7 +212,8 @@ namespace Etaa.Controllers
             try
             {
                 var InstallmentsNo = (from paymentVoucher in _context.PaymentVouchers
-                                      where paymentVoucher.ProjectId == projectId
+                                      where paymentVoucher.ProjectId == projectId && 
+                                      paymentVoucher.IsCanceled == false
                                       select (int?)paymentVoucher.InstallmentsId).Max();
 
                 // Check if it's the first installment or not, If it's the first just return 1 meaning it's the first installment.
@@ -243,6 +251,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -258,6 +267,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -285,6 +295,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -301,6 +312,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -368,7 +380,8 @@ namespace Etaa.Controllers
                             {
                                 decimal SumPaidAmountForInstallmentNo = (from paymentVoucherVar in _context.PaymentVouchers
                                                                          where paymentVoucherVar.ProjectId == paymentVoucher.ProjectId &&
-                                                                         paymentVoucherVar.InstallmentsId == paymentVoucher.InstallmentsId
+                                                                         paymentVoucherVar.InstallmentsId == paymentVoucher.InstallmentsId &&
+                                                                         paymentVoucherVar.IsCanceled == false
                                                                          select (decimal)paymentVoucherVar.PaymentAmount).Sum();
 
                                 if (SumPaidAmountForInstallmentNo.Equals(0) || SumPaidAmountForInstallmentNo.Equals(null) || SumPaidAmountForInstallmentNo == 0)
@@ -429,7 +442,7 @@ namespace Etaa.Controllers
 
                         _context.Set<PaymentVoucher>().AddRange(paymentVouchers);
                         await _context.SaveChangesAsync();
-
+                        paymentVouchers.ForEach(x => _logger.LogInformation("Payment voucher added, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = x.PaymentVoucherId, ProjectId = x.ProjectId, InstallmentId = x.InstallmentsId, PaidAmount = x.PaymentAmount, PaymentDate = x.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
                         TempData["PaymentVoucher"] = "PaymentVoucher";
                         //return RedirectToAction(nameof(Index));
                         var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
@@ -460,6 +473,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Payment voucher not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["PaymentVoucherError"] = "PaymentVoucher";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -492,6 +506,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -505,6 +520,8 @@ namespace Etaa.Controllers
         {
             try
             {
+                var NewFilePath = HttpContext.Session.GetString("filePath");
+                HttpContext.Session.Clear();
                 if (paymentVoucherId != paymentVoucher.PaymentVoucherId)
                 {
                     TempData["PaymentVoucherError"] = "PaymentVoucher";
@@ -520,34 +537,77 @@ namespace Etaa.Controllers
                 {
                     try
                     {
-                        // If the session value exists then the user has added a file to update instead of the existing file
-                        var NewFilePath = HttpContext.Session.GetString("filePath");
-                        if (NewFilePath != null)
+                        // Firstly check if this payment voucher is canceled then it can't be modeified again
+                        var canceled = (from paymentVouchers in _context.PaymentVouchers
+                                        where paymentVouchers.PaymentVoucherId == paymentVoucher.PaymentVoucherId
+                                        select (bool)paymentVouchers.IsCanceled).Single();
+                        if (!canceled)
                         {
-                            HttpContext.Session.Clear();
-                            var OldFilePath = "";
-                            OldFilePath = _context.PaymentVouchers.Where(f => f.PaymentVoucherId == paymentVoucher.PaymentVoucherId).Select(f => f.PaymentDocumentPath).Single();
-                            FileInfo file = new FileInfo(OldFilePath);
-                            if (file.Exists)
+                            // Then check if the paid amount is greater than the monthly installment amount then it's not allowed
+                            decimal MonthlyInstallmentAmount = (from project in _context.Projects
+                                                                where project.ProjectId == paymentVoucher.ProjectId
+                                                                select (decimal)project.MonthlyInstallmentAmount).Single();
+                            if(paymentVoucher.PaymentAmount > MonthlyInstallmentAmount)
                             {
-                                file.Delete();
+                                TempData["PaymentAmountGreaterThanMonthlyAmount"] = "PaymentVoucher";
+                                var RedirectURLSixth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                                return Json(new
+                                {
+                                    redirectUrl = RedirectURLSixth
+                                });
                             }
-                            paymentVoucher.PaymentDocumentPath = NewFilePath;
-                        }
+                            else
+                            {
+                                // If the session value exists then the user has added a file to update instead of the existing file
+                                if (NewFilePath != null)
+                                {
+                                    var OldFilePath = "";
+                                    OldFilePath = _context.PaymentVouchers.Where(f => f.PaymentVoucherId == paymentVoucher.PaymentVoucherId).Select(f => f.PaymentDocumentPath).Single();
+                                    FileInfo file = new FileInfo(OldFilePath);
+                                    if (file.Exists)
+                                    {
+                                        file.Delete();
+                                    }
+                                    paymentVoucher.PaymentDocumentPath = NewFilePath;
+                                }
 
-                        _context.Update(paymentVoucher);
-                        await _context.SaveChangesAsync();
-                        TempData["PaymentVoucher"] = "PaymentVoucher";
+                                _context.Update(paymentVoucher);
+                                await _context.SaveChangesAsync();
+                                _logger.LogInformation("Payment voucher edited, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                                TempData["PaymentVoucher"] = "PaymentVoucher";
+                            }
+                        }
+                        else
+                        {
+                            TempData["PaymentVoucherCanceled"] = "PaymentVoucher";
+                            var RedirectURLSixth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSixth
+                            });
+                        }
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!PaymentVoucherExists(paymentVoucher.PaymentVoucherId))
                         {
-                            return NotFound();
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Payment voucher not edited, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                            TempData["PaymentVoucherError"] = "PaymentVoucher";
+                            var RedirectURLSixth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSixth
+                            });
                         }
                         else
                         {
-                            throw;
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Payment voucher not edited, Payment voucher: {PaymentVoucherData}, User: {User}", paymentVoucher, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                            TempData["PaymentVoucherError"] = "PaymentVoucher";
+                            var RedirectURLSeventh = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            return Json(new
+                            {
+                                redirectUrl = RedirectURLSeventh
+                            });
                         }
                     }
                     //return RedirectToAction(nameof(Index));
@@ -569,6 +629,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Payment voucher not edited, Message: {ErrorData}, User: {User}, Payment voucher: {PaymentVoucherData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, paymentVoucher);
                 TempData["PaymentVoucherError"] = "PaymentVoucher";
                 var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -601,6 +662,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -616,10 +678,13 @@ namespace Etaa.Controllers
                 var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
                 paymentVoucher.IsCanceled = true;
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Payment voucher canceled, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
+                _logger.LogError("Payment voucher not canceled, Message: {ErrorData}, User: {User}, Payment voucher: {PaymentVoucherData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
                 TempData["PaymentVoucherError"] = "PaymentVoucher";
                 return RedirectToAction(nameof(Index));
             }
@@ -633,6 +698,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }
@@ -672,6 +738,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -726,6 +793,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }

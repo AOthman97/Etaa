@@ -13,10 +13,12 @@ namespace Etaa.Controllers
     public class FamiliesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<FamiliesController> _logger;
 
-        public FamiliesController(ApplicationDbContext context)
+        public FamiliesController(ApplicationDbContext context, ILogger<FamiliesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // For the create action to load the states first, then load the cities and districts
@@ -29,6 +31,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -43,6 +46,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -57,6 +61,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -67,13 +72,12 @@ namespace Etaa.Controllers
         {
             try
             {
-                // .Include(f => f.IdentityUser)
-                // .Include(f => f.AccommodationType).Include(f => f.District).Include(f => f.EducationalStatus).Include(f => f.Gender).Include(f => f.HealthStatus).Include(f => f.InvestmentType).Include(f => f.Job).Include(f => f.MartialStatus).Include(f => f.Religion)
                 var applicationDbContext = _context.Families;
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -108,6 +112,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -133,6 +138,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -157,6 +163,7 @@ namespace Etaa.Controllers
                     family.UserId = userId;
                     _context.Add(family);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Family added, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     return RedirectToAction(nameof(Index));
                 }
                 else
@@ -176,6 +183,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Family not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["FamilyError"] = family.NameAr;
                 return RedirectToAction(nameof(Index));
             }
@@ -214,6 +222,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -239,15 +248,18 @@ namespace Etaa.Controllers
                     {
                         _context.Update(family);
                         await _context.SaveChangesAsync();
+                        _logger.LogInformation("Family edited, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!FamilyExists(family.FamilyId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Family not edited, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             return View("Edit");
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Family not edited, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             return View("Edit");
                         }
                     }
@@ -269,6 +281,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Family not edited, Message: {ErrorData}, User: {User}, Family: {FamilyData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn });
                 TempData["FamilyError"] = "FamilyError";
                 return RedirectToAction(nameof(Index));
             }
@@ -304,6 +317,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -316,15 +330,16 @@ namespace Etaa.Controllers
             try
             {
                 var family = await _context.Families.FindAsync(id);
-                //_context.Families.Remove(family);
                 family.IsCanceled = true;
-                //_context.Families.Remove(family);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Family canceled, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["Family"] = family.NameAr;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                var family = await _context.Families.FindAsync(id);
+                _logger.LogError("Family not canceled, Message: {ErrorData}, User: {User}, Family: {FamilyData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn });
                 TempData["FamilyError"] = "FamilyError";
                 return RedirectToAction(nameof(Index));
             }
@@ -338,6 +353,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }

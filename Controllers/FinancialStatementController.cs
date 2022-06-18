@@ -13,11 +13,13 @@ namespace Etaa.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IWebHostEnvironment hostingEnv;
+        private readonly ILogger<FinancialStatementController> _logger;
 
-        public FinancialStatementController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public FinancialStatementController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<FinancialStatementController> logger)
         {
             _context = context;
             hostingEnv = webHostEnvironment;
+            _logger = logger;
         }
 
         [Authorize]
@@ -31,6 +33,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -57,6 +60,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -72,6 +76,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -112,6 +117,7 @@ namespace Etaa.Controllers
                     _context.Add(financialStatement);
                     await _context.SaveChangesAsync();
                     TempData["FinancialStatement"] = "FinancialStatement";
+                    _logger.LogInformation("Financial statement added, Financial statement: {FinancialStatementData}, User: {User}", new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                     return Json(new
                     {
@@ -130,6 +136,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Financial statement not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["FinancialStatementError"] = "FinancialStatement";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -161,6 +168,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -211,6 +219,7 @@ namespace Etaa.Controllers
                     {
                         if (!FinancialStatementExists(financialStatement.FinancialStatementId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Financial statement not edited, Financial statement: {FinancialStatementData}, User: {User}", new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["FinancialStatementError"] = "FinancialStatement";
                             var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
@@ -220,6 +229,7 @@ namespace Etaa.Controllers
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Financial statement not edited, Financial statement: {FinancialStatementData}, User: {User}", new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["FinancialStatementError"] = "FinancialStatement";
                             var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
@@ -228,6 +238,7 @@ namespace Etaa.Controllers
                             });
                         }
                     }
+                    _logger.LogInformation("Financial statement edited, Financial statement: {FinancialStatementData}, User: {User}", new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                     return Json(new
                     {
@@ -245,6 +256,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Financial statement not edited, Message: {ErrorData}, User: {User}, Financial statement: {FinancialStatementData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId });
                 TempData["FinancialStatementError"] = "FinancialStatement";
                 var RedirectURLFourth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -276,6 +288,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -293,6 +306,7 @@ namespace Etaa.Controllers
                 {
                     financialStatement.IsCanceled = true;
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Financial statement canceled, Financial statement: {FinancialStatementData}, User: {User}", new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["FinancialStatement"] = "FinancialStatement";
                     return RedirectToAction(nameof(Index));
                 }
@@ -304,6 +318,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                var financialStatement = await _context.FinancialStatements.FindAsync(id);
+                _logger.LogError("Financial statement not canceled, Message: {ErrorData}, User: {User}, Financial statement: {FinancialStatementData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId });
                 TempData["FinancialStatementError"] = "FinancialStatement";
                 return RedirectToAction(nameof(Index));
             }
@@ -317,6 +333,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }
@@ -356,6 +373,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -410,6 +428,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }

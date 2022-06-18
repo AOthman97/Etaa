@@ -16,11 +16,13 @@ namespace Etaa.Controllers
     {
         private readonly ApplicationDbContext _context;
         private IWebHostEnvironment hostingEnv;
+        private readonly ILogger<ClearanceController> _logger;
 
-        public ClearanceController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public ClearanceController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<ClearanceController> logger)
         {
             _context = context;
             hostingEnv = webHostEnvironment;
+            _logger = logger;
         }
 
         // This action and the below are for the autocomplete functionality to firstly select the Project and get the ProjectID
@@ -41,6 +43,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return Json(default);
             }
         }
@@ -51,7 +54,8 @@ namespace Etaa.Controllers
             try
             {
                 decimal SumPaidAmount = (from paymentVoucherVar in _context.PaymentVouchers
-                                                         where paymentVoucherVar.ProjectId == projectId
+                                                         where paymentVoucherVar.ProjectId == projectId &&
+                                                         paymentVoucherVar.IsCanceled == false
                                                          select (decimal)paymentVoucherVar.PaymentAmount).Sum();
                 decimal Capital = (from project in _context.Projects
                                    where project.ProjectId == projectId
@@ -61,6 +65,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return -1;
             }
         }
@@ -77,6 +82,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -103,6 +109,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -118,6 +125,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -166,7 +174,8 @@ namespace Etaa.Controllers
                                             select (decimal)project.Capital.GetValueOrDefault()).Single();
 
                 decimal SumPaidAmount = (from paymentVoucherVar in _context.PaymentVouchers
-                                                         where paymentVoucherVar.ProjectId == clearance.ProjectId
+                                                         where paymentVoucherVar.ProjectId == clearance.ProjectId &&
+                                                         paymentVoucherVar.IsCanceled == false
                                                          select (decimal)paymentVoucherVar.PaymentAmount).Sum();
 
                 var Project = _context.Clearances.Where(c => c.ProjectId == clearance.ProjectId).Select(c => c.ProjectId);
@@ -176,6 +185,7 @@ namespace Etaa.Controllers
                     {
                         _context.Add(clearance);
                         await _context.SaveChangesAsync();
+                        _logger.LogInformation("Clearance added, Clearance: {ClearanceData}, User: {User}", new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                         TempData["Clearance"] = "Clearance";
                         var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                         return Json(new
@@ -205,6 +215,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Clearance not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ClearanceError"] = clearance.ClearanceDate;
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -236,6 +247,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -280,11 +292,13 @@ namespace Etaa.Controllers
 
                         _context.Update(clearance);
                         await _context.SaveChangesAsync();
+                        _logger.LogInformation("Clearance edited, Clearance: {ClearanceData}, User: {User}", new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     }
                     catch (DbUpdateConcurrencyException)
                     {
                         if (!ClearanceExists(clearance.ClearanceId))
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Clearance not edited, Clearance: {ClearanceData}, User: {User}", new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ClearanceError"] = clearance.ClearanceDate;
                             var RedirectURLSecond = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
@@ -294,6 +308,7 @@ namespace Etaa.Controllers
                         }
                         else
                         {
+                            _logger.LogError("DbUpdateConcurrencyException Exception, Clearance not edited, Clearance: {ClearanceData}, User: {User}", new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ClearanceError"] = clearance.ClearanceDate;
                             var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
@@ -319,6 +334,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Clearance not edited, Message: {ErrorData}, User: {User}, Clearance: {ClearanceData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId });
                 TempData["ClearanceError"] = clearance.ClearanceDate;
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -350,6 +366,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -377,6 +394,7 @@ namespace Etaa.Controllers
                     clearance.IsCanceled = true;
                     //_context.Clearances.Remove(clearance);
                     await _context.SaveChangesAsync();
+                    _logger.LogInformation("Clearance canceled, Clearance: {ClearanceData}, User: {User}", new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["Clearance"] = "Clearance";
                     return RedirectToAction(nameof(Index));
                 }
@@ -392,6 +410,8 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                var clearance = await _context.Clearances.FindAsync(id);
+                _logger.LogError("Clearance not canceled, Message: {ErrorData}, User: {User}, Clearance: {ClearanceData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId });
                 TempData["ClearanceError"] = "Clearance";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
@@ -409,11 +429,12 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return false;
             }
         }
 
-        public async Task<IActionResult> Upload(IFormFile file)
+        public IActionResult Upload(IFormFile file)
         {
             try
             {
@@ -448,6 +469,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }
@@ -502,6 +524,7 @@ namespace Etaa.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 return View("Error");
             }
         }

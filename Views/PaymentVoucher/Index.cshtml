@@ -63,6 +63,30 @@
 </div>
 
 @section Scripts {
+    @if (TempData["PaymentAmountGreaterThanMonthlyAmount"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "مبلغ الدفعية أكبر من قيمة القسط الشهري !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
+    @if (TempData["PaymentVoucherCanceled"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "لم يتم الحفظ !",
+                          text: "تم إلغاء مستند الدفع هذا مسبقا !",
+                          icon: "info"
+                        });
+                    });
+                </script>
+    }
     @if (TempData["NoFinancialStatement"] != null)
     {
         <script>
