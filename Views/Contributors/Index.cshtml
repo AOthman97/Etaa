@@ -13,25 +13,25 @@
 <table class="table display table-striped" id="tblContributor" style="width:100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.Mobile)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.WhatsappMobile)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.Address)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
             </th>
             <th></th>
@@ -58,7 +58,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
@@ -78,7 +78,24 @@
 @section Scripts{
     <script>
         $(document).ready( function () {
-            $('#tblContributor').DataTable();
+            $('#tblContributor').DataTable({
+                "language": {
+                    processing: "جاري المعالجة ",
+                    search: "البحث:  ",
+                    lengthMenu:    "إظهار _MENU_ سجلات",
+                    info:           "إظهار _START_ إلى _END_ من _TOTAL_ سجل",
+                    infoEmpty:      "إظهار 0 إلى 0 من 0 سجلات",
+                    loadingRecords: "جاري معالجة السجلات...",
+                    zeroRecords:    "لا توجد سجلات !",
+                    emptyTable:     "لا توجد بيانات !",
+                    paginate: {
+                        first:      "الأول",
+                        previous:   "السابق",
+                        next:       "التالي",
+                        last:       "الأخير"
+                    }
+              }
+            });
         });
     </script>
 

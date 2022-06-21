@@ -139,7 +139,7 @@ namespace Etaa.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "معلومات المستخدم غير صحيحة.");
                     return Page();
                 }
             }

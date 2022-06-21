@@ -15,10 +15,10 @@
             @*<th>
                 @Html.DisplayNameFor(model => model.DocumentPath)
             </th>*@
-            <th>
+            <th class="text-end">
                 المشروع
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
             </th>
             <th></th>
@@ -33,7 +33,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Projects.NameAr)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
@@ -53,7 +53,24 @@
 @section Scripts{
     <script>
         $(document).ready( function () {
-            $('#tblFinancialStatement').DataTable();
+            $('#tblFinancialStatement').DataTable({
+                "language": {
+                    processing: "جاري المعالجة ",
+                    search: "البحث:  ",
+                    lengthMenu:    "إظهار _MENU_ سجلات",
+                    info:           "إظهار _START_ إلى _END_ من _TOTAL_ سجل",
+                    infoEmpty:      "إظهار 0 إلى 0 من 0 سجلات",
+                    loadingRecords: "جاري معالجة السجلات...",
+                    zeroRecords:    "لا توجد سجلات !",
+                    emptyTable:     "لا توجد بيانات !",
+                    paginate: {
+                        first:      "الأول",
+                        previous:   "السابق",
+                        next:       "التالي",
+                        last:       "الأخير"
+                    }
+              }
+            });
         });
     </script>
 

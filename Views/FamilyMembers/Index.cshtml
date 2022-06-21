@@ -14,25 +14,25 @@
 <table class="table display table-striped" id="tblFamilyMember" style="width:100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.Age)
             </th>
-            <th>
+            <th class="text-end">
                 صلة القرابة
             </th>
-            <th>
+            <th class="text-end">
                 الحالة التعليمية
             </th>
-            <th>
+            <th class="text-end">
                 الأسرة
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
             </th>
             <th></th>
@@ -59,7 +59,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Family.NameAr)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
@@ -79,7 +79,24 @@
 @section Scripts{
     <script>
         $(document).ready( function () {
-            $('#tblFamilyMember').DataTable();
+            $('#tblFamilyMember').DataTable({
+                "language": {
+                    processing: "جاري المعالجة ",
+                    search: "البحث:  ",
+                    lengthMenu:    "إظهار _MENU_ سجلات",
+                    info:           "إظهار _START_ إلى _END_ من _TOTAL_ سجل",
+                    infoEmpty:      "إظهار 0 إلى 0 من 0 سجلات",
+                    loadingRecords: "جاري معالجة السجلات...",
+                    zeroRecords:    "لا توجد سجلات !",
+                    emptyTable:     "لا توجد بيانات !",
+                    paginate: {
+                        first:      "الأول",
+                        previous:   "السابق",
+                        next:       "التالي",
+                        last:       "الأخير"
+                    }
+              }
+            });
         });
     </script>
 

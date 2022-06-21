@@ -9,16 +9,16 @@
 @*<p>
     <a asp-action="Create" asp-route-ProjectTypeId="@ViewBag.ProjectTypeId">Create New</a>
 </p>*@
-<table class="table">
+<table class="table display table-striped" id="tblProjectTypesAssets" style="width:100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
             </th>
             <th></th>
@@ -33,13 +33,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameEn)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectTypesAssetsId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectTypesAssetsId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectTypesAssetsId">الحذف</a>
+                <a asp-action="Edit" asp-route-id="@item.ProjectTypesAssetsId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectTypesAssetsId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectTypesAssetsId" class="btn btn-outline-danger btn-sm">الحذف</a>
             </td>
         </tr>
 }
@@ -51,6 +51,29 @@
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblProjectTypesAssets').DataTable({
+                "language": {
+                    processing: "جاري المعالجة ",
+                    search: "البحث:  ",
+                    lengthMenu:    "إظهار _MENU_ سجلات",
+                    info:           "إظهار _START_ إلى _END_ من _TOTAL_ سجل",
+                    infoEmpty:      "إظهار 0 إلى 0 من 0 سجلات",
+                    loadingRecords: "جاري معالجة السجلات...",
+                    zeroRecords:    "لا توجد سجلات !",
+                    emptyTable:     "لا توجد بيانات !",
+                    paginate: {
+                        first:      "الأول",
+                        previous:   "السابق",
+                        next:       "التالي",
+                        last:       "الأخير"
+                    }
+              }
+            });
+        });
+    </script>
+
     @if (TempData["ProjectTypesAssetsError"] != null)
     {
         <script>

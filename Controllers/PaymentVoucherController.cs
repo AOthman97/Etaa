@@ -734,7 +734,7 @@ namespace Etaa.Controllers
                 HttpContext.Session.SetString("filePath", filePath);
                 using (FileStream fs = System.IO.File.Create(filePath))
                 {
-                    file.CopyTo(fs);
+                    await file.CopyToAsync(fs);
                 }
 
                 return RedirectToAction("Index");

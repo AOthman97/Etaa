@@ -12,19 +12,19 @@
 <table class="table display table-striped" id="tblPaymentVoucher" style="width:100%">
     <thead>
         <tr>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.PaymentDate)
             </th>
-            <th>
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.PaymentAmount)
             </th>
-            <th>
+            <th class="text-end">
                 المشروع
             </th>
-            <th>
+            <th class="text-end">
                 القسط
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
             </th>
             <th></th>
@@ -45,7 +45,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Installments.NameAr)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
@@ -65,7 +65,24 @@
 @section Scripts {
     <script>
         $(document).ready( function () {
-            $('#tblPaymentVoucher').DataTable();
+            $('#tblPaymentVoucher').DataTable({
+                "language": {
+                    processing: "جاري المعالجة ",
+                    search: "البحث:  ",
+                    lengthMenu:    "إظهار _MENU_ سجلات",
+                    info:           "إظهار _START_ إلى _END_ من _TOTAL_ سجل",
+                    infoEmpty:      "إظهار 0 إلى 0 من 0 سجلات",
+                    loadingRecords: "جاري معالجة السجلات...",
+                    zeroRecords:    "لا توجد سجلات !",
+                    emptyTable:     "لا توجد بيانات !",
+                    paginate: {
+                        first:      "الأول",
+                        previous:   "السابق",
+                        next:       "التالي",
+                        last:       "الأخير"
+                    }
+              }
+            });
         });
     </script>
 
