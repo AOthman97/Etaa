@@ -19,7 +19,7 @@ namespace Etaa
         public void ConfigureServices(IServiceCollection services)
         {
             // Set the connection string of the app
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
             // Services Configuration
             services.AddScoped<IFamiliesService, FamiliesService>();

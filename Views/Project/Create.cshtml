@@ -26,12 +26,11 @@
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group mb-3">
                         <div class="col-md-12 border border-info" id="dropzone">
-                            <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader" formaction="/Project/Upload">
+                            <div class="dropzone" style="border:none" action="@Url.Action("Upload", "Project")" id="uploader">
                                 <div class="dz-message needsclick">
                                     <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
                                     <div class="ms-4">
                                         <h3 class="fs-5 fw-bolder text-gray-900 mb-1">Drop files here or click to upload</h3>
-                                        <span class="fs-7 fw-bold text-gray-400">Upload up to 10 files</span>
                                     </div>
                                 </div>
                             </div>
@@ -268,7 +267,8 @@
 
 
         $.ajax({
-            url: "/Project/Create",
+            // /Project/Create
+            url: "@Url.Action("Create", "Project")",
             type: 'Post',
             data: {
                 projectsAssets: selected, 

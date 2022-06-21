@@ -74,7 +74,7 @@
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group">
                         <div class="col-md-12 border border-info" id="dropzone">
-                            <div class="dropzone" style="border:none" action="/Clearance/Upload" id="uploader">
+                            <div class="dropzone" style="border:none" action="@Url.Action("Upload", "Clearance")" id="uploader">
                                 <div class="dz-message needsclick">
                                     <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
                                     <div class="ms-4">
@@ -116,7 +116,8 @@
             }
 
             $.ajax({
-                url: "/Clearance/Create",
+                // /Clearance/Create
+                url: "@Url.Action("Create", "Clearance")",
                 type: 'Post',
                 data: {
                    clearance : clearance

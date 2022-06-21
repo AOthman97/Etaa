@@ -41,7 +41,7 @@
                 <form id="form2" method="post" enctype="multipart/form-data" data-parsley-validate class="form-horizontal form-label-left">
                     <div class="form-group mb-3">
                         <div class="col-md-12 border border-info" id="dropzone">
-                            <div class="dropzone" style="border:none" action="/Project/Upload" id="uploader">
+                            <div class="dropzone" style="border:none" action="@Url.Action("Upload", "Project")" id="uploader">
                                 <div class="dz-message needsclick">
                                     <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
                                     <div class="ms-4">
@@ -258,7 +258,8 @@
             });
 
         $.ajax({
-            url: "/Project/Edit",
+            // /Project/Edit
+            url: "@Url.Action("Edit", "Project")",
             type: 'Post',
             data: {
                 projectId: ProjectId,
@@ -283,7 +284,8 @@
             $(function ()
             {
                 // Should already get the data on page load
-                $.post(`/Project/GetProjectSelectionReasons`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
+                // /Project/GetProjectSelectionReasons
+                $.post(`@Url.Action("GetProjectSelectionReasons", "Project")`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
                         if(e.selected){
                             $("#ProjectSelectionReasons").append(`
@@ -309,7 +311,8 @@
                 });
 
                 // Should already get the data on page load
-                $.post(`/Project/GetProjectSocialBenefits`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
+                // /Project/GetProjectSocialBenefits
+                $.post(`@Url.Action("GetProjectSocialBenefits", "Project")`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
                         if(e.selected){
                             $("#ProjectSocialBenefits").append(`
@@ -334,13 +337,15 @@
                     });
                 });
 
-                $.post(`/Project/GetProjectTypes`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
+                // /Project/GetProjectTypes
+                $.post(`@Url.Action("GetProjectTypes", "Project")`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
                         if(e.selected){
                             $("#ProjectTypes").append(`
                                 <option value="${e.value}" selected>${e.text}</option>
                             `);
-                            $.post('/Project/GetProjectTypeAssetsForEdit', {ProjectId: $("#hdnProjectId").val()} , function (data) {
+                            // /Project/GetProjectTypeAssetsForEdit
+                            $.post('@Url.Action("GetProjectTypeAssetsForEdit", "Project")', {ProjectId: $("#hdnProjectId").val()} , function (data) {
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group mb-3">`);
                                     var lblProjectAssetName = $(`<label class="form-label col-lg-4">${e.nameAr}</label>`);
@@ -364,7 +369,8 @@
                 });
 
                 // Should already get the data on page load
-                $.post(`/Project/GetNumberOfFunds`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
+                // /Project/GetNumberOfFunds
+                $.post(`@Url.Action("GetNumberOfFunds", "Project")`, {ProjectId: $("#hdnProjectId").val()}, function (data) {
                     $.each(data, function (i, e) {
                         if(e.selected){
                             $("#NoOfFunds").append(`
@@ -382,7 +388,8 @@
                 // Should already get the data on page load
                 $("select#ProjectTypes").change(function () {
                             var itemVal = $(this).val();
-                            $.post('/Project/GetProjectTypeAssets',{ProjectTypeId: itemVal} , function (data) {
+                            // /Project/GetProjectTypeAssets
+                            $.post('@Url.Action("GetProjectTypeAssets", "Project")',{ProjectTypeId: itemVal} , function (data) {
                             $("#ProjectAssets").children().empty();
                              $.each(data, function (i, e) {
                                     var parent = $(`<div class="form-group mb-3">`);
