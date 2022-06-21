@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\lib\datatable-js\" />
     <Folder Include="wwwroot\ProjectFiles\" />
     <Folder Include="wwwroot\Temp\" />
   </ItemGroup>

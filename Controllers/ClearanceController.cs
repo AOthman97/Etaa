@@ -282,10 +282,13 @@ namespace Etaa.Controllers
                             HttpContext.Session.Clear();
                             var OldFilePath = "";
                             OldFilePath = _context.Clearances.Where(f => f.ClearanceId == clearance.ClearanceId).Select(f => f.ClearanceDocumentPath).Single();
-                            FileInfo file = new FileInfo(OldFilePath);
-                            if (file.Exists)
+                            if (OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
                             {
-                                file.Delete();
+                                FileInfo file = new FileInfo(OldFilePath);
+                                if (file.Exists)
+                                {
+                                    file.Delete();
+                                }
                             }
                             clearance.ClearanceDocumentPath = NewFilePath;
                         }

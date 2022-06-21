@@ -9,7 +9,7 @@
 @*<p>
     <a asp-action="Create">Create New</a>
 </p>*@
-<table class="table">
+<table class="table display table-striped" id="tblClearance" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -43,9 +43,9 @@
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ClearanceId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ClearanceId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ClearanceId">الحذف</a>
+                <a asp-action="Edit" asp-route-id="@item.ClearanceId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.ClearanceId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ClearanceId" class="btn btn-outline-danger btn-sm">الحذف</a>
             </td>
         </tr>
 }
@@ -57,6 +57,12 @@
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblClearance').DataTable();
+        });
+    </script>
+
     @if(TempData["PaidAmount"] != null)
     {
         <script>

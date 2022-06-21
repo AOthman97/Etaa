@@ -9,7 +9,7 @@
 @*<p>
     <a asp-action="Create">Create New</a>
 </p>*@
-<table class="table">
+<table class="table table-striped" id="tblProjects" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -79,9 +79,9 @@
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectId">الحذف</a>
+                <a asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-outline-secondary btn-sm mt-2">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-outline-danger btn-sm mt-2">الحذف</a>
             </td>
         </tr>
 }
@@ -94,6 +94,12 @@
 
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblProjects').DataTable();
+        });
+    </script>
+
     @if (TempData["FinancialStatemntId"] != null)
                 {
                     <script>

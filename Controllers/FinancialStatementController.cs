@@ -203,10 +203,13 @@ namespace Etaa.Controllers
                             HttpContext.Session.Clear();
                             var OldFilePath = "";
                             OldFilePath = _context.FinancialStatements.Where(f => f.FinancialStatementId == financialStatement.FinancialStatementId).Select(f => f.DocumentPath).Single();
-                            FileInfo file = new FileInfo(OldFilePath);
-                            if (file.Exists)
+                            if(OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
                             {
-                                file.Delete();
+                                FileInfo file = new FileInfo(OldFilePath);
+                                if (file.Exists)
+                                {
+                                    file.Delete();
+                                }
                             }
                             financialStatement.DocumentPath = NewFilePath;
                         }
@@ -366,7 +369,7 @@ namespace Etaa.Controllers
                 HttpContext.Session.SetString("filePath", filePath);
                 using (FileStream fs = System.IO.File.Create(filePath))
                 {
-                    file.CopyTo(fs);
+                    await file.CopyToAsync(fs);
                 }
 
                 return RedirectToAction("Index");

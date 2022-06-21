@@ -563,10 +563,13 @@ namespace Etaa.Controllers
                                 {
                                     var OldFilePath = "";
                                     OldFilePath = _context.PaymentVouchers.Where(f => f.PaymentVoucherId == paymentVoucher.PaymentVoucherId).Select(f => f.PaymentDocumentPath).Single();
-                                    FileInfo file = new FileInfo(OldFilePath);
-                                    if (file.Exists)
+                                    if (OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
                                     {
-                                        file.Delete();
+                                        FileInfo file = new FileInfo(OldFilePath);
+                                        if (file.Exists)
+                                        {
+                                            file.Delete();
+                                        }
                                     }
                                     paymentVoucher.PaymentDocumentPath = NewFilePath;
                                 }

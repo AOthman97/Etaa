@@ -535,15 +535,20 @@ namespace Etaa.Controllers
 
                         // If the session value exists then the user has added a file to update instead of the existing file
                         var NewFilePath = HttpContext.Session.GetString("filePath");
+                        var Check = ViewData["filePath"];
+                        ViewData["filePath"] = null;
                         if (NewFilePath != null)
                         {
                             HttpContext.Session.Clear();
                             var OldFilePath = "";
                             OldFilePath = _context.Projects.Where(f => f.ProjectId == projects.ProjectId).Select(f => f.SignatureofApplicantPath).Single();
-                            FileInfo file = new FileInfo(OldFilePath);
-                            if (file.Exists)
+                            if(OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
                             {
-                                file.Delete();
+                                FileInfo file = new FileInfo(OldFilePath);
+                                if (file.Exists)
+                                {
+                                    file.Delete();
+                                }
                             }
                             projects.SignatureofApplicantPath = NewFilePath;
                         }
@@ -820,6 +825,7 @@ namespace Etaa.Controllers
 
                 string filePath = Path.Combine(SubFilePath, fileName);
                 HttpContext.Session.SetString("filePath", filePath);
+                ViewData["filePath"] = filePath;
                 using (FileStream fs = System.IO.File.Create(filePath))
                 {
                     await file.CopyToAsync(fs);

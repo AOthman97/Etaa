@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>*@
-<table class="table">
+<table class="table display table-striped" id="tblProjectTypes" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -49,10 +49,10 @@
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectTypeId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectTypeId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectTypeId">الحذف</a>   |
-                <a asp-controller="ProjectTypesAsset" asp-action="Index" asp-route-ProjectTypeId="@item.ProjectTypeId">إضافة أصول نوع المشروع</a>
+                <a asp-action="Edit" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-danger btn-sm">الحذف</a>   |
+                <a asp-controller="ProjectTypesAsset" asp-action="Index" asp-route-ProjectTypeId="@item.ProjectTypeId" class="btn btn-outline-primary btn-sm">إضافة أصول نوع المشروع</a>
             </td>
         </tr>
 }
@@ -64,6 +64,12 @@
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblProjectTypes').DataTable();
+        });
+    </script>
+
     @if (TempData["ProjectTypeError"] != null)
     {
         <script>

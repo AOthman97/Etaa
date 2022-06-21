@@ -11,7 +11,7 @@
     @*<a asp-action="AddOrEdit">إضافة عضو أسرة</a>*@
     @*<a onclick="ShowPopup('@Url.Action("AddOrEdit","FamilyMembers",null,Context.Request.Scheme)', 'New Family Member')" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#form-modal">Create New</a>*@
 </p>
-<table class="table">
+<table class="table display table-striped" id="tblFamilyMember" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -63,9 +63,9 @@
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.FamilyMemberId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.FamilyMemberId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.FamilyMemberId">الحذف</a>
+                <a asp-action="Edit" asp-route-id="@item.FamilyMemberId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyMemberId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyMemberId" class="btn btn-outline-danger btn-sm">الحذف</a>
             </td>
         </tr>
 }
@@ -77,6 +77,12 @@
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblFamilyMember').DataTable();
+        });
+    </script>
+
     @if (TempData["FamilyMemberError"] != null)
     {
     <script>

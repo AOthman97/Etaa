@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /wwwroot/Temp
 /wwwroot/ProjectFiles
 /Data/Migrations
+/wwwroot/lib/datatable-js

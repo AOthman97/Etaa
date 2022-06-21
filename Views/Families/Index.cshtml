@@ -6,7 +6,7 @@
 
 <h1> <i class="fa-solid fa-people-roof"></i> بيانات الأسر</h1>
 
-<table class="table">
+<table class="table display table-striped" id="tblFamily" style="width:100%">
     <thead>
         <tr>
             <th>
@@ -64,9 +64,9 @@
                 @Html.DisplayFor(modelItem => item.IsCanceled)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.FamilyId">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.FamilyId">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.FamilyId">الحذف</a>
+                <a asp-action="Edit" asp-route-id="@item.FamilyId" class="btn btn-outline-info btn-sm">التعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.FamilyId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.FamilyId" class="btn btn-outline-danger btn-sm mt-2">الحذف</a>
             </td>
         </tr>
 }
@@ -78,6 +78,12 @@
 </div>
 
 @section Scripts{
+    <script>
+        $(document).ready( function () {
+            $('#tblFamily').DataTable();
+        });
+    </script>
+
     @if (TempData["FamilyError"] != null)
     {
     <script>
