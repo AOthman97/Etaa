@@ -24,9 +24,9 @@
             <th class="text-end">
                 القسط
             </th>
-            <th class="text-center">
+            @*<th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -45,9 +45,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Installments.NameAr)
             </td>
-            <td class="text-center">
+            @*<td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PaymentVoucherId" class="btn btn-outline-info btn-sm">التعديل</a> |
                 <a asp-action="Details" asp-route-id="@item.PaymentVoucherId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |

@@ -1,17 +1,4 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Microsoft.AspNetCore.Authorization;
-using Etaa.Extensions;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class ProjectTypeController : Controller
     {
@@ -30,7 +17,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.ProjectTypes.Include(p => p.ProjectDomainTypes).Include(p => p.ProjectGroup);
+                var applicationDbContext = _context.ProjectTypes.Include(p => p.ProjectDomainTypes).Include(p => p.ProjectGroup).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -53,6 +40,7 @@ namespace Etaa.Controllers
                 var projectTypes = await _context.ProjectTypes
                     .Include(p => p.ProjectDomainTypes)
                     .Include(p => p.ProjectGroup)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ProjectTypeId == id);
                 if (projectTypes == null)
                 {
@@ -73,8 +61,8 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes, "ProjectDomainTypeId", "NameAr");
-                ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups, "ProjectGroupId", "NameAr");
+                ViewData["ProjectDomainTypeId"] = new SelectList(_context.ProjectDomainTypes.AsNoTracking(), "ProjectDomainTypeId", "NameAr");
+                ViewData["ProjectGroupId"] = new SelectList(_context.ProjectGroups.AsNoTracking(), "ProjectGroupId", "NameAr");
                 return View();
             }
             catch (Exception ex)

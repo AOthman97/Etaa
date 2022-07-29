@@ -1,17 +1,4 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class ContributorsController : Controller
     {
@@ -75,7 +62,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.Contributors.Include(c => c.District);
+                var applicationDbContext = _context.Contributors.Include(c => c.District).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -97,6 +84,7 @@ namespace Etaa.Controllers
 
                 var contributor = await _context.Contributors
                     .Include(c => c.District)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ContributorId == id);
                 if (contributor == null)
                 {

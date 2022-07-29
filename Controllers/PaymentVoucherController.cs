@@ -1,18 +1,4 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Newtonsoft.Json;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class PaymentVoucherController : Controller
     {
@@ -33,7 +19,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = new SelectList(await _context.Installments.ToListAsync(), "InstallmentsId", "NameAr");
+                var Result = new SelectList(await _context.Installments.AsNoTracking().ToListAsync(), "InstallmentsId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -49,8 +35,8 @@ namespace Etaa.Controllers
             try
             {
                 // await _context.PaymentVouchers.Where(f => f.PaymentVoucherId == PaymentVoucherId).Select(f => f.InstallmentsId).ToListAsync()
-                var InstallmentId = _context.PaymentVouchers.Where(p => p.PaymentVoucherId == PaymentVoucherId).Select(p => p.InstallmentsId).Single();
-                var Result = new SelectList(await _context.Installments.Where(i => i.InstallmentsId == InstallmentId).ToListAsync(), "InstallmentsId", "NameAr");
+                var InstallmentId = _context.PaymentVouchers.Where(p => p.PaymentVoucherId == PaymentVoucherId).AsNoTracking().Select(p => p.InstallmentsId).Single();
+                var Result = new SelectList(await _context.Installments.Where(i => i.InstallmentsId == InstallmentId).AsNoTracking().ToListAsync(), "InstallmentsId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -67,12 +53,13 @@ namespace Etaa.Controllers
             try
             {
                 var Project = (from project in _context.Projects
-                               where project.NameEn.StartsWith(prefix)
+                               where project.NameEn.StartsWith(prefix) ||
+                               project.NameAr.StartsWith(prefix)
                                select new
                                {
-                                   label = project.NameEn,
+                                   label = project.NameAr,
                                    val = project.ProjectId
-                               }).ToList();
+                               }).AsNoTracking().ToList();
                 return Json(Project);
             }
             catch (Exception ex)
@@ -103,14 +90,14 @@ namespace Etaa.Controllers
 
                 var ProjectNumberOfInstallments = (from project in _context.Projects
                                                    where project.ProjectId == ProjectId
-                                                   select (int)project.NumberOfInstallments).Single();
+                                                   select (int?)project.NumberOfInstallments).Single();
                 List<string> Installments = new List<string>();
 
                 for (int Increment = 1; Increment <= ProjectNumberOfInstallments; Increment++)
                 {
                     var InstallmentName = (from Installment in _context.Installments
                                            where Installment.InstallmentNumber == Increment
-                                           select (string)Installment.NameAr).Single();
+                                           select (string)Installment.NameAr).AsNoTracking().Single();
 
                     Installments.Add(InstallmentName);
 
@@ -133,7 +120,7 @@ namespace Etaa.Controllers
 
                     var MonthlyInstallmentAmount = (from project in _context.Projects
                                                     where project.ProjectId == ProjectId
-                                                    select (decimal)project.MonthlyInstallmentAmount).Single();
+                                                    select (decimal?)project.MonthlyInstallmentAmount).Single();
 
                     Installments.Add(MonthlyInstallmentAmount.ToString());
 
@@ -262,7 +249,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.PaymentVouchers.Include(p => p.Installments).Include(p => p.Projects);
+                var applicationDbContext = _context.PaymentVouchers.Include(p => p.Installments).Include(p => p.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -285,6 +272,7 @@ namespace Etaa.Controllers
                 var paymentVoucher = await _context.PaymentVouchers
                     .Include(p => p.Installments)
                     .Include(p => p.Projects)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.PaymentVoucherId == id);
                 if (paymentVoucher == null)
                 {
@@ -305,9 +293,9 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewData["InstallmentsId"] = new SelectList(_context.Installments, "InstallmentsId", "NameAr");
-                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
+                ViewData["InstallmentsId"] = new SelectList(_context.Installments.AsNoTracking(), "InstallmentsId", "NameAr");
+                ViewData["ProjectId"] = new SelectList(_context.Projects.AsNoTracking(), "ProjectId", "ProjectId");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)

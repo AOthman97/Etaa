@@ -1,13 +1,4 @@
-﻿#nullable disable
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class FinancialStatementController : Controller
     {
@@ -28,7 +19,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects);
+                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -50,6 +41,7 @@ namespace Etaa.Controllers
 
                 var financialStatement = await _context.FinancialStatements
                     .Include(f => f.Projects)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.FinancialStatementId == id);
                 if (financialStatement == null)
                 {
@@ -70,8 +62,8 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId");
-                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
+                ViewData["ProjectId"] = new SelectList(_context.Projects.AsNoTracking(), "ProjectId", "ProjectId");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -413,7 +405,7 @@ namespace Etaa.Controllers
             {
                 var fileSession = await (from financialStatement in this._context.FinancialStatements
                                          where financialStatement.FinancialStatementId.Equals(FinancialStatementId)
-                                         select (string)financialStatement.DocumentPath).SingleOrDefaultAsync();
+                                         select (string?)financialStatement.DocumentPath).SingleOrDefaultAsync();
 
                 var fileName = fileSession;
                 var fileExists = System.IO.File.Exists(fileName);
@@ -427,7 +419,6 @@ namespace Etaa.Controllers
                 {
                     return View("Error");
                 }
-
             }
             catch (Exception ex)
             {

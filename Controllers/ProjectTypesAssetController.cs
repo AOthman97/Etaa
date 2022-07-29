@@ -1,17 +1,4 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Microsoft.AspNetCore.Authorization;
-using Etaa.Extensions;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class ProjectTypesAssetController : Controller
     {
@@ -39,7 +26,7 @@ namespace Etaa.Controllers
                                                                          NameAr = ProjectTypesAsset.NameAr,
                                                                          NameEn = ProjectTypesAsset.NameEn,
                                                                          ProjectTypeId = ProjectTypeId
-                                                                     }).ToListAsync();
+                                                                     }).AsNoTracking().ToListAsync();
 
                 ViewBag.ProjectTypeId = ProjectTypeId;
                 // await _context.ProjectTypesAssets.ToListAsync()
@@ -63,6 +50,7 @@ namespace Etaa.Controllers
                 }
 
                 var projectTypesAssets = await _context.ProjectTypesAssets
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ProjectTypesAssetsId == id);
                 if (projectTypesAssets == null)
                 {

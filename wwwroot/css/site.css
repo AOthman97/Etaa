@@ -140,6 +140,20 @@ body {
     }
 }
 
+@media only screen and (max-width: 600px) {
+    .btn-sm {
+        margin-bottom: 10px;
+    }
+    #first {
+        margin-bottom: 15px;
+        margin-left: 20px;
+    }
+    #second {
+        margin-bottom: 15px;
+        margin-left: 20px;
+    }
+}
+
 .login-wrapper-footer-text {
     font-size: 16px;
     color: #000;

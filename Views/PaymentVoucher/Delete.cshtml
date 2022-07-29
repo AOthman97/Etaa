@@ -4,13 +4,13 @@
     ViewData["Title"] = "حذف مستند الدفع";
 }
 
-<h1>الحذف</h1>
+<h1>هل تريد حذف مستند الدفع ؟</h1>
 
-<h3>هل تريد حذف مستند الدفع ؟</h3>
-<div>
-    <h4>مستند الدفع</h4>
+<h3>@*هل تريد حذف مستند الدفع ؟*@</h3>
+<div class="row">
+    @*<h4>مستند الدفع</h4>*@
     <hr />
-    <dl class="row">
+    <dl class="col-md-12">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PaymentDate)
         </dt>

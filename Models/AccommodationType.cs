@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Etaa.Models
+﻿namespace Etaa.Models
 {
     public class AccommodationType
     {

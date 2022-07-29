@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Etaa.Models
+﻿namespace Etaa.Models
 {
     public class FinancialStatement
     {
@@ -23,5 +20,9 @@ namespace Etaa.Models
         public string? UserId { get; set; }
         [Display(Name = "إسم مستخدم الإدارة")]
         public string? ManagementUserId { get; set; }
+
+        //private readonly List<FinancialStatement> _FinancialStatements = new();
+
+        //public IEnumerable<FinancialStatement> AllFinancialStatements => _FinancialStatements;
     }
 }

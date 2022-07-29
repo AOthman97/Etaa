@@ -15,18 +15,18 @@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
-            </th>
+            </th>*@
             <th class="text-end">
                 مجال المشروع
             </th>
             <th class="text-end">
                 مجموعة المشروع
             </th>
-            <th class="text-center">
+            @*<th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -36,23 +36,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameAr)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.NameEn)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectDomainTypes.NameAr)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectGroup.NameAr)
             </td>
-            <td class="text-center">
+            @*<td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
+            </td>*@
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-info btn-sm">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-danger btn-sm">الحذف</a>   |
-                <a asp-controller="ProjectTypesAsset" asp-action="Index" asp-route-ProjectTypeId="@item.ProjectTypeId" class="btn btn-outline-primary btn-sm">إضافة أصول نوع المشروع</a>
+                <a id="first" asp-action="Edit" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-info btn-sm">التعديل</a> 
+                <a id="second" asp-action="Details" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> 
+                <a id="third" asp-action="Delete" asp-route-id="@item.ProjectTypeId" class="btn btn-outline-danger btn-sm">الحذف</a>   
+                <a id="fourth" asp-controller="ProjectTypesAsset" asp-action="Index" asp-route-ProjectTypeId="@item.ProjectTypeId" class="btn btn-outline-primary btn-sm">إضافة أصول نوع المشروع</a>
             </td>
         </tr>
 }

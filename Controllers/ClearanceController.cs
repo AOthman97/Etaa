@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class ClearanceController : Controller
     {
@@ -32,10 +20,11 @@ namespace Etaa.Controllers
             try
             {
                 var Project = (from project in this._context.Projects
-                               where project.NameEn.StartsWith(prefix)
+                               where project.NameEn.StartsWith(prefix) ||
+                               project.NameAr.StartsWith(prefix)
                                select new
                                {
-                                   label = project.NameEn,
+                                   label = project.NameAr,
                                    val = project.ProjectId
                                }).ToList();
 
@@ -77,7 +66,7 @@ namespace Etaa.Controllers
             try
             {
                 // .Include(c => c.IdentityUser)
-                var applicationDbContext = _context.Clearances.Include(c => c.Projects);
+                var applicationDbContext = _context.Clearances.Include(c => c.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -99,6 +88,7 @@ namespace Etaa.Controllers
 
                 var clearance = await _context.Clearances
                     .Include(c => c.Projects)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ClearanceId == id);
                 if (clearance == null)
                 {

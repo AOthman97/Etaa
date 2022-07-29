@@ -15,15 +15,15 @@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
-            </th>
-            <th class="text-end">
+            </th>*@
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.ProjectActivity)
             </th>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.ProjectPurpose)
-            </th>
+            </th>*@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.Capital)
             </th>
@@ -33,15 +33,15 @@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NumberOfInstallments)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th class="text-end">
+            </th>*@
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.WaiverPeriod)
-            </th>
-            <th class="text-center">
+            </th>*@
+            @*<th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -51,15 +51,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameAr)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.NameEn)
-            </td>
-            <td>
+            </td>*@
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ProjectActivity)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectPurpose)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Capital)
             </td>
@@ -69,19 +69,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NumberOfInstallments)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
+            </td>*@
+            @*<td>
                 @Html.DisplayFor(modelItem => item.WaiverPeriod)
             </td>
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-outline-info btn-sm">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-outline-secondary btn-sm mt-2">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-outline-danger btn-sm mt-2">الحذف</a>
+                <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-outline-danger btn-sm">الحذف</a>
             </td>
         </tr>
 }

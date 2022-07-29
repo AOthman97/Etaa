@@ -11,30 +11,30 @@
     @*<a asp-action="AddOrEdit">إضافة عضو أسرة</a>*@
     @*<a onclick="ShowPopup('@Url.Action("AddOrEdit","FamilyMembers",null,Context.Request.Scheme)', 'New Family Member')" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#form-modal">Create New</a>*@
 </p>
-<table class="table display table-striped" id="tblFamilyMember" style="width:100%">
+<table class="table display table-striped table-responsive" id="tblFamilyMember" style="width:100%">
     <thead>
         <tr>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
-            </th>
+            </th>*@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.Age)
             </th>
             <th class="text-end">
                 صلة القرابة
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 الحالة التعليمية
-            </th>
+            </th>*@
             <th class="text-end">
                 الأسرة
             </th>
-            <th class="text-center">
+            @*<th class="text-center">
                 @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -44,24 +44,24 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameAr)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.NameEn)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Age)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Kinship.NameAr)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.EducationalStatus.NameAr)
-            </td>
-            <td>
+            </td>*@
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Family.NameAr)
             </td>
-            <td class="text-center">
+            @*<td class="text-center">
                 @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FamilyMemberId" class="btn btn-outline-info btn-sm">التعديل</a> |
                 <a asp-action="Details" asp-route-id="@item.FamilyMemberId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |

@@ -1,14 +1,4 @@
-﻿#nullable disable
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using System.Data;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class FamiliesController : Controller
     {
@@ -26,7 +16,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewBag.States = new SelectList(_context.States, "StateId", "NameAr");
+                ViewBag.States = new SelectList(_context.States.AsNoTracking(), "StateId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -41,7 +31,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var City = _context.Cities.Where(City => City.StateId == StateId);
+                var City = _context.Cities.Where(City => City.StateId == StateId).AsNoTracking();
                 return Json(new SelectList(City, "CityId", "NameAr"));
             }
             catch (Exception ex)
@@ -56,7 +46,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var District = _context.Districts.Where(District => District.CityId == CityId);
+                var District = _context.Districts.Where(District => District.CityId == CityId).AsNoTracking();
                 return Json(new SelectList(District, "DistrictId", "NameAr"));
             }
             catch (Exception ex)
@@ -72,7 +62,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.Families;
+                var applicationDbContext = _context.Families.AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -102,6 +92,7 @@ namespace Etaa.Controllers
                     .Include(f => f.Job)
                     .Include(f => f.MartialStatus)
                     .Include(f => f.Religion)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.FamilyId == id);
                 if (family == null)
                 {
@@ -132,7 +123,7 @@ namespace Etaa.Controllers
                 ViewData["MartialStatusId"] = new SelectList(_context.MartialStatuses, "MartialStatusId", "NameAr");
                 ViewData["ReligionId"] = new SelectList(_context.Religions, "ReligionId", "NameAr");
 
-                var StatesList = new SelectList(_context.States.ToList(), "StateId", "NameAr");
+                var StatesList = new SelectList(_context.States.AsNoTracking().ToList(), "StateId", "NameAr");
                 ViewData["States"] = StatesList;
                 return View();
             }

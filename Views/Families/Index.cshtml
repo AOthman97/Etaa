@@ -6,27 +6,27 @@
 
 <h1> <i class="fa-solid fa-people-roof"></i> بيانات الأسر</h1>
 
-<table class="table display table-striped" id="tblFamily" style="width:100%">
+<table class="table display table-striped table-responsive" id="tblFamily" style="width:100%">
     <thead>
         <tr>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.NameEn)
-            </th>
+            </th>*@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.Address)
             </th>
-            <th class="text-end">
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.HouseNumber)
-            </th>
-            <th class="text-end">
+            </th>*@
+            @*<th class="text-end">
                 @Html.DisplayNameFor(model => model.Alleyway)
             </th>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.ResidentialSquare)
-            </th>
+            </th>*@
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.FirstPhoneNumber)
             </th>
@@ -42,21 +42,21 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameAr)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.NameEn)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.HouseNumber)
-            </td>
-            <td>
+            </td>*@
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Alleyway)
-            </td>
-            <td>
+            </td>*@
+            @*<td>
                 @Html.DisplayFor(modelItem => item.ResidentialSquare)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.FirstPhoneNumber)
             </td>
@@ -66,7 +66,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FamilyId" class="btn btn-outline-info btn-sm">التعديل</a> |
                 <a asp-action="Details" asp-route-id="@item.FamilyId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.FamilyId" class="btn btn-outline-danger btn-sm mt-2">الحذف</a>
+                <a asp-action="Delete" asp-route-id="@item.FamilyId" class="btn btn-outline-danger btn-sm">الحذف</a>
             </td>
         </tr>
 }

@@ -6,9 +6,9 @@
     ViewData["Title"] = "إضافة مشروع";
 }
 
-<h1>الإضافة</h1>
+<h1>إضافة مشروع</h1>
 
-<h4>المشروع</h4>
+@*<h4>المشروع</h4>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -195,7 +195,18 @@
                     });
                 </script>
     }
-
+    @if (TempData["FirstInstallmentDueDate"] != null)
+    {
+        <script>
+            $(function () {
+                        swal({
+                          title: "الرجاء إختيار تاريخ  صحيح !",
+                          text: "قم بإختيار تاريخ إستحقاق أول قسط !",
+                          icon: "error"
+                        });
+                    });
+                </script>
+    }
 <script>
     function saveData(){
             // Firstly the project data, Then the project assets, then the project selection reasons and finally the social benefits

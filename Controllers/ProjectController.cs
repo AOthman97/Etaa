@@ -1,14 +1,4 @@
-﻿#nullable disable
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using System.Collections;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class ProjectController : Controller
     {
@@ -30,12 +20,13 @@ namespace Etaa.Controllers
             try
             {
                 var Project = (from project in this._context.Projects
-                               where project.NameEn.StartsWith(prefix)
+                               where project.NameEn.StartsWith(prefix) ||
+                               project.NameAr.StartsWith(prefix)
                                select new
                                {
-                                   label = project.NameEn,
+                                   label = project.NameAr,
                                    val = project.ProjectId
-                               }).ToList();
+                               }).AsNoTracking().ToList();
 
                 return Json(Project);
             }
@@ -53,7 +44,7 @@ namespace Etaa.Controllers
             try
             {
                 // .Include(p => p.IdentityUser)
-                var applicationDbContext = _context.Projects;
+                var applicationDbContext = _context.Projects.AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -75,6 +66,7 @@ namespace Etaa.Controllers
 
                 // .Include(p => p.IdentityUser)
                 var projects = await _context.Projects
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.ProjectId == id);
                 if (projects == null)
                 {
@@ -96,7 +88,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr");
+                ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
                 return View();
             }
             catch (Exception ex)
@@ -110,7 +102,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.ToListAsync(), "ProjectSelectionReasonsId", "NameAr");
+                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.AsNoTracking().ToListAsync(), "ProjectSelectionReasonsId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -125,8 +117,8 @@ namespace Etaa.Controllers
         {
             try
             {
-                IEnumerable SelectedValues = _context.ProjectsSelectionReasons.Where(p => p.ProjectId == ProjectId).Select(p => p.ProjectSelectionReasonsId);
-                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.ToListAsync(), "ProjectSelectionReasonsId", "NameAr", SelectedValues);
+                IEnumerable SelectedValues = _context.ProjectsSelectionReasons.Where(p => p.ProjectId == ProjectId).AsNoTracking().Select(p => p.ProjectSelectionReasonsId);
+                var Result = new MultiSelectList(await _context.ProjectSelectionReasons.AsNoTracking().ToListAsync(), "ProjectSelectionReasonsId", "NameAr", SelectedValues);
                 return Json(Result);
             }
             catch (Exception ex)
@@ -140,7 +132,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = new MultiSelectList(await _context.ProjectSocialBenefits.ToListAsync(), "ProjectSocialBenefitsId", "NameAr");
+                var Result = new MultiSelectList(await _context.ProjectSocialBenefits.AsNoTracking().ToListAsync(), "ProjectSocialBenefitsId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -155,8 +147,8 @@ namespace Etaa.Controllers
         {
             try
             {
-                IEnumerable SelectedValues = _context.ProjectsSocialBenefits.Where(p => p.ProjectId == ProjectId).Select(p => p.ProjectSocialBenefitsId);
-                var Result = new MultiSelectList(await _context.ProjectSocialBenefits.ToListAsync(), "ProjectSocialBenefitsId", "NameAr", SelectedValues);
+                IEnumerable SelectedValues = _context.ProjectsSocialBenefits.Where(p => p.ProjectId == ProjectId).AsNoTracking().Select(p => p.ProjectSocialBenefitsId);
+                var Result = new MultiSelectList(await _context.ProjectSocialBenefits.AsNoTracking().ToListAsync(), "ProjectSocialBenefitsId", "NameAr", SelectedValues);
                 return Json(Result);
             }
             catch (Exception ex)
@@ -170,7 +162,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr");
+                var Result = new SelectList(await _context.ProjectTypes.AsNoTracking().ToListAsync(), "ProjectTypeId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -186,8 +178,8 @@ namespace Etaa.Controllers
             try
             {
                 ProjectTypes projectTypes = new ProjectTypes();
-                projectTypes.ProjectTypeId = _context.Projects.Where(p => p.ProjectId == ProjectId).Select(p => p.ProjectTypeId).SingleOrDefault();
-                var Result = new SelectList(await _context.ProjectTypes.ToListAsync(), "ProjectTypeId", "NameAr", projectTypes.ProjectTypeId);
+                projectTypes.ProjectTypeId = _context.Projects.Where(p => p.ProjectId == ProjectId).AsNoTracking().Select(p => p.ProjectTypeId).SingleOrDefault();
+                var Result = new SelectList(await _context.ProjectTypes.AsNoTracking().ToListAsync(), "ProjectTypeId", "NameAr", projectTypes.ProjectTypeId);
                 return Json(Result);
             }
             catch (Exception ex)
@@ -201,7 +193,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).ToListAsync();
+                var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).AsNoTracking().ToListAsync();
                 return Json(Result);
             }
             catch (Exception ex)
@@ -216,7 +208,7 @@ namespace Etaa.Controllers
             try
             {
                 //var Result = await _context.ProjectTypesAssets.Where(ProjectTypeAsset => ProjectTypeAsset.ProjectTypeId == ProjectTypeId).ToListAsync();
-                var Result = await _context.ProjectAssetesProjectTypeAssets.Where(ProjectsAssets => ProjectsAssets.ProjectId == ProjectId).ToListAsync();
+                var Result = await _context.ProjectAssetesProjectTypeAssets.Where(ProjectsAssets => ProjectsAssets.ProjectId == ProjectId).AsNoTracking().ToListAsync();
                 return Json(Result);
             }
             catch (Exception ex)
@@ -230,7 +222,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr");
+                var Result = new SelectList(await _context.NumberOfFunds.AsNoTracking().ToListAsync(), "NumberOfFundsId", "NameAr");
                 return Json(Result);
             }
             catch (Exception ex)
@@ -246,8 +238,8 @@ namespace Etaa.Controllers
             try
             {
                 NumberOfFunds numberOfFunds = new NumberOfFunds();
-                numberOfFunds.NumberOfFundsId = _context.Projects.Where(p => p.ProjectId == ProjectId).Select(p => p.NumberOfFundsId).SingleOrDefault();
-                var Result = new SelectList(await _context.NumberOfFunds.ToListAsync(), "NumberOfFundsId", "NameAr", numberOfFunds.NumberOfFundsId);
+                numberOfFunds.NumberOfFundsId = _context.Projects.Where(p => p.ProjectId == ProjectId).AsNoTracking().Select(p => p.NumberOfFundsId).SingleOrDefault();
+                var Result = new SelectList(await _context.NumberOfFunds.AsNoTracking().ToListAsync(), "NumberOfFundsId", "NameAr", numberOfFunds.NumberOfFundsId);
                 return Json(Result);
             }
             catch (Exception ex)
@@ -283,9 +275,9 @@ namespace Etaa.Controllers
                 var filePath = HttpContext.Session.GetString("filePath");
                 HttpContext.Session.Clear();
 
-                decimal Capital = (decimal)project.Capital;
-                decimal MonthlyInstallmentAmount = (decimal)project.MonthlyInstallmentAmount;
-                int NumberOfInstallments = (int)project.NumberOfInstallments;
+                decimal? Capital = (decimal?)project.Capital;
+                decimal? MonthlyInstallmentAmount = (decimal?)project.MonthlyInstallmentAmount;
+                int? NumberOfInstallments = (int?)project.NumberOfInstallments;
                 int MaxInstallmentsNo = _context.Installments.Select(i => i.InstallmentsId).Max();
 
                 if(NumberOfInstallments > MaxInstallmentsNo)
@@ -318,6 +310,15 @@ namespace Etaa.Controllers
                 else if (project.NumberOfFundsId.Equals(null) || project.NumberOfFundsId.Equals(0))
                 {
                     TempData["ChooseFundsNumber"] = "Project";
+                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    return Json(new
+                    {
+                        redirectUrl = RedirectURL
+                    });
+                }
+                else if (project.FirstInstallmentDueDate.Equals(null))
+                {
+                    TempData["FirstInstallmentDueDate"] = "Project";
                     var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
                     return Json(new
                     {
@@ -491,9 +492,9 @@ namespace Etaa.Controllers
                 {
                     try
                     {
-                        decimal Capital = (decimal)projects.Capital;
-                        decimal MonthlyInstallmentAmount = (decimal)projects.MonthlyInstallmentAmount;
-                        int NumberOfInstallments = (int)projects.NumberOfInstallments;
+                        decimal? Capital = (decimal?)projects.Capital;
+                        decimal? MonthlyInstallmentAmount = (decimal?)projects.MonthlyInstallmentAmount;
+                        int? NumberOfInstallments = (int?)projects.NumberOfInstallments;
                         int MaxInstallmentsNo = _context.Installments.Select(i => i.InstallmentsId).Max();
 
                         if (NumberOfInstallments > MaxInstallmentsNo)
@@ -739,29 +740,32 @@ namespace Etaa.Controllers
                 if (FinancialStatemntId.Any())
                 {
                     TempData["FinancialStatemntId"] = "FinancialStatemntId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
+                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    //return Json(new
+                    //{
+                    //    redirectUrl = RedirectURL
+                    //});
+                    return RedirectToAction(nameof(Index));
                 }
                 else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
+                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    //return Json(new
+                    //{
+                    //    redirectUrl = RedirectURL
+                    //});
+                    return RedirectToAction(nameof(Index));
                 }
                 else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
+                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                    //return Json(new
+                    //{
+                    //    redirectUrl = RedirectURL
+                    //});
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
@@ -916,7 +920,7 @@ namespace Etaa.Controllers
                 
                 var fileSession = await (from project in this._context.Projects
                                          where project.ProjectId.Equals(ProjectId)
-                                         select (string)project.SignatureofApplicantPath).SingleOrDefaultAsync();
+                                         select (string?)project.SignatureofApplicantPath).SingleOrDefaultAsync();
 
                 var fileName = fileSession;
                 var fileExists = System.IO.File.Exists(fileName);

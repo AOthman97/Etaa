@@ -1,0 +1,11 @@
+﻿global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.Rendering;
+global using Microsoft.EntityFrameworkCore;
+global using Etaa.Data;
+global using Etaa.Models;
+global using Etaa.Extensions;
+global using Microsoft.AspNetCore.Authorization;
+global using System.Data;
+global using System.Collections;
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;

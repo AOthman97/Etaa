@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtaaTests", "..\EtaaTests\EtaaTests.csproj", "{051BDDF1-EB34-43FA-BA14-10AEFB48FA7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{897C6CAD-6CAD-4DD9-AEE2-AAA729F85A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{897C6CAD-6CAD-4DD9-AEE2-AAA729F85A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{897C6CAD-6CAD-4DD9-AEE2-AAA729F85A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{051BDDF1-EB34-43FA-BA14-10AEFB48FA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{051BDDF1-EB34-43FA-BA14-10AEFB48FA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{051BDDF1-EB34-43FA-BA14-10AEFB48FA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{051BDDF1-EB34-43FA-BA14-10AEFB48FA7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

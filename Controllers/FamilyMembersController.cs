@@ -1,13 +1,4 @@
-﻿#nullable disable
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Etaa.Data;
-using Etaa.Models;
-using Etaa.Extensions;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Etaa.Controllers
+﻿namespace Etaa.Controllers
 {
     public class FamilyMembersController : Controller
     {
@@ -27,12 +18,13 @@ namespace Etaa.Controllers
             try
             {
                 var Families = (from family in this._context.Families
-                                where family.NameEn.StartsWith(prefix)
+                                where family.NameEn.StartsWith(prefix) ||
+                                family.NameAr.StartsWith(prefix)
                                 select new
                                 {
-                                    label = family.NameEn,
+                                    label = family.NameAr,
                                     val = family.FamilyId
-                                }).ToList();
+                                }).AsNoTracking().ToList();
 
                 return Json(Families);
             }
@@ -64,7 +56,7 @@ namespace Etaa.Controllers
         {
             try
             {
-                var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship);
+                var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship).AsNoTracking();
                 return View(await applicationDbContext.OrderBy(family => family.Family.NameEn).ToListAsync());
             }
             catch (Exception ex)
@@ -90,6 +82,7 @@ namespace Etaa.Controllers
                     .Include(f => f.Gender)
                     .Include(f => f.Job)
                     .Include(f => f.Kinship)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(m => m.FamilyMemberId == id);
                 if (familyMember == null)
                 {
@@ -149,10 +142,10 @@ namespace Etaa.Controllers
         {
             try
             {
-                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses, "EducationalStatusId", "NameAr");
-                ViewData["GenderId"] = new SelectList(_context.Genders, "GenderId", "NameAr");
-                ViewData["JobId"] = new SelectList(_context.Jobs, "JobId", "NameAr");
-                ViewData["KinshipId"] = new SelectList(_context.Kinships, "KinshipId", "NameAr");
+                ViewData["EducationalStatusId"] = new SelectList(_context.EducationalStatuses.AsNoTracking(), "EducationalStatusId", "NameAr");
+                ViewData["GenderId"] = new SelectList(_context.Genders.AsNoTracking(), "GenderId", "NameAr");
+                ViewData["JobId"] = new SelectList(_context.Jobs.AsNoTracking(), "JobId", "NameAr");
+                ViewData["KinshipId"] = new SelectList(_context.Kinships.AsNoTracking(), "KinshipId", "NameAr");
                 return View();
             }
             catch (Exception ex)
