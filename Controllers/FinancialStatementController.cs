@@ -98,7 +98,7 @@
             try
             {
                 var Project = _context.FinancialStatements.Where(f => f.ProjectId == financialStatement.ProjectId && f.IsCanceled == false).Select(f => f.ProjectId);
-                if(Project.Any() == false)
+                if (Project.Any() == false)
                 {
                     var userId = User.GetLoggedInUserId<string>();
                     financialStatement.UserId = userId;
@@ -195,7 +195,7 @@
                             HttpContext.Session.Clear();
                             var OldFilePath = "";
                             OldFilePath = _context.FinancialStatements.Where(f => f.FinancialStatementId == financialStatement.FinancialStatementId).Select(f => f.DocumentPath).Single();
-                            if(OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
+                            if (OldFilePath != null && !string.IsNullOrEmpty(OldFilePath))
                             {
                                 FileInfo file = new FileInfo(OldFilePath);
                                 if (file.Exists)

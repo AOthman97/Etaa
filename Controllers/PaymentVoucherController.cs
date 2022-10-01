@@ -519,7 +519,6 @@
                         redirectUrl = RedirectURLThird
                     });
                 }
-
                 
                 if (ModelState.IsValid)
                 {

@@ -3,13 +3,13 @@
     public class ClearanceController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private IWebHostEnvironment hostingEnv;
+        private IWebHostEnvironment _hostingEnv;
         private readonly ILogger<ClearanceController> _logger;
 
         public ClearanceController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, ILogger<ClearanceController> logger)
         {
             _context = context;
-            hostingEnv = webHostEnvironment;
+            _hostingEnv = webHostEnvironment;
             _logger = logger;
         }
 
@@ -442,7 +442,7 @@
                     HttpContext.Session.SetString("SubFolderName", SubFileDic);
                 }
 
-                string FilePath = Path.Combine(hostingEnv.WebRootPath, FileDic);
+                string FilePath = Path.Combine(_hostingEnv.WebRootPath, FileDic);
 
                 if (!Directory.Exists(FilePath))
                     Directory.CreateDirectory(FilePath);
