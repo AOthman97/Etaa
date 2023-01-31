@@ -378,6 +378,12 @@
                             await _context.ProjectsSocialBenefits.AddAsync(item);
                         }
 
+                        lock (this)
+                        {
+                            int MaxProjectNumber = (int)_context.Projects.Select(i => i.ProjectNumber).Max();
+                            project.ProjectNumber = (MaxProjectNumber != null && MaxProjectNumber != 0) ? MaxProjectNumber : 1;
+                        }
+                        
                         await _context.SaveChangesAsync();
 
                         await transaction.CommitAsync();

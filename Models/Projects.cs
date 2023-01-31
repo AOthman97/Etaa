@@ -57,6 +57,8 @@
         public string? UserId { get; set; }
         [Display(Name = "إسم مستخدم الإدارة")]
         public string? ManagementUserId { get; set; }
+        [Display(Name = "رقم المشروع")]
+        public int? ProjectNumber { get; set; } = 0;
 
         [ForeignKey("ProjectId")]
         [NotMapped]
