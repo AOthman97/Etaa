@@ -105,6 +105,14 @@
             try
             {
                 ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
+                if (ViewBag["FamilyId"] != null)
+                {
+                    int FamilyId = (int)ViewBag["FamilyId"];
+                    Family family = _context.Families.Where(f => f.FamilyId == FamilyId).SingleOrDefault();
+                    // Populate them in the family hidden Id and then also get the family name in the text box
+                    ViewBag["FamilyId"] = FamilyId;
+                    ViewBag["FamilyName"] = family.NameAr;
+                }
                 return View();
             }
             catch (Exception ex)
