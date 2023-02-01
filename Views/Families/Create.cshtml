@@ -62,37 +62,37 @@
             return false;
         });
 
-        $("#Address").keypress(function(event){
-            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
-            var ew = event.which;
-            if(ew == 32)
-                return true;
-            if(ew == 169)
-                return true;
+        //$("#Address").keypress(function(event){
+        //    var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+        //    var ew = event.which;
+        //    if(ew == 32)
+        //        return true;
+        //    if(ew == 169)
+        //        return true;
 
-            var str = String.fromCharCode(ew);
-            if (arabicCharUnicodeRange.test(str) )
-            {
-              return true;
-            }
-            return false;
-        });
+        //    var str = String.fromCharCode(ew);
+        //    if (arabicCharUnicodeRange.test(str) )
+        //    {
+        //      return true;
+        //    }
+        //    return false;
+        //});
 
-        $("#Alleyway").keypress(function(event){
-            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
-            var ew = event.which;
-            if(ew == 32)
-                return true;
-            if(ew == 169)
-                return true;
+        //$("#Alleyway").keypress(function(event){
+        //    var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+        //    var ew = event.which;
+        //    if(ew == 32)
+        //        return true;
+        //    if(ew == 169)
+        //        return true;
 
-            var str = String.fromCharCode(ew);
-            if (arabicCharUnicodeRange.test(str) )
-            {
-              return true;
-            }
-            return false;
-        });
+        //    var str = String.fromCharCode(ew);
+        //    if (arabicCharUnicodeRange.test(str) )
+        //    {
+        //      return true;
+        //    }
+        //    return false;
+        //});
 
         $("#ResidentialSquare").keypress(function(event){
             var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
@@ -109,18 +109,6 @@
             }
             return false;
         });
-
-        // Just english or arabic letters without numbers
-        //$('#Address').keydown(function (e) {
-        //  if (e.shiftKey || e.ctrlKey || e.altKey) {
-        //      e.preventDefault();
-        //  } else {
-        //      var key = e.keyCode;
-        //      if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
-        //          e.preventDefault();
-        //      }
-        //  }
-        //});
     }); 
 </script>
 
@@ -224,9 +212,13 @@
             </div>
             <div class="form-group mb-3">
                 <label asp-for="Address" class="control-label"></label>
-                @*rejex for only english onkeyup="this.value=this.value.replace(/[^a-z]/g,'');"*@
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="DistrictName" class="control-label"></label>
+                <input asp-for="DistrictName" class="form-control" />
+                <span asp-validation-for="DistrictName" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label asp-for="GenderId" class="control-label"></label>
@@ -244,9 +236,14 @@
                 <label asp-for="JobId" class="control-label"></label>
                 <select asp-for="JobId" class ="form-control" asp-items="ViewBag.JobId"></select>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-3" style="display: none;">
                 <label asp-for="HealthStatusId" class="control-label"></label>
                 <select asp-for="HealthStatusId" class ="form-control" asp-items="ViewBag.HealthStatusId"></select>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="HealthCondition" class="control-label"></label>
+                <input asp-for="HealthCondition" class="form-control" />
+                <span asp-validation-for="HealthCondition" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label asp-for="EducationalStatusId" class="control-label"></label>

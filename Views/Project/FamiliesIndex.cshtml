@@ -1,50 +1,17 @@
-﻿@model IEnumerable<Etaa.Models.Projects>
+﻿@model IEnumerable<Etaa.Models.Family>
 
 @{
-    ViewData["Title"] = "بيانات المشاريع";
+    ViewData["Title"] = "بيانات الأسر";
 }
 
 <h1><i class="fa-solid fa-list"></i> بيانات المشاريع</h1>
 
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
 <table class="table table-striped" id="tblProjects" style="width:100%">
     <thead>
         <tr>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.NameAr)
             </th>
-            @*<th class="text-end">
-                @Html.DisplayNameFor(model => model.NameEn)
-            </th>*@
-            @*<th class="text-end">
-                @Html.DisplayNameFor(model => model.ProjectActivity)
-            </th>
-            <th class="text-end">
-                @Html.DisplayNameFor(model => model.ProjectPurpose)
-            </th>*@
-            <th class="text-end">
-                @Html.DisplayNameFor(model => model.Capital)
-            </th>
-            <th class="text-end">
-                @Html.DisplayNameFor(model => model.MonthlyInstallmentAmount)
-            </th>
-            <th class="text-end">
-                @Html.DisplayNameFor(model => model.NumberOfInstallments)
-            </th>
-            <th class="text-end">
-                @Html.DisplayNameFor(model => model.ProjectNumber)
-            </th>
-            @*<th class="text-end">
-                @Html.DisplayNameFor(model => model.Date)
-            </th>*@
-            @*<th class="text-end">
-                @Html.DisplayNameFor(model => model.WaiverPeriod)
-            </th>*@
-            @*<th class="text-center">
-                @Html.DisplayNameFor(model => model.IsCanceled)
-            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -54,40 +21,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.NameAr)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.NameEn)
-            </td>*@
-            @*<td>
-                @Html.DisplayFor(modelItem => item.ProjectActivity)
-            </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjectPurpose)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Capital)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MonthlyInstallmentAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfInstallments)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProjectNumber)
-                </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>*@
-            @*<td>
-                @Html.DisplayFor(modelItem => item.WaiverPeriod)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.IsCanceled)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProjectId" class="btn btn-outline-info btn-sm">التعديل</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-outline-secondary btn-sm">التفاصيل</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProjectId" class="btn btn-outline-danger btn-sm">الحذف</a>
+                    <a asp-action="Index" asp-route-FamilyId="@item.FamilyId" class="btn btn-outline-info btn-sm">عرض المشاريع</a>
             </td>
         </tr>
 }

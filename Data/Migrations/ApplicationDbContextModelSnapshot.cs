@@ -264,6 +264,9 @@ namespace Etaa.Data.Migrations
                     b.Property<int?>("DistrictId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DistrictName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("EducationalStatusId")
                         .HasColumnType("int");
 
@@ -272,6 +275,9 @@ namespace Etaa.Data.Migrations
 
                     b.Property<int>("GenderId")
                         .HasColumnType("int");
+
+                    b.Property<string>("HealthCondition")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("HealthStatusId")
                         .HasColumnType("int");
@@ -856,6 +862,18 @@ namespace Etaa.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsCanceled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManagedByDaughter")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManagedByFather")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManagedByHusband")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsManagedBySon")
                         .HasColumnType("bit");
 
                     b.Property<string>("ManagementUserId")

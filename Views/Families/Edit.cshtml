@@ -62,37 +62,37 @@
             return false;
         });
 
-        $("#Address").keypress(function(event){
-            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
-            var ew = event.which;
-            if(ew == 32)
-                return true;
-            if(ew == 169)
-                return true;
+        //$("#Address").keypress(function(event){
+        //    var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+        //    var ew = event.which;
+        //    if(ew == 32)
+        //        return true;
+        //    if(ew == 169)
+        //        return true;
 
-            var str = String.fromCharCode(ew);
-            if (arabicCharUnicodeRange.test(str) )
-            {
-              return true;
-            }
-            return false;
-        });
+        //    var str = String.fromCharCode(ew);
+        //    if (arabicCharUnicodeRange.test(str) )
+        //    {
+        //      return true;
+        //    }
+        //    return false;
+        //});
 
-        $("#Alleyway").keypress(function(event){
-            var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
-            var ew = event.which;
-            if(ew == 32)
-                return true;
-            if(ew == 169)
-                return true;
+        //$("#Alleyway").keypress(function(event){
+        //    var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
+        //    var ew = event.which;
+        //    if(ew == 32)
+        //        return true;
+        //    if(ew == 169)
+        //        return true;
 
-            var str = String.fromCharCode(ew);
-            if (arabicCharUnicodeRange.test(str) )
-            {
-              return true;
-            }
-            return false;
-        });
+        //    var str = String.fromCharCode(ew);
+        //    if (arabicCharUnicodeRange.test(str) )
+        //    {
+        //      return true;
+        //    }
+        //    return false;
+        //});
 
         $("#ResidentialSquare").keypress(function(event){
             var arabicCharUnicodeRange = /[\u0600-\u06FF]/;
@@ -236,6 +236,11 @@
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
+                <label asp-for="DistrictName" class="control-label"></label>
+                <input asp-for="DistrictName" class="form-control" />
+                <span asp-validation-for="DistrictName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
                 <label asp-for="GenderId" class="control-label"></label>
                 <select asp-for="GenderId" class="form-control" asp-items="ViewBag.GenderId"></select>
                 <span asp-validation-for="GenderId" class="text-danger"></span>
@@ -255,10 +260,15 @@
                 <select asp-for="JobId" class="form-control" asp-items="ViewBag.JobId"></select>
                 <span asp-validation-for="JobId" class="text-danger"></span>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-3" style="display: none;">
                 <label asp-for="HealthStatusId" class="control-label"></label>
                 <select asp-for="HealthStatusId" class="form-control" asp-items="ViewBag.HealthStatusId"></select>
                 <span asp-validation-for="HealthStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="HealthCondition" class="control-label"></label>
+                <input asp-for="HealthCondition" class="form-control" />
+                <span asp-validation-for="HealthCondition" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
                 <label asp-for="EducationalStatusId" class="control-label"></label>

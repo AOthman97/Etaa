@@ -39,13 +39,29 @@
 
         [Authorize]
         // GET: Project
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? FamilyId)
         {
             try
             {
-                // .Include(p => p.IdentityUser)
-                var applicationDbContext = _context.Projects.AsNoTracking();
+                var applicationDbContext = _context.Projects.Where(p => p.FamilyId == FamilyId).AsNoTracking();
+                TempData["FamilyId"] = FamilyId;
                 return View(await applicationDbContext.ToListAsync());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                return View("Error");
+            }
+        }
+
+        [Authorize]
+        // GET: Project
+        public async Task<IActionResult> FamiliesIndex()
+        {
+            try
+            {
+                var applicationDbContext = _context.Families.AsNoTracking();
+                return View("FamiliesIndex", await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
             {
@@ -89,6 +105,15 @@
             try
             {
                 ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
+                if (TempData["FamilyId"] != null)
+                {
+                    int FamilyId = (int)TempData["FamilyId"];
+                    Family family = _context.Families.Where(f => f.FamilyId == FamilyId).SingleOrDefault();
+                    // Populate them in the family hidden Id and then also get the family name in the text box
+                    ViewData["FamilyId"] = FamilyId;
+                    ViewData["FamilyName"] = family.NameAr;
+                    TempData["FamilyId"] = null;
+                }
                 return View();
             }
             catch (Exception ex)
@@ -289,15 +314,15 @@
                         redirectUrl = RedirectURL
                     });
                 }
-                else if(Capital / MonthlyInstallmentAmount != NumberOfInstallments)
-                {
-                    TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
-                    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    return Json(new
-                    {
-                        redirectUrl = RedirectURL
-                    });
-                }
+                //else if(Capital / MonthlyInstallmentAmount != NumberOfInstallments)
+                //{
+                //    TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
+                //    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                //    return Json(new
+                //    {
+                //        redirectUrl = RedirectURL
+                //    });
+                //}
                 else if (project.FamilyId.Equals(null) || project.FamilyId.Equals(0))
                 {
                     TempData["ChooseFamily"] = "Project";
@@ -378,6 +403,12 @@
                             await _context.ProjectsSocialBenefits.AddAsync(item);
                         }
 
+                        lock (this)
+                        {
+                            int MaxProjectNumber = (int)_context.Projects.Select(i => i.ProjectNumber).Max();
+                            project.ProjectNumber = (MaxProjectNumber != null && MaxProjectNumber != 0) ? MaxProjectNumber + 1 : 1;
+                        }
+                        
                         await _context.SaveChangesAsync();
 
                         await transaction.CommitAsync();
@@ -388,7 +419,7 @@
                         projectsSocialBenefitsList.ForEach(x => _logger.LogInformation("Project social benfits added for project, Project social benefits: {ProjectSocialBenefitsData}, User: {User}", new { ProjectId = project.ProjectId, ProjectSocialBenefitsId = x.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = x.ProjectsSocialBenefitsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
 
                         TempData["Project"] = "Project";
-                        var RedirectURLThird = Url.Action(nameof(Index));
+                        var RedirectURLThird = Url.Action(nameof(FamiliesIndex));
                         return Json(new
                         {
                             redirectUrl = RedirectURLThird
@@ -399,7 +430,7 @@
                         transaction.Rollback();
                         _logger.LogError("Project not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                         TempData["ProjectError"] = "Project";
-                        var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                        var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
                         return Json(new
                         {
                             redirectUrl = RedirectURL
@@ -411,7 +442,7 @@
             {
                 _logger.LogError("Project not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
+                var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
                 return Json(new
                 {
                     redirectUrl = RedirectURL
@@ -464,7 +495,7 @@
                 if (projectId != projects.ProjectId || FinancialStatemntId.Any())
                 {
                     TempData["FinancialStatemntId"] = "FinancialStatemntId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                     return Json(new
                     {
                         redirectUrl = RedirectURL
@@ -473,7 +504,7 @@
                 else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                     return Json(new
                     {
                         redirectUrl = RedirectURL
@@ -482,7 +513,7 @@
                 else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
-                    var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                    var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                     return Json(new
                     {
                         redirectUrl = RedirectURL
@@ -640,8 +671,7 @@
                             projectsSelectionReasonsList.ForEach(x => _logger.LogInformation("Project selection reasons edited for project, Project selection reasons: {ProjectSelectionReasonsData}, User: {User}", new { ProjectId = projects.ProjectId, ProjectSelectionReasonsId = x.ProjectSelectionReasonsId, ProjectsSelectionReasonsId = x.ProjectsSelectionReasonsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
                             projectsSocialBenefitsList.ForEach(x => _logger.LogInformation("Project social benfits edited for project, Project social benefits: {ProjectSocialBenefitsData}, User: {User}", new { ProjectId = projects.ProjectId, ProjectSocialBenefitsId = x.ProjectSocialBenefitsId, ProjectsSocialBenefitsId = x.ProjectsSocialBenefitsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }));
                             TempData["Project"] = "Project";
-                            //return RedirectToAction(nameof(Index));
-                            var RedirectURLThird = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            var RedirectURLThird = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
                             {
                                 redirectUrl = RedirectURLThird
@@ -652,7 +682,7 @@
                             transaction.Rollback();
                             _logger.LogError("Project not added, Message: {ErrorData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectError"] = "Project";
-                            var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                            var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                             return Json(new
                             {
                                 redirectUrl = RedirectURL
@@ -665,7 +695,7 @@
                         {
                             _logger.LogError("DbUpdateConcurrencyException Exception, Project not edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectError"] = "ProjectError";
-                            var RedirectURLSixth = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            var RedirectURLSixth = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
                             {
                                 redirectUrl = RedirectURLSixth
@@ -675,7 +705,7 @@
                         {
                             _logger.LogError("DbUpdateConcurrencyException Exception, Project not edited, Project: {ProjectData}, User: {User}", new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                             TempData["ProjectError"] = "ProjectError";
-                            var RedirectURLSeventh = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                            var RedirectURLSeventh = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                             return Json(new
                             {
                                 redirectUrl = RedirectURLSeventh
@@ -688,7 +718,7 @@
             {
                 _logger.LogError("Error, Project not edited, Message: {ErrorData}, Project: {ProjectData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { ProjectId = projects.ProjectId, NameAr = projects.NameAr, NameEn = projects.NameEn, ProjectTypeId = projects.ProjectTypeId, Capital = projects.Capital, NumberOfInstallments = projects.NumberOfInstallments, MonthlyInstallmentAmount = projects.MonthlyInstallmentAmount, NumberOfFunds = projects.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
                 return Json(new
                 {
                     redirectUrl = RedirectURL
@@ -745,7 +775,7 @@
                     //{
                     //    redirectUrl = RedirectURL
                     //});
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else if (ClearanceId.Any())
                 {
@@ -755,7 +785,7 @@
                     //{
                     //    redirectUrl = RedirectURL
                     //});
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else if (PaymentVoucherId.Any())
                 {
@@ -765,7 +795,7 @@
                     //{
                     //    redirectUrl = RedirectURL
                     //});
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else
                 {
@@ -773,7 +803,7 @@
                     await _context.SaveChangesAsync();  
                     _logger.LogInformation("Project canceled, Project: {ProjectData}, User: {User}", new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                     TempData["Project"] = "Project";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(FamiliesIndex));
                 }
             }
             catch (Exception ex)
@@ -781,7 +811,7 @@
                 var project = await _context.Projects.FindAsync(id);
                 _logger.LogError("Error, Project not canceled, Message: {ErrorData}, Project: {ProjectData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
-                var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
+                var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));
                 return Json(new
                 {
                     redirectUrl = RedirectURL
