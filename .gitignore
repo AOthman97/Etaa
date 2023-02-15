@@ -365,3 +365,8 @@ FodyWeavers.xsd
 /wwwroot/ProjectFiles
 /Data/Migrations
 /wwwroot/lib/datatable-js
+/appsettings.json
+/Data/Migrations/ApplicationDbContextModelSnapshot.cs
+/Etaa.sln
+/Program.cs
+/Program.cs
