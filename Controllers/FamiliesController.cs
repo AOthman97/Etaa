@@ -140,7 +140,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         // ,UserId,ManagementUserId
-        public async Task<IActionResult> Create([Bind("FamilyId,NameAr,NameEn,Address,HouseNumber,Alleyway,ResidentialSquare,FirstPhoneNumber,SecondPhoneNumber,NationalNumber,PassportNumber,NumberOfIndividuals,Age,MonthlyIncome,IsCurrentInvestmentProject,IsApprovedByManagement,IsCanceled,DateOfBirth,DistrictId,GenderId,ReligionId,MartialStatusId,JobId,HealthStatusId,EducationalStatusId,AccommodationTypeId,InvestmentTypeId")] Family family)
+        public async Task<IActionResult> Create([Bind("FamilyId,NameAr,NameEn,Address,HouseNumber,Alleyway,ResidentialSquare,FirstPhoneNumber,SecondPhoneNumber,NationalNumber,PassportNumber,NumberOfIndividuals,Age,MonthlyIncome,IsCurrentInvestmentProject,IsApprovedByManagement,IsCanceled,DateOfBirth,DistrictId,GenderId,ReligionId,MartialStatusId,JobId,HealthStatusId,EducationalStatusId,AccommodationTypeId,InvestmentTypeId,DistrictName,HealthCondition")] Family family)
         {
             try
             {
@@ -223,7 +223,7 @@
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FamilyId,NameAr,NameEn,Address,HouseNumber,Alleyway,ResidentialSquare,FirstPhoneNumber,SecondPhoneNumber,NationalNumber,PassportNumber,NumberOfIndividuals,Age,MonthlyIncome,IsCurrentInvestmentProject,IsApprovedByManagement,IsCanceled,DateOfBirth,DistrictId,GenderId,ReligionId,MartialStatusId,JobId,HealthStatusId,EducationalStatusId,AccommodationTypeId,InvestmentTypeId,UserId,ManagementUserId")] Family family)
+        public async Task<IActionResult> Edit(int id, [Bind("FamilyId,NameAr,NameEn,Address,HouseNumber,Alleyway,ResidentialSquare,FirstPhoneNumber,SecondPhoneNumber,NationalNumber,PassportNumber,NumberOfIndividuals,Age,MonthlyIncome,IsCurrentInvestmentProject,IsApprovedByManagement,IsCanceled,DateOfBirth,DistrictId,GenderId,ReligionId,MartialStatusId,JobId,HealthStatusId,EducationalStatusId,AccommodationTypeId,InvestmentTypeId,UserId,ManagementUserId,DistrictName,HealthCondition")] Family family)
         {
             try
             {

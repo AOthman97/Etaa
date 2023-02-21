@@ -31,6 +31,10 @@
         public string? NationalNumber { get; set; }
         [Display(Name = "حقل رقم الجواز")]
         public string? PassportNumber { get; set; }
+        [Display(Name = "حقل المحلية")]
+        public string? DistrictName { get; set; }
+        [Display(Name = "حقل الحالة الصحية")]
+        public string? HealthCondition { get; set; }
         [Display(Name = "حقل عدد أفراد الأسرة")]
         public int? NumberOfIndividuals { get; set; }
         [Display(Name = "حقل العمر")]
