@@ -4,10 +4,10 @@
 
 @{
     ViewData["Title"] = "إضافة مشروع";
-    var FamilyNameAr = ViewData["FamilyName"];
-    var FamilyId = ViewData["FamilyId"];
-    ViewData["FamilyName"] = null;
-    ViewData["FamilyId"] = null;
+    var FamilyNameAr = TempData["FamilyName"];
+    var FamilyId = TempData["FamilyId"];
+    TempData["FamilyName"] = null;
+    TempData["FamilyId"] = null;
 }
 
 <h1>إضافة مشروع</h1>
