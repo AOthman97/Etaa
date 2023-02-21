@@ -43,9 +43,8 @@
         {
             try
             {
-                var applicationDbContext = _context.Projects.Where(p => p.FamilyId == FamilyId).AsNoTracking();
+                var applicationDbContext = _context.Projects.Where(p => p.FamilyId == FamilyId && p.IsCanceled == false).AsNoTracking();
                 TempData["FamilyId"] = FamilyId;
->>>>>>> 896d8f35a74bd64a3ea47ba035784c0d6f51b085
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -537,15 +536,15 @@
                                 redirectUrl = RedirectURL
                             });
                         }
-                        else if (Capital / MonthlyInstallmentAmount != NumberOfInstallments)
-                        {
-                            TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
-                            var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
-                            return Json(new
-                            {
-                                redirectUrl = RedirectURL
-                            });
-                        }
+                        //else if (Capital / MonthlyInstallmentAmount != NumberOfInstallments)
+                        //{
+                        //    TempData["CapitalDividedByMonthlyInstallmentAmountNotEqualToNumberOfInstallments"] = "Project";
+                        //    var RedirectURL = Url.Action(nameof(Create), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", projects.UserId));
+                        //    return Json(new
+                        //    {
+                        //        redirectUrl = RedirectURL
+                        //    });
+                        //}
                         else if (projects.FamilyId.Equals(null) || projects.FamilyId.Equals(0))
                         {
                             TempData["ChooseFamily"] = "Project";

@@ -66,7 +66,7 @@
             try
             {
                 // .Include(c => c.IdentityUser)
-                var applicationDbContext = _context.Clearances.Include(c => c.Projects).AsNoTracking();
+                var applicationDbContext = _context.Clearances.Where(c => c.IsCanceled == false).Include(c => c.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

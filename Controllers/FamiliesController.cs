@@ -62,7 +62,7 @@
         {
             try
             {
-                var applicationDbContext = _context.Families.AsNoTracking();
+                var applicationDbContext = _context.Families.Where(f => f.IsCanceled == false).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

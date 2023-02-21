@@ -62,7 +62,7 @@
         {
             try
             {
-                var applicationDbContext = _context.Contributors.Include(c => c.District).AsNoTracking();
+                var applicationDbContext = _context.Contributors.Where(c => c.IsCanceled == false).Include(c => c.District).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

@@ -17,7 +17,7 @@
         {
             try
             {
-                var applicationDbContext = _context.ProjectTypes.Include(p => p.ProjectDomainTypes).Include(p => p.ProjectGroup).AsNoTracking();
+                var applicationDbContext = _context.ProjectTypes.Where(p => p.IsCanceled == false).Include(p => p.ProjectDomainTypes).Include(p => p.ProjectGroup).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

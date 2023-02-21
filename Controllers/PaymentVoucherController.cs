@@ -249,7 +249,7 @@
         {
             try
             {
-                var applicationDbContext = _context.PaymentVouchers.Include(p => p.Installments).Include(p => p.Projects).AsNoTracking();
+                var applicationDbContext = _context.PaymentVouchers.Where(p => p.IsCanceled == false).Include(p => p.Installments).Include(p => p.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

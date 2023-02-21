@@ -19,7 +19,7 @@
         {
             try
             {
-                var applicationDbContext = _context.FinancialStatements.Include(f => f.Projects).AsNoTracking();
+                var applicationDbContext = _context.FinancialStatements.Where(f => f.IsCanceled == false).Include(f => f.Projects).AsNoTracking();
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)

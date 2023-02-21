@@ -56,7 +56,7 @@
         {
             try
             {
-                var applicationDbContext = _context.FamilyMembers.Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship).AsNoTracking();
+                var applicationDbContext = _context.FamilyMembers.Where(f => f.IsCanceled == false).Include(f => f.EducationalStatus).Include(f => f.Family).Include(f => f.Gender).Include(f => f.Job).Include(f => f.Kinship).AsNoTracking();
                 return View(await applicationDbContext.OrderBy(family => family.Family.NameEn).ToListAsync());
             }
             catch (Exception ex)
