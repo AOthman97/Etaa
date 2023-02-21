@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin - Copy\**" />
+    <Content Remove="bin - Copy\**" />
+    <EmbeddedResource Remove="bin - Copy\**" />
+    <None Remove="bin - Copy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Models\Users.cs" />
   </ItemGroup>
 

@@ -45,6 +45,7 @@
             {
                 var applicationDbContext = _context.Projects.Where(p => p.FamilyId == FamilyId).AsNoTracking();
                 TempData["FamilyId"] = FamilyId;
+>>>>>>> 896d8f35a74bd64a3ea47ba035784c0d6f51b085
                 return View(await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -105,14 +106,13 @@
             try
             {
                 ViewData["UserId"] = new SelectList(_context.IdentityUser.AsNoTracking(), "UserId", "NameAr");
-                if (TempData["FamilyId"] != null)
+                if (ViewBag["FamilyId"] != null)
                 {
                     int FamilyId = (int)TempData["FamilyId"];
                     Family family = _context.Families.Where(f => f.FamilyId == FamilyId).SingleOrDefault();
                     // Populate them in the family hidden Id and then also get the family name in the text box
-                    ViewData["FamilyId"] = FamilyId;
-                    ViewData["FamilyName"] = family.NameAr;
-                    TempData["FamilyId"] = null;
+                    ViewBag["FamilyId"] = FamilyId;
+                    ViewBag["FamilyName"] = family.NameAr;
                 }
                 return View();
             }
