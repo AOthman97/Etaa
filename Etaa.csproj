@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Compile Remove="Models\Users.cs" />
+    <Compile Remove="Program.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -755,16 +755,16 @@
         // POST: Project/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int ProjectId)
         {
             try
             {
-                var project = await _context.Projects.FindAsync(id);
+                var project = await _context.Projects.FindAsync(ProjectId);
                 // In each of these models create actions you should check first if there's no not canceled rows that have
                 // the same ProjectId in them
-                var FinancialStatemntId = _context.FinancialStatements.Where(f => f.ProjectId == id && f.IsCanceled == false).Select(f => f.FinancialStatementId);
-                var ClearanceId = _context.Clearances.Where(c => c.ProjectId == id && c.IsCanceled == false).Select(c => c.ClearanceId);
-                var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == id && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
+                var FinancialStatemntId = _context.FinancialStatements.Where(f => f.ProjectId == ProjectId && f.IsCanceled == false).Select(f => f.FinancialStatementId);
+                var ClearanceId = _context.Clearances.Where(c => c.ProjectId == ProjectId && c.IsCanceled == false).Select(c => c.ClearanceId);
+                var PaymentVoucherId = _context.PaymentVouchers.Where(p => p.ProjectId == ProjectId && p.IsCanceled == false).Select(p => p.PaymentVoucherId);
                 // This is a business validation
                 if (FinancialStatemntId.Any())
                 {
@@ -807,7 +807,7 @@
             }
             catch (Exception ex)
             {
-                var project = await _context.Projects.FindAsync(id);
+                var project = await _context.Projects.FindAsync(ProjectId);
                 _logger.LogError("Error, Project not canceled, Message: {ErrorData}, Project: {ProjectData}, User: {User}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { ProjectId = project.ProjectId, NameAr = project.NameAr, NameEn = project.NameEn, ProjectTypeId = project.ProjectTypeId, Capital = project.Capital, NumberOfInstallments = project.NumberOfInstallments, MonthlyInstallmentAmount = project.MonthlyInstallmentAmount, NumberOfFunds = project.NumberOfFundsId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
                 TempData["ProjectError"] = "Project";
                 var RedirectURL = Url.Action(nameof(FamiliesIndex), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));

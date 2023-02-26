@@ -75,7 +75,14 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProjectId" />
-        <input type="submit" value="الحذف" class="btn btn-danger" /> |
+        <input type="submit" value="الحذف" class="btn btn-danger" />
+    @*<a asp-action="Delete" asp-route-ProjectId="Model.ProjectId" class="btn btn-outline-danger">الحذف</a>*@
+        @*@using (Html.BeginForm("Delete", "Project"))
+        {
+            @Html.HiddenFor(m => m.ProjectId)
+            <input type="submit" value="الحذف" class="btn btn-danger" />
+        }*@
+         |
         <a asp-action="FamiliesIndex">العودة إلى القائمة الرئيسية</a>
     </form>
 </div>
