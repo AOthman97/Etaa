@@ -6,9 +6,7 @@
 
 <h1>هل تريد حذف المشروع ؟</h1>
 
-<h3>@*هل تريد حذف المشروع ؟*@</h3>
 <div class="row">
-    @*<h4>المشروع</h4>*@
     <hr />
     <dl class="col-md-12">
         <dt class = "col-sm-2">
@@ -59,30 +57,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.IsApprovedByManagement)
         </dd>
-        @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCanceled)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCanceled)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ManagementUserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ManagementUserId)
-        </dd>*@
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProjectId" />
-        <input type="submit" value="الحذف" class="btn btn-danger" />
-    @*<a asp-action="Delete" asp-route-ProjectId="Model.ProjectId" class="btn btn-outline-danger">الحذف</a>*@
-        @*@using (Html.BeginForm("Delete", "Project"))
-        {
-            @Html.HiddenFor(m => m.ProjectId)
-            <input type="submit" value="الحذف" class="btn btn-danger" />
-        }*@
-         |
+        <input type="submit" value="الحذف" class="btn btn-danger" /> |
         <a asp-action="FamiliesIndex">العودة إلى القائمة الرئيسية</a>
     </form>
 </div>

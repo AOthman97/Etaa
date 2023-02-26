@@ -19,10 +19,11 @@ namespace Etaa
         public void ConfigureServices(IServiceCollection services)
         {
             // Set the connection string of the app
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration
+                .GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
 
             // Services Configuration
-            services.AddScoped<IFamiliesService, FamiliesService>();
+            //services.AddScoped<IFamiliesService, FamiliesService>();
 
             services.AddControllersWithViews();
 
@@ -36,7 +37,7 @@ namespace Etaa
             // For the IdentityUser
             services.AddHttpContextAccessor();
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
         }
@@ -64,6 +65,7 @@ namespace Etaa
                 RequestPath = "/ProjectFiles"
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSession();
