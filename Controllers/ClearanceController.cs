@@ -367,7 +367,7 @@
         // POST: Clearance/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int ClearanceId)
         {
             try
             {
@@ -380,7 +380,7 @@
                         redirectUrl = RedirectURL
                     });
                 }
-                var clearance = await _context.Clearances.FindAsync(id);
+                var clearance = await _context.Clearances.FindAsync(ClearanceId);
                 
                 if (clearance != null)
                 {
@@ -403,7 +403,7 @@
             }
             catch (Exception ex)
             {
-                var clearance = await _context.Clearances.FindAsync(id);
+                var clearance = await _context.Clearances.FindAsync(ClearanceId);
                 _logger.LogError("Clearance not canceled, Message: {ErrorData}, User: {User}, Clearance: {ClearanceData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { ClearanceId = clearance.ClearanceId, ProjectId = clearance.ProjectId });
                 TempData["ClearanceError"] = "Clearance";
                 var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", User.GetLoggedInUserId<string>()));

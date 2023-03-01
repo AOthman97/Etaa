@@ -316,20 +316,29 @@
         // POST: Families/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int FamilyId)
         {
             try
             {
-                var family = await _context.Families.FindAsync(id);
-                family.IsCanceled = true;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Family canceled, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
-                TempData["Family"] = family.NameAr;
-                return RedirectToAction(nameof(Index));
+                var family = await _context.Families.FindAsync(FamilyId);
+
+                if(family != null)
+                {
+                    family.IsCanceled = true;
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Family canceled, Family: {FamilyData}, User: {User}", new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                    TempData["Family"] = family.NameAr;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["FamilyError"] = "FamilyError";
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
-                var family = await _context.Families.FindAsync(id);
+                var family = await _context.Families.FindAsync(FamilyId);
                 _logger.LogError("Family not canceled, Message: {ErrorData}, User: {User}, Family: {FamilyData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyId = family.FamilyId, NameAr = family.NameAr, NameEn = family.NameEn });
                 TempData["FamilyError"] = "FamilyError";
                 return RedirectToAction(nameof(Index));

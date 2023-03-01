@@ -1,4 +1,6 @@
-﻿namespace Etaa.Controllers
+﻿using Etaa.Models;
+
+namespace Etaa.Controllers
 {
     public class ProjectController : Controller
     {
@@ -61,6 +63,8 @@
             try
             {
                 var applicationDbContext = _context.Families.AsNoTracking();
+                var ProjectsNumber = _context.Projects.Where(p => p.IsCanceled == false).Count();
+                TempData["ProjectsNumber"] = ProjectsNumber;
                 return View("FamiliesIndex", await applicationDbContext.ToListAsync());
             }
             catch (Exception ex)
@@ -769,31 +773,16 @@
                 if (FinancialStatemntId.Any())
                 {
                     TempData["FinancialStatemntId"] = "FinancialStatemntId";
-                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    //return Json(new
-                    //{
-                    //    redirectUrl = RedirectURL
-                    //});
                     return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else if (ClearanceId.Any())
                 {
                     TempData["ClearanceId"] = "ClearanceId";
-                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    //return Json(new
-                    //{
-                    //    redirectUrl = RedirectURL
-                    //});
                     return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else if (PaymentVoucherId.Any())
                 {
                     TempData["PaymentVoucherId"] = "PaymentVoucherId";
-                    //var RedirectURL = Url.Action(nameof(Index), ViewData["UserId"] = new SelectList(_context.IdentityUser, "UserId", "NameAr", project.UserId));
-                    //return Json(new
-                    //{
-                    //    redirectUrl = RedirectURL
-                    //});
                     return RedirectToAction(nameof(FamiliesIndex));
                 }
                 else

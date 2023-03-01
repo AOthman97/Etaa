@@ -291,13 +291,13 @@
         // POST: FinancialStatement/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int FinancialStatementId)
         {
             try
             {
-                var financialStatement = await _context.FinancialStatements.FindAsync(id);
+                var financialStatement = await _context.FinancialStatements.FindAsync(FinancialStatementId);
                 var Project = _context.PaymentVouchers.Where(p => p.ProjectId == financialStatement.ProjectId && p.IsCanceled == false).Select(p => p.Projects);
-                if (Project.Any() == false)
+                if (Project.Any() == false && financialStatement != null)
                 {
                     financialStatement.IsCanceled = true;
                     await _context.SaveChangesAsync();
@@ -313,7 +313,7 @@
             }
             catch (Exception ex)
             {
-                var financialStatement = await _context.FinancialStatements.FindAsync(id);
+                var financialStatement = await _context.FinancialStatements.FindAsync(FinancialStatementId);
                 _logger.LogError("Financial statement not canceled, Message: {ErrorData}, User: {User}, Financial statement: {FinancialStatementData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FinancialStatementId = financialStatement.FinancialStatementId, ProjectId = financialStatement.ProjectId });
                 TempData["FinancialStatementError"] = "FinancialStatement";
                 return RedirectToAction(nameof(Index));

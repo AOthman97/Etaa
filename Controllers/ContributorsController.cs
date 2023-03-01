@@ -248,16 +248,25 @@
         // POST: Contributors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int ContributorId)
         {
             try
             {
                 TempData["Contributor"] = "Contributor";
-                var contributor = await _context.Contributors.FindAsync(id);
-                contributor.IsCanceled = true;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Contributor canceled, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
-                return RedirectToAction(nameof(Index));
+                var contributor = await _context.Contributors.FindAsync(ContributorId);
+
+                if(contributor != null)
+                {
+                    contributor.IsCanceled = true;
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Contributor canceled, Contributor: {ContributorData}, User: {User}", new { ContributorId = contributor.ContributorId, NameAr = contributor.NameAr, NameEn = contributor.NameEn }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["ContributorError"] = "Contributor";
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {

@@ -319,21 +319,30 @@
         // POST: FamilyMembers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int FamilyMemberId)
         {
             try
             {
                 TempData["FamilyMember"] = "FamilyMember";
-                var familyMember = await _context.FamilyMembers.FindAsync(id);
-                familyMember.IsCanceled = true;
-                //_context.FamilyMembers.Remove(familyMember);
-                await _context.SaveChangesAsync();
-                _logger.LogError("Family member canceled, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
-                return RedirectToAction(nameof(Index));
+                var familyMember = await _context.FamilyMembers.FindAsync(FamilyMemberId);
+
+                if(familyMember != null)
+                {
+                    familyMember.IsCanceled = true;
+                    //_context.FamilyMembers.Remove(familyMember);
+                    await _context.SaveChangesAsync();
+                    _logger.LogError("Family member canceled, FamilyMember: {FamilyMemberData}, User: {User}", new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["FamilyMemberError"] = "FamilyMemberError";
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
-                var familyMember = await _context.FamilyMembers.FindAsync(id);
+                var familyMember = await _context.FamilyMembers.FindAsync(FamilyMemberId);
                 _logger.LogError("Family Member not canceled, Message: {ErrorData}, User: {User}, FamilyMember: {FamilyMemberData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { FamilyMemberId = familyMember.FamilyMemberId, NameAr = familyMember.NameAr, NameEn = familyMember.NameEn, FamilyId = familyMember.FamilyId });
                 TempData["FamilyMemberError"] = "FamilyMemberError";
                 return RedirectToAction(nameof(Index));

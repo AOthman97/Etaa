@@ -660,20 +660,29 @@
         // POST: PaymentVoucher/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromForm] int PaymentVoucherId)
         {
             try
             {
                 TempData["PaymentVoucher"] = "PaymentVoucher";
-                var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
-                paymentVoucher.IsCanceled = true;
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Payment voucher canceled, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
-                return RedirectToAction(nameof(Index));
+                var paymentVoucher = await _context.PaymentVouchers.FindAsync(PaymentVoucherId);
+
+                if(paymentVoucher != null)
+                {
+                    paymentVoucher.IsCanceled = true;
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation("Payment voucher canceled, Payment voucher: {PaymentVoucherData}, User: {User}", new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() });
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["PaymentVoucherError"] = "PaymentVoucher";
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception ex)
             {
-                var paymentVoucher = await _context.PaymentVouchers.FindAsync(id);
+                var paymentVoucher = await _context.PaymentVouchers.FindAsync(PaymentVoucherId);
                 _logger.LogError("Payment voucher not canceled, Message: {ErrorData}, User: {User}, Payment voucher: {PaymentVoucherData}", new { ex.Message, ex.StackTrace, ex.InnerException }, new { Id = User.GetLoggedInUserId<string>(), name = User.GetLoggedInUserName() }, new { PaymentVoucherId = paymentVoucher.PaymentVoucherId, ProjectId = paymentVoucher.ProjectId, InstallmentId = paymentVoucher.InstallmentsId, PaidAmount = paymentVoucher.PaymentAmount, PaymentDate = paymentVoucher.PaymentDate });
                 TempData["PaymentVoucherError"] = "PaymentVoucher";
                 return RedirectToAction(nameof(Index));

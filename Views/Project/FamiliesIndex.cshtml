@@ -2,9 +2,12 @@
 
 @{
     ViewData["Title"] = "بيانات الأسر";
+    var ProjectsNumber = TempData["ProjectsNumber"];
+    TempData["ProjectsNumber"] = null;
 }
 
 <h1><i class="fa-solid fa-list"></i> بيانات المشاريع</h1>
+<h6 class="display-6">عدد المشاريع الحالية: @ProjectsNumber</h6>
 
 <table class="table table-striped" id="tblProjects" style="width:100%">
     <thead>
